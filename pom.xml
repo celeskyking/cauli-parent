@@ -13,6 +13,7 @@
         <module>cauli-ui</module>
         <module>cauli-test</module>
         <module>cauli-http</module>
+        <module>cauli-server</module>
     </modules>
 
     <properties>
