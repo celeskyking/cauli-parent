@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * Created by tianqing.wang on 14-2-25
  */
+@Deprecated
 public class PropertyUtils {
 
     private static Logger logger = LoggerFactory.getLogger(PropertyUtils.class);

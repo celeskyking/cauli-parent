@@ -44,17 +44,6 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-surefire-plugin</artifactId>-->
-            <!--<version>2.12.2</version>-->
-            <!--<configuration>-->
-            <!--<forkCount>1</forkCount>-->
-            <!--<reuseForks>true</reuseForks>-->
-            <!--<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>-->
-            <!--<useFile>false</useFile>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 

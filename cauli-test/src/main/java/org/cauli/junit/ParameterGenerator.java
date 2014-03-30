@@ -1,15 +1,15 @@
 package org.cauli.junit;
 
 import com.google.common.collect.Lists;
+import jodd.typeconverter.TypeConverterManager;
 import org.cauli.db.DBCore;
 import org.cauli.db.DbManager;
 import org.cauli.db.annotation.Field;
 import org.cauli.db.annotation.SQL;
+import org.cauli.instrument.BeanUtils;
 import org.cauli.instrument.ClassUtils;
 import org.cauli.instrument.MethodUtils;
-import org.cauli.instrument.PropertyUtils;
 import org.cauli.junit.anno.Bean;
-import org.cauli.junit.commons.StringUtils;
 import org.cauli.junit.info.DefaultInfoProvider;
 import org.junit.runners.model.FrameworkMethod;
 import org.slf4j.Logger;
@@ -19,8 +19,8 @@ import org.springframework.jdbc.core.RowMapper;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tianqing.wang on 14-2-28
@@ -93,12 +93,11 @@ public class ParameterGenerator implements ParameterProvider {
                 Bean bean = MethodUtils.getParameterAnnotation(method,Bean.class,j);
                 String value = bean.value();
                 Object object = clazz.newInstance();
-                PropertyUtils.initBean(object);
                 List<String> headers = this.fileGenerator.getHeaders();
                 for (int i = 0; i < headers.size(); i++) {
                     if (headers.get(i).contains(value)) {
                         String beanValue = org.apache.commons.lang3.StringUtils.substringAfter(headers.get(i), ".");
-                        PropertyUtils.setProperty(object, beanValue, rowParameter.getParams().get(i));
+                        BeanUtils.setProperty(object, beanValue, rowParameter.getParams().get(i));
                     }
                 }
                 objects[j] = object;
@@ -108,45 +107,13 @@ public class ParameterGenerator implements ParameterProvider {
                 objects[j]= setDBVaule(clazz,field,sql);
             } else {
                 String string = rowParameter.getParams().get(j);
-                objects[j]=setObjectVaule(clazz, string);
+                objects[j]= TypeConverterManager.convertType(string,clazz);
             }
             j++;
         }
         DefaultInfoProvider infoProvider = new DefaultInfoProvider();
         FrameworkMethodWithParameters frameworkMethodWithParameters = new FrameworkMethodWithParameters(method, objects, infoProvider.testInfo(method, objects));
         return frameworkMethodWithParameters;
-    }
-
-
-    private Object setObjectVaule( Class<?> clazz, String vaule) {
-        String string = vaule;
-        Object object;
-        if (clazz.getName().endsWith("Integer")) {
-            if (string.contains(".")) {
-                string = string.substring(0, string.indexOf("."));
-            }
-            object = StringUtils.toInteger(string);
-        } else if (clazz.getName().endsWith("Boolean")) {
-            object = StringUtils.toBoolean(string);
-        } else if (clazz.getName().endsWith("String")) {
-            if (string.equals("<empty>")) {
-                object = "";
-            } else if (string.equals("<null>")) {
-                object = null;
-            } else {
-                object = string;
-            }
-        } else if (clazz.getName().endsWith("Double")) {
-            object = StringUtils.toDouble(string);
-        } else if (clazz.getName().endsWith("Float")) {
-            object = StringUtils.toFloat(string);
-        } else if (clazz.getName().endsWith("Long")) {
-            object = StringUtils.toLong(string);
-        } else {
-            throw new UnsupportedOperationException("暂时不支持非基础属性的参数形式，支持String,Integer,Boolean," +
-                    "Double,Float,Long");
-        }
-        return object;
     }
 
     /**
