@@ -1,6 +1,6 @@
 package org.cauli.ui.selenium.element;
 
-import org.apache.commons.lang3.StringUtils;
+import jodd.util.StringUtil;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -23,7 +23,7 @@ public class LocationParse {
             return null;
         }else{
             if(text.contains("->")){
-                String strs[] = StringUtils.split(text,"->");
+                String strs[] = StringUtil.split(text, "->");
                 if(strs.length<=1){
                     throw new RuntimeException("{}-> 定位方式写的不正确");
                 }else{
