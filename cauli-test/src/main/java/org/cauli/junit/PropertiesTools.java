@@ -413,5 +413,21 @@ public class PropertiesTools {
 		}
 		return keyInfo;
 	}
+
+    public static Map<String,String> getPropertiesMap(Properties props){
+        Map<String,String> keyInfo = null;
+        try{
+            keyInfo=new HashMap<String,String>();
+            Enumeration<?> en = props.propertyNames();
+            while (en.hasMoreElements()) {
+                String key = (String) en.nextElement();
+                String value = props.getProperty (key);
+                keyInfo.put(key, value);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return keyInfo;
+    }
 	
 }

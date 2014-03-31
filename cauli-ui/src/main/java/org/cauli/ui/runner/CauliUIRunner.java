@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * Created by celeskyking on 14-3-1
  */
 public class CauliUIRunner extends JUnitBaseRunner{
+
     private Logger logger = LoggerFactory.getLogger(CauliUIRunner.class);
     public CauliUIRunner(Class<?> klass) throws InitializationError {
         super(klass);
@@ -37,4 +38,7 @@ public class CauliUIRunner extends JUnitBaseRunner{
         }
         super.run(notifier);
     }
+
+
+
 }

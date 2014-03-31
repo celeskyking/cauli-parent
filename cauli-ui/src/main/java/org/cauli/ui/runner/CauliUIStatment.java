@@ -1,5 +1,6 @@
 package org.cauli.ui.runner;
 
+import jodd.util.StringUtil;
 import org.cauli.junit.statement.InterceptorStatement;
 import org.cauli.ui.annotation.Require;
 import org.cauli.ui.selenium.browser.Auto;
@@ -16,8 +17,22 @@ public class CauliUIStatment extends InterceptorStatement{
     }
 
 
+
+
     @Override
     public void evaluate() throws Throwable {
+        String browsers = CauliConfigUtil.getInstance().get("browers");
+        if(browsers!=null){
+            String[] strings = StringUtil.split(browsers,"|");
+            for(String browser:strings){
+                Auto.require(browser);
+                evaluate();
+                if(!Auto.browser().isClosed()){
+                    Auto.browser().closeAllWindows();
+                }
+            }
+        }
+
         FrameworkMethod frameworkMethod = getTestMethod();
         if(frameworkMethod.getMethod().isAnnotationPresent(Require.class)){
             Engine engine = frameworkMethod.getAnnotation(Require.class).value();
