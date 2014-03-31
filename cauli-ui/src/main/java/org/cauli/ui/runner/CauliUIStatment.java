@@ -26,31 +26,33 @@ public class CauliUIStatment extends InterceptorStatement{
             String[] strings = StringUtil.split(browsers,"|");
             for(String browser:strings){
                 Auto.require(browser);
-                evaluate();
+                super.evaluate();
                 if(!Auto.browser().isClosed()){
                     Auto.browser().closeAllWindows();
                 }
             }
+        }else{
+            FrameworkMethod frameworkMethod = getTestMethod();
+            if(frameworkMethod.getMethod().isAnnotationPresent(Require.class)){
+                Engine engine = frameworkMethod.getAnnotation(Require.class).value();
+                String url = frameworkMethod.getAnnotation(Require.class).url();
+                if(null==url||"".equals(url)){
+                    Auto.require(engine);
+                }else{
+                    Auto.require(engine,url);
+                }
+            }else if(frameworkMethod.getMethod().getDeclaringClass().isAnnotationPresent(Require.class)){
+                Engine engine = frameworkMethod.getMethod().getDeclaringClass().getAnnotation(Require.class).value();
+                String url = frameworkMethod.getMethod().getDeclaringClass().getAnnotation(Require.class).url();
+                if(null==url||"".equals(url)){
+                    Auto.require(engine);
+                }else{
+                    Auto.require(engine,url);
+                }
+            }
+            super.evaluate();
         }
 
-        FrameworkMethod frameworkMethod = getTestMethod();
-        if(frameworkMethod.getMethod().isAnnotationPresent(Require.class)){
-            Engine engine = frameworkMethod.getAnnotation(Require.class).value();
-            String url = frameworkMethod.getAnnotation(Require.class).url();
-            if(null==url||"".equals(url)){
-                Auto.require(engine);
-            }else{
-                Auto.require(engine,url);
-            }
-        }else if(frameworkMethod.getMethod().getDeclaringClass().isAnnotationPresent(Require.class)){
-            Engine engine = frameworkMethod.getMethod().getDeclaringClass().getAnnotation(Require.class).value();
-            String url = frameworkMethod.getMethod().getDeclaringClass().getAnnotation(Require.class).url();
-            if(null==url||"".equals(url)){
-                Auto.require(engine);
-            }else{
-                Auto.require(engine,url);
-            }
-        }
-        super.evaluate();
+
     }
 }
