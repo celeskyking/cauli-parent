@@ -34,8 +34,9 @@ public class CauliConfigUtil {
         try{
             Map<String,String> configs = Maps.newHashMap();
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            Resource[] resources = resolver.getResources("classpath:config/config_*.properties");
+            Resource[] resources = resolver.getResources("classpath:config_*.properties");
             if(resources==null){
+                System.out.println("没有获得..");
                 return null;
             }
             for(Resource resource:resources){
@@ -45,7 +46,7 @@ public class CauliConfigUtil {
             }
             return configs;
         }catch (Exception e){
-            throw new RuntimeException("加载配置文件的时候出现了错误...");
+            throw new RuntimeException("加载配置文件的时候出现了错误...",e);
         }
 
     }

@@ -21,10 +21,11 @@ public class CauliUIStatment extends InterceptorStatement{
 
     @Override
     public void evaluate() throws Throwable {
-        String browsers = CauliConfigUtil.getInstance().get("browers");
+        String browsers = CauliConfigUtil.getInstance().get("browsers");
         if(browsers!=null){
             String[] strings = StringUtil.split(browsers,"|");
             for(String browser:strings){
+                System.out.println(browser);
                 Auto.require(browser);
                 super.evaluate();
                 if(!Auto.browser().isClosed()){
