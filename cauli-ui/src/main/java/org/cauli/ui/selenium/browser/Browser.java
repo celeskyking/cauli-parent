@@ -263,7 +263,6 @@ public class Browser implements IBrowser {
     public Object runJavaScript(String js, Object... objects) {
         ActionListenerProxy.getDispatcher().beforerunJS();
         Object obj= ((JavascriptExecutor)this.driver).executeScript(js,objects);
-        logger.info("浏览器执行了javascript--> "+js);
         ActionListenerProxy.getDispatcher().afterrunJS();
         return obj;
     }
@@ -272,7 +271,6 @@ public class Browser implements IBrowser {
     public Object runAsynJavaScript(String js, Object... objects) {
         ActionListenerProxy.getDispatcher().beforerunJS();
         Object obj= ((JavascriptExecutor)this.driver).executeAsyncScript(js, objects);
-        logger.info("浏览器执行了异步javascript--> "+js);
         ActionListenerProxy.getDispatcher().afterrunJS();
         return obj;
     }

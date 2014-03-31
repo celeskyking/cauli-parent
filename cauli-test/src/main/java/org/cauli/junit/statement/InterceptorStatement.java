@@ -39,11 +39,11 @@ public class InterceptorStatement extends Statement {
         }
         if(this.testMethod.getMethod().isAnnotationPresent(Retry.class)){
             times=this.testMethod.getMethod().getAnnotation(Retry.class).value();
-            logger.info(this.testMethod.getName()+">>>这个case执行失败的话会被重新执行"+times+"次");
+            logger.info("["+this.testMethod.getName()+"]>>>这个case执行失败的话会被重新执行"+times+"次");
             //System.out.println(this.testMethod.getMethod().getDeclaringClass().getName());
         }else if(this.testMethod.getMethod().getDeclaringClass().isAnnotationPresent(Retry.class)){
             times=this.testMethod.getMethod().getDeclaringClass().getAnnotation(Retry.class).value();
-            logger.info(this.testMethod.getName()+"]>>>这个case执行失败的话会被重新执行"+times+"次");
+            logger.info("["+this.testMethod.getName()+"]>>>这个case执行失败的话会被重新执行"+times+"次");
         }else{
             this.times=0;
         }
@@ -55,7 +55,7 @@ public class InterceptorStatement extends Statement {
             }catch(Exception e){
                 logger.error("用例执行失败了,异常信息->"+e.getMessage());
                 if(i==times){
-                    throw new TestFailedError(this.testMethod.getName()+"]用例执行失败了！",e);
+                    throw new TestFailedError("["+this.testMethod.getName()+"]用例执行失败了！",e);
                 }else{
                     logger.info("用例执行失败，重新执行失败的方法-->"+testMethod.getName());
                 }
