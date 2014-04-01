@@ -79,7 +79,7 @@ public class Auto {
         return local.get().getBrowser();
     }
 
-    public Engine browserType(){
+    public static Engine browserType(){
         return browser().browserType();
     }
 
