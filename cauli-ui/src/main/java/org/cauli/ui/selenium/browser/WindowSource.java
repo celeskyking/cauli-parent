@@ -11,14 +11,9 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class WindowSource {
-    public boolean isRun() {
-        return isRun;
-    }
 
-    public void setRun(boolean run) {
-        isRun = run;
-    }
-    private boolean isRun=false;
+
+
     private Vector repository =new Vector();
     private WindowsListener windowsListener;
 

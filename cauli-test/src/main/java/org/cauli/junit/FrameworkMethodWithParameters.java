@@ -45,6 +45,10 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 	    this.info = info;
     }
 
+    public FrameworkMethodWithParameters(Method method){
+        super(method);
+    }
+
     public FrameworkMethodWithParameters(Method method,Object[] parameters,String info){
         this(method,parameters,null,3000,info);
     }
@@ -67,4 +71,27 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 		return getMethod().getName() + '<' + info + '>';
 	}
 
+    public Object[] getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Object[] parameters) {
+        this.parameters = parameters;
+    }
+
+    public void setThreadPoolSize(Integer threadPoolSize) {
+        this.threadPoolSize = threadPoolSize;
+    }
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
 }

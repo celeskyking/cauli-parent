@@ -263,7 +263,7 @@ public class Feeder extends BlockJUnit4ClassRunner {
 		return DEFAULT_TIMEOUT;
 	}
 	
-	private Feed4JUnitConfig getConfig() {
+	protected Feed4JUnitConfig getConfig() {
 		if (this.config == null)
 			init();
 		return this.config;

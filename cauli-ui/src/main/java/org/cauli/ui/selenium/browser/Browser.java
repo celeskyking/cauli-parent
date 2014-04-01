@@ -25,14 +25,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class Browser implements IBrowser {
     private Logger logger = LoggerFactory.getLogger(Browser.class);
-	@SuppressWarnings("unused")
-	private boolean isClosed;
+	private boolean isClosed=false;
     private boolean isUseJQuery=false;
     private WindowsCollectorListener windowsCollectorListener;
     private WindowSource windowSource;
     private Page page;
     private WebDriver driver;
+    private Engine engine;
     public Browser(Engine browser){
+        this.engine=browser;
         this.driver=browser.browser();
         maxWindow();
         this.driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
@@ -45,6 +46,7 @@ public class Browser implements IBrowser {
     }
 
     public Browser(Engine browser,URL url){
+        this.engine=browser;
         if(url==null){
             this.driver=browser.browser();
         }else{
@@ -84,12 +86,15 @@ public class Browser implements IBrowser {
         if(this.driver!=null){
             this.getCurrentBrowserDriver().quit();
             this.setClosed(true);
-            this.windowSource.setRun(false);
             logger.info("关闭了浏览器");
         }else{
             logger.warn("与浏览器交互的session值可能已经中断了，请检查程序是否编写正确，程序还将继续运行下去");
         }
         ActionListenerProxy.getDispatcher().aftercloseAllWindows();
+    }
+
+    public Engine browserType(){
+        return this.engine;
     }
 
     @Override

@@ -77,6 +77,6 @@ public interface IBrowser {
 
     public Page page();
 
-
+    public Engine browserType();
 
 }

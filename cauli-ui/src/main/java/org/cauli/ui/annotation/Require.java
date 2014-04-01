@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Require {
     String url() default "";
-    Engine value();
+    Engine[] value();
 }

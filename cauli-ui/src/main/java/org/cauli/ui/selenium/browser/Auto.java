@@ -79,6 +79,10 @@ public class Auto {
         return local.get().getBrowser();
     }
 
+    public Engine browserType(){
+        return browser().browserType();
+    }
+
 
     public static ICurrentPage go(String url){
         return browser().open(url);
