@@ -44,10 +44,7 @@ public class UIFrameworkMethod extends FrameworkMethodWithParameters{
 
     @Override
     public String toString() {
-        if(this.info==null){
-            return getMethod().getName() + '<'+this.engine.toString()+'>';
-        }
-        return getMethod().getName() + '<' + info +","+ this.engine.toString()+'>';
+        return super.toString()+"["+this.engine+"]";
 
     }
 
