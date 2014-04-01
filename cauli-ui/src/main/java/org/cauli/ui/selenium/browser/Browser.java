@@ -298,7 +298,7 @@ public class Browser implements IBrowser {
     }
 
     public boolean isClosed() {
-        return isClosed=false;
+        return isClosed;
     }
 
     public void setClosed(boolean closed) {
