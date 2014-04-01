@@ -44,7 +44,7 @@ public class UIFrameworkMethod extends FrameworkMethodWithParameters{
 
     @Override
     public String toString() {
-        return super.toString()+"["+this.engine+"]";
+        return super.toString().replace("<null>","")+"["+this.engine+"]";
 
     }
 
