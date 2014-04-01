@@ -170,7 +170,7 @@ public class Auto {
     }
 
     public static void setClosed(boolean isclose){
-        browser().setClosed(isClosed());
+        browser().setClosed(isclose);
     }
 
     public static void clearBrowserManager(){
