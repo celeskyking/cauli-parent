@@ -45,8 +45,6 @@ public class CauliUIStatment extends InterceptorStatement{
             if(bool){
                 if(!Auto.isClosed()){
                     Auto.browser().closeAllWindows();
-                }else{
-                    System.out.println("something is wrong");
                 }
             }
 

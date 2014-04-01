@@ -52,9 +52,9 @@ public class InterceptorStatement extends Statement {
                     interceptor.interceptorBefore(testMethod, target);
                 }
                 testMethod.invokeExplosively(target);
-
                 break;
             }catch(Exception e){
+                e.printStackTrace();
                 for(Interceptor interceptor:interceptors){
                     interceptor.interceptorAfter(testMethod, target);
                 }
