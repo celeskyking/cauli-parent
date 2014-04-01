@@ -62,10 +62,9 @@ public class CauliUIRunner extends JUnitBaseRunner{
             if(frameworkMethod instanceof FrameworkMethodWithParameters){
                 Engine[] engines=getConfigEngines(frameworkMethod);
                 for(Engine engine:engines){
-                    TestInfoProvider testInfoProvider =getConfig().getInfoProvider();
-                    String testInfo = testInfoProvider.testInfo(frameworkMethod.getMethod(),((FrameworkMethodWithParameters) frameworkMethod).getParameters());
                     UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),
-                            ((FrameworkMethodWithParameters) frameworkMethod).getParameters(),testInfo,engine);
+                            ((FrameworkMethodWithParameters) frameworkMethod).getParameters(),
+                            ((FrameworkMethodWithParameters) frameworkMethod).getInfo(),engine);
                     methods.add(method);
                 }
             }else if(frameworkMethod instanceof FrameworkMethod){
