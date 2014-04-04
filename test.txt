@@ -1,2 +1,2 @@
-name|age
-tianqing|12
+地点
+北京
