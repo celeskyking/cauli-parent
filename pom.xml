@@ -13,7 +13,7 @@
     <groupId>com.github.celeskyking</groupId>
     <artifactId>cauli-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <description>it`s the tools of uitest or mock server</description>
     <url>http://maven.apache.org</url>
