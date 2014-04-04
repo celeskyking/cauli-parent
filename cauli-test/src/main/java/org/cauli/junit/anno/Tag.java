@@ -11,5 +11,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Tag {
 
-    String value() default "default";
+    String feature() default "default";
+    String release();
 }

@@ -52,11 +52,14 @@ public class InterceptorStatement extends Statement {
                     interceptor.interceptorBefore(testMethod, target);
                 }
                 testMethod.invokeExplosively(target);
+                for(Interceptor interceptor:interceptors){
+                    interceptor.interceptorAfter(testMethod, target);
+                }
                 break;
             }catch(Exception e){
                 e.printStackTrace();
                 for(Interceptor interceptor:interceptors){
-                    interceptor.interceptorAfter(testMethod, target);
+                    interceptor.interceptorAfterForce(testMethod, target);
                 }
                 logger.error("用例执行失败了,异常信息->" + e.getMessage());
                 if(i==times){

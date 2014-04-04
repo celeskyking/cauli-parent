@@ -1,81 +1,61 @@
 package org.cauli.junit;
 
 
-
 import com.google.common.collect.Lists;
 import org.cauli.db.DBCore;
 import org.cauli.db.DbManager;
 import org.cauli.db.annotation.DB;
 import org.cauli.db.annotation.MySQL;
 import org.cauli.instrument.ClassPool;
-import org.cauli.junit.anno.ThreadRunner;
-import org.cauli.junit.statement.InterceptorStatement;
 import org.cauli.junit.anno.CauliRule;
 import org.cauli.junit.anno.Listener;
+import org.cauli.junit.statement.InterceptorStatement;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.model.*;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author 王天庆
  * */
 public class JUnitBaseRunner extends Feeder{
+    private Logger logger = LoggerFactory.getLogger(JUnitBaseRunner.class);
+    private CauliFilter filter;
+
+    public CauliFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(CauliFilter filter) {
+        this.filter = filter;
+    }
+
     public JUnitBaseRunner(final Class<?> klass)
             throws InitializationError {
         super(klass);
+        setScheduler(new ExcuteScheduler(klass));
+        filter=new CauliFilter();
         initDB();
-        setScheduler(new RunnerScheduler() {
-            ExecutorService executorService = Executors.newFixedThreadPool(
-                    klass.isAnnotationPresent(ThreadRunner.class) ?
-                            klass.getAnnotation(ThreadRunner.class).threads() :1,
-                    new NamedThreadFactory(klass.getSimpleName()));
-            CompletionService<Void> completionService = new ExecutorCompletionService<Void>(executorService);
-            Queue<Future<Void>> tasks = new LinkedList<Future<Void>>();
+        initFilter();
 
-            public void schedule(Runnable childStatement) {
-                tasks.offer(completionService.submit(childStatement, null));
-            }
-
-
-            public void finished() {
-                try {
-                    while (!tasks.isEmpty())
-                        tasks.remove(completionService.take());
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                } finally {
-                    while (!tasks.isEmpty())
-                        tasks.poll().cancel(true);
-                    executorService.shutdownNow();
-                }
-            }
-
-        });
-    }
-    static final class NamedThreadFactory implements ThreadFactory {
-        static final AtomicInteger poolNumber = new AtomicInteger(1);
-        final AtomicInteger threadNumber = new AtomicInteger(1);
-        final ThreadGroup group;
-
-        NamedThreadFactory(String poolName) {
-            group = new ThreadGroup(poolName + "-" + poolNumber.getAndIncrement());
-        }
-
-
-        public Thread newThread(Runnable r) {
-            return new Thread(group, r, group.getName() + "-thread-" + threadNumber.getAndIncrement(), 0);
-        }
     }
 
+    protected void initFilter(){
+        try {
+            filter(filter);
+        } catch (NoTestsRemainException e) {
+            logger.warn("过滤器加载失败,将会执行所有的case..");
+            e.printStackTrace();
+        }
+    }
 
     protected Statement methodInvoker(FrameworkMethod method, Object test) {
         InterceptorStatement statement = new InterceptorStatement(method, test);
@@ -102,11 +82,6 @@ public class JUnitBaseRunner extends Feeder{
 
     @Override
     public void run(RunNotifier notifier) {
-        try {
-            filter(new CauliFilter());
-        } catch (NoTestsRemainException e) {
-            e.printStackTrace();
-        }
         super.run(notifier);
     }
 
@@ -146,6 +121,7 @@ public class JUnitBaseRunner extends Feeder{
             }
         }
     }
+
 
 
 }

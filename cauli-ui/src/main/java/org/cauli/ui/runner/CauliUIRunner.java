@@ -5,7 +5,6 @@ import jodd.util.StringUtil;
 import org.cauli.instrument.ClassPool;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.cauli.junit.JUnitBaseRunner;
-import org.cauli.junit.TestInfoProvider;
 import org.cauli.ui.annotation.Action;
 import org.cauli.ui.annotation.Require;
 import org.cauli.ui.selenium.browser.Engine;
@@ -14,7 +13,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-import org.junit.runners.model.TestClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +22,21 @@ import java.util.List;
  * Created by celeskyking on 14-3-1
  */
 public class CauliUIRunner extends JUnitBaseRunner{
-
-    private Logger logger = LoggerFactory.getLogger(CauliUIRunner.class);
+    private static Logger logger = LoggerFactory.getLogger(CauliUIRunner.class);
     public CauliUIRunner(Class<?> klass) throws InitializationError {
         super(klass);
     }
+
+    @Override
+    protected void initFilter() {
+        try{
+            getFilter().setFilterContent(CauliConfigUtil.getInstance().get("filter"));
+        }catch (Exception e){
+            logger.error("没有查找系统的配置文件：config.properties",e);
+        }
+        super.initFilter();
+    }
+
 
 
     @Override
@@ -38,7 +46,7 @@ public class CauliUIRunner extends JUnitBaseRunner{
     }
 
     @Override
-    public void run(RunNotifier notifier) {
+    public void run(final RunNotifier notifier) {
         for(Class<?> clazz: ClassPool.getClassPool()){
             if(clazz.isAnnotationPresent(Action.class)){
                 ActionListenerProxy.register(clazz);
@@ -61,14 +69,23 @@ public class CauliUIRunner extends JUnitBaseRunner{
         for(FrameworkMethod frameworkMethod:frameworkMethods){
             if(frameworkMethod instanceof FrameworkMethodWithParameters){
                 Engine[] engines=getConfigEngines(frameworkMethod);
-                for(Engine engine:engines){
-                    UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),
-                            ((FrameworkMethodWithParameters) frameworkMethod).getParameters(),
-                            ((FrameworkMethodWithParameters) frameworkMethod).getInfo(),engine);
-                    methods.add(method);
+                if(engines==null){
+                    methods.add(frameworkMethod);
+                }else{
+                    for(Engine engine:engines){
+                        UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),
+                                ((FrameworkMethodWithParameters) frameworkMethod).getParameters(),
+                                ((FrameworkMethodWithParameters) frameworkMethod).getInfo(),engine);
+                        methods.add(method);
+                    }
                 }
+
             }else if(frameworkMethod instanceof FrameworkMethod){
                 Engine[] engines=getConfigEngines(frameworkMethod);
+                if(engines==null){
+                    methods.add(frameworkMethod);
+                    continue;
+                }
                 for(Engine engine:engines){
                     UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),engine);
                     methods.add(method);
@@ -82,7 +99,7 @@ public class CauliUIRunner extends JUnitBaseRunner{
     private Engine[] getConfigEngines(FrameworkMethod method){
         if(isHaveRequireAnnotation(method)){
             return getRequireBrowsers(method);
-        }else{
+        }else if(StringUtil.isNotEmpty(CauliConfigUtil.getInstance().get("browsers"))){
             String browsers = CauliConfigUtil.getInstance().get("browsers");
             if(browsers!=null&&!"".equals(browsers)){
                 String[] strings = StringUtil.split(browsers, "|");
@@ -96,6 +113,8 @@ public class CauliUIRunner extends JUnitBaseRunner{
             }else{
                 return new Engine[]{Engine.PHANTOMJS};
             }
+        }else {
+            return null;
         }
     }
 

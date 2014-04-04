@@ -14,7 +14,7 @@ public class UIFrameworkMethod extends FrameworkMethodWithParameters{
     protected Object[] parameters;
     protected Integer threadPoolSize;
     protected long timeout;
-    protected String info;
+
     public UIFrameworkMethod(Method method, Object[] parameters, Integer threadPoolSize, long timeout, String info) {
         super(method,parameters,threadPoolSize,timeout,info);
     }

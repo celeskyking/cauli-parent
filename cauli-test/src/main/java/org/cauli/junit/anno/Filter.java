@@ -9,5 +9,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface Filter {
-    String value();
+    String feature() default "default";
+    String release() default "";
 }

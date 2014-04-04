@@ -5,6 +5,7 @@ import org.cauli.junit.anno.Param;
 import org.cauli.junit.scheduler.DefaultFeedScheduler;
 import org.databene.benerator.Generator;
 import org.databene.benerator.anno.AnnotationMapper;
+import org.databene.benerator.anno.Source;
 import org.databene.benerator.anno.ThreadPoolSize;
 import org.databene.benerator.engine.BeneratorContext;
 import org.databene.benerator.engine.DefaultBeneratorContext;
@@ -16,6 +17,7 @@ import org.databene.platform.java.Entity2JavaConverter;
 import org.databene.script.DatabeneScriptParser;
 import org.databene.script.Expression;
 import org.junit.Test;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.*;
@@ -141,6 +143,9 @@ public class Feeder extends BlockJUnit4ClassRunner {
                     }
                     children.addAll(methods);
                 }else{
+                    if(!method.getMethod().isAnnotationPresent(Source.class)&&method.getMethod().getParameterTypes().length>0){
+                        throw new RuntimeException(method.getName()+":参数化数据和方法参数个数不匹配，请检查..");
+                    }
                     // parameterized Feed4JUnit generator method
                     BeneratorContext context = getContext();
                     context.setGeneratorFactory(config.createDefaultGeneratorFactory());
@@ -161,21 +166,21 @@ public class Feeder extends BlockJUnit4ClassRunner {
 
 	// generator execution --------------------------------------------------------------------------------------------------
 	
-	protected Statement childrenInvoker(final RunNotifier notifier) {
-		return new Statement() {
-			@Override
-			public void evaluate() {
-				runChildren(notifier);
-			}
-		};
-	}
-
-	private void runChildren(final RunNotifier notifier) {
-		RunnerScheduler scheduler = getScheduler();
-		for (FrameworkMethod method : getChildren())
- 			scheduler.schedule(new ChildRunner(this, method, notifier));
-		scheduler.finished();
-	}
+//	protected Statement childrenInvoker(final RunNotifier notifier) {
+//		return new Statement() {
+//			@Override
+//			public void evaluate() {
+//				runChildren(notifier);
+//			}
+//		};
+//	}
+//
+//	private void runChildren(final RunNotifier notifier) {
+//        RunnerScheduler scheduler = getScheduler();
+//		for (FrameworkMethod method : getChildren())
+// 			scheduler.schedule(new ChildRunner(this, method, notifier));
+//		scheduler.finished();
+//	}
 	
 	/** this is needed to make the runChild() method public and thus accessible from other classes, especially {@link ChildRunner}. */
 	@Override

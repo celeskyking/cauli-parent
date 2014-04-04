@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.cauli.test</groupId>
+            <groupId>com.github.celeskyking.test</groupId>
             <artifactId>cauli-test</artifactId>
             <version>${project.version}</version>
         </dependency>

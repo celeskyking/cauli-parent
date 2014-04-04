@@ -37,6 +37,12 @@ public class CauliUIStatment extends InterceptorStatement{
 
         @Override
         public void interceptorAfter(FrameworkMethod method, Object test) {
+
+
+        }
+
+        @Override
+        public void interceptorAfterForce(FrameworkMethod method, Object test) {
             boolean bool = true;
             String boolString = CauliConfigUtil.getInstance().get("browser_fail_auto_close");
             if(boolString!=null&&!"".equals(boolString)){
@@ -47,7 +53,7 @@ public class CauliUIStatment extends InterceptorStatement{
                     Auto.browser().closeAllWindows();
                 }
             }
-
         }
+
     }
 }
