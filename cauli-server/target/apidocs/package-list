@@ -1,9 +1,0 @@
-org.cauli.server
-org.cauli.server.handler
-org.cauli.server.handler.authentication
-org.cauli.server.handler.exceptions
-org.cauli.server.handler.logging
-org.cauli.server.helpers
-org.cauli.server.netty
-org.cauli.server.stub
-org.cauli.server.wrapper
