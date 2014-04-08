@@ -3,13 +3,13 @@
     <parent>
         <artifactId>cauli-parent</artifactId>
         <groupId>com.github.celeskyking</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.celeskyking.server</groupId>
     <artifactId>cauli-server</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
