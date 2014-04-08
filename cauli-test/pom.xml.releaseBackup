@@ -7,19 +7,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.celeskyking.ui</groupId>
-    <artifactId>cauli-ui</artifactId>
+    <groupId>com.github.celeskyking.test</groupId>
+    <artifactId>cauli-test</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.celeskyking.test</groupId>
-            <artifactId>cauli-test</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-bean</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -34,44 +33,66 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>org.databene</groupId>
+            <artifactId>databene-commons</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jodd</groupId>
-            <artifactId>jodd-core</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.databene</groupId>
+            <artifactId>databene-benerator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>com.opera</groupId>
-            <artifactId>operadriver</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.github.detro.ghostdriver</groupId>
-            <artifactId>phantomjsdriver</artifactId>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
@@ -88,7 +109,6 @@
             <artifactId>jaxen</artifactId>
         </dependency>
     </dependencies>
-
 
 
 </project>
