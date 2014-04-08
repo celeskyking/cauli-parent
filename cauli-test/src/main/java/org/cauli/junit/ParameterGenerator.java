@@ -54,9 +54,9 @@ public class ParameterGenerator implements ParameterProvider {
             this.fileGenerator = FileGeneratorFactory.createFileGenerator(file, method.getMethod(), getReadType());
         }
         List<RowParameter> rowParameters = fileGenerator.generator();
-        if(rowParameters.size()!=classes.length){
-            throw new RuntimeException("参数化数据和方法参数个数不匹配，请检查..");
-        }
+//        if(rowParameters.size()!=classes.length){
+//            throw new RuntimeException("参数化数据和方法参数个数不匹配，请检查..");
+//        }
         for (RowParameter parameter : rowParameters) {
             try {
                 FrameworkMethodWithParameters parameters = parseBeanMethod(method.getMethod(), parameter);
