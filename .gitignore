@@ -4,3 +4,5 @@
 /cauli-ui/target
 /cauli-test/target
 *.iml
+.project
+.classpath

@@ -25,6 +25,13 @@ public class CauliElements{
 
     }
 
+    public CauliElements(IBrowser browser){
+        this.browser=browser;
+        this.elements=null;
+    }
+
+
+
 
     private void locateElements(){
         WebDriver driver = browser.getCurrentBrowserDriver();

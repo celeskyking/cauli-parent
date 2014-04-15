@@ -56,7 +56,7 @@ public class InterceptorStatement extends Statement {
                     interceptor.interceptorAfter(testMethod, target);
                 }
                 break;
-            }catch(Exception e){
+            }catch(Throwable e){
                 e.printStackTrace();
                 for(Interceptor interceptor:interceptors){
                     interceptor.interceptorAfterForce(testMethod, target);
@@ -67,8 +67,6 @@ public class InterceptorStatement extends Statement {
                 }else{
                     logger.info("用例执行失败，重新执行失败的方法-->"+testMethod.getName());
                 }
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
             }
         }
     }

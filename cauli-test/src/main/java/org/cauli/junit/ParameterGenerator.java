@@ -46,8 +46,6 @@ public class ParameterGenerator implements ParameterProvider {
 
     public List<FrameworkMethodWithParameters> generator(FrameworkMethod method) throws IOException {
         List<FrameworkMethodWithParameters> result = Lists.newArrayList();
-        Method m = method.getMethod();
-        Class[] classes = m.getParameterTypes();
         if (!file.exists()) {
             throw new RuntimeException(getClass().getName() + "找不到文件...");
         } else {

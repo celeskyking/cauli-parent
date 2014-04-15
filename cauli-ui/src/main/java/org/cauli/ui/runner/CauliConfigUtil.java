@@ -2,6 +2,8 @@ package org.cauli.ui.runner;
 
 import com.google.common.collect.Maps;
 import org.cauli.junit.PropertiesTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -14,6 +16,7 @@ import java.util.Properties;
  */
 public class CauliConfigUtil {
     private Map<String,String> configs;
+    private Logger logger = LoggerFactory.getLogger(CauliConfigUtil.class);
     private static CauliConfigUtil self;
     private CauliConfigUtil(){
         this.configs= getConfigs();
@@ -34,10 +37,12 @@ public class CauliConfigUtil {
         try{
             Map<String,String> configs = Maps.newHashMap();
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-            Resource[] resources = resolver.getResources("classpath:config/config.properties");
-            if(resources==null){
-                System.out.println("没有获得..");
-                return null;
+            Resource[] resources=null;
+            try{
+                resources = resolver.getResources("classpath:config/config.properties");
+            }catch(Exception e){
+                logger.warn("没有获取到配置文件...不适用配置模式..");
+                return Maps.newHashMap();
             }
             for(Resource resource:resources){
                 Properties properties = new Properties();

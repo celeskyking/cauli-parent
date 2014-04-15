@@ -92,6 +92,9 @@ public class Feeder extends BlockJUnit4ClassRunner {
 
     private File getSimilarFile(String dir,String partFileName) throws FileNotFoundException {
         File dirFile = new File(dir);
+        if(dirFile==null){
+            throw new FileNotFoundException("文件没有找到,查找的目录不存在");
+        }
         if(dirFile.isDirectory()){
             File[] files = dirFile.listFiles();
             for(File file:files){
@@ -99,6 +102,8 @@ public class Feeder extends BlockJUnit4ClassRunner {
                     return file;
                 }
             }
+        }else if(!dirFile.isDirectory()){
+            return dirFile;
         }else{
             throw new FileNotFoundException("文件没有找到,查找的目录不存在");
         }

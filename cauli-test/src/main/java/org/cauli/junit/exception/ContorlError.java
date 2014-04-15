@@ -25,4 +25,7 @@ public class ContorlError extends RuntimeException {
     public ContorlError(String message,Exception e){
         super(message,e);
     }
+    public ContorlError(String message,Throwable e){
+        super(message,e);
+    }
 }

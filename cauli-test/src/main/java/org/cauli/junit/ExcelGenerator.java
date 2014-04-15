@@ -28,7 +28,12 @@ public class ExcelGenerator extends FileGenerator{
                 e.printStackTrace();
                 throw new RuntimeException("初始化excel文件的时候出现了错误");
             }
-            this.sheet=this.workbook.getSheet(method.getName());
+            if(excel.getName().contains(method.getName())){
+                this.sheet=this.workbook.getSheetAt(0);
+            }else{
+                this.sheet=this.workbook.getSheet(method.getName());
+            }
+
         }
         this.headers=Lists.newArrayList();
     }

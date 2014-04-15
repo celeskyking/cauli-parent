@@ -19,7 +19,7 @@ public enum Engine{
     PHANTOMJS(){
         @Override
         protected PhantomJSDriver browser() {
-            return new PhantomJSDriver(new DesiredCapabilities());
+            return new PhantomJSDriver(DesiredCapabilities.phantomjs());
         }
 
         @Override
