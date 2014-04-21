@@ -36,6 +36,9 @@ cauli-server
 ######JQuery定位方式和selenium定位方式的混用
         find("id->kw1")
         find("#kw1")
+cauli-ui的定位方式是分两种的，一种是原生的支持selenium的定位方式，一种是jquery的定位方式，jquery的定位方式可以选择纯js注入执行，也可以使用不注入的方式。
+
+
 
 
 
