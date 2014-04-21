@@ -90,7 +90,13 @@ public class Auto {
     public static IElement $(String jquery){
     	return browser().currentPage().$(jquery);
     }
+    public static IElement find(String location){
+        return currentPage().find(location);
+    }
 
+    public static <T>T find(Class<T> clazz,String location){
+        return currentPage().find(clazz,location);
+    }
 
     public static void maxWindow(){
         browser().maxWindow();
