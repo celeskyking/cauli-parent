@@ -4,6 +4,47 @@ cauli-parent
 一个基于junit和selenium的测试框架，包含一些mock的控件..
 
 
+
+Maven下载
+--------
+         <dependencies>
+                <dependency>
+                    <groupId>com.github.celeskyking.ui</groupId>
+                    <artifactId>cauli-ui</artifactId>
+                    <version>1.1-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.1</version>
+                        <configuration>
+                            <source>1.6</source>
+                            <target>1.6</target>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <repositories>
+                <repository>
+                    <id>qa_nexus</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </repository>
+            </repositories>
+
+项目目前只上传到了Maven中央仓库的SNAPSHOT仓库中，未正式提交release版本，目前版本随时都有更新..
+
+
 cauli-test
 ----------
 
