@@ -52,9 +52,6 @@ public class ParameterGenerator implements ParameterProvider {
             this.fileGenerator = FileGeneratorFactory.createFileGenerator(file, method.getMethod(), getReadType());
         }
         List<RowParameter> rowParameters = fileGenerator.generator();
-//        if(rowParameters.size()!=classes.length){
-//            throw new RuntimeException("参数化数据和方法参数个数不匹配，请检查..");
-//        }
         for (RowParameter parameter : rowParameters) {
             try {
                 FrameworkMethodWithParameters parameters = parseBeanMethod(method.getMethod(), parameter);
@@ -102,7 +99,7 @@ public class ParameterGenerator implements ParameterProvider {
                     }
                 }
                 objects[j] = object;
-            } else if (method.isAnnotationPresent(SQL.class)){
+            } else if (MethodUtils.isParameterAnnotationPresent(method,SQL.class)){
                 Field field = MethodUtils.getParameterAnnotation(method,Field.class,j);
                 SQL sql = method.getAnnotation(SQL.class);
                 objects[j]= setDBVaule(clazz,field,sql);
