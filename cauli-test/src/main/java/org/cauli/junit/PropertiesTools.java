@@ -1,5 +1,7 @@
 package org.cauli.junit;
 
+import jodd.io.FileUtil;
+
 import java.io.*;
 import java.util.*;
 
@@ -44,8 +46,12 @@ public class PropertiesTools {
 	 * @param fullPath 指定的文件地址,带有后缀".properties"的
 	 * */
 	public static void savePropertiesFile(Properties properties,String fullPath,String comments){
-		MyFile.createFile(fullPath);
-		try {
+        try {
+            FileUtil.touch(fullPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
 			FileOutputStream outputStream=new FileOutputStream(new File(fullPath));
 			properties.store(outputStream, comments);
 		} catch (FileNotFoundException e) {

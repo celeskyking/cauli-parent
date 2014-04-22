@@ -3,8 +3,6 @@ package org.cauli.ui.selenium;
 
 import org.cauli.ui.selenium.browser.*;
 import org.cauli.ui.selenium.page.CurrentPage;
-import org.cauli.ui.selenium.page.Frame;
-import org.cauli.ui.selenium.page.SourcePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,9 +2,11 @@ package org.cauli.ui.selenium.element;
 
 import org.apache.commons.io.IOUtils;
 import org.cauli.ui.selenium.browser.IBrowser;
+import org.cauli.ui.selenium.listener.ActionListener;
 import org.cauli.ui.selenium.listener.ActionListenerProxy;
 import org.junit.Assert;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.slf4j.Logger;
@@ -619,7 +621,14 @@ public class CauliElement implements IElement {
 
     @Override
     public void contextClick() {
-       this.actions.contextClick(this.element).build().perform();
+        ActionListenerProxy.getDispatcher().beforeContextClick();
+        if(isExist()){
+            this.actions.contextClick(this.element).build().perform();
+        }else{
+            logger.error("[" + id + "]元素查找失败，可能这个元素不存在，元素处contextClick失败！");
+            throw new NoSuchElementException("["+id+"]元素查找失败，可能这个元素不存在，元素处contextClick失败！");
+        }
+        ActionListenerProxy.getDispatcher().afterContextClick();
     }
 
 
@@ -629,6 +638,7 @@ public class CauliElement implements IElement {
 	}
 	
 	public void keyPress(Keys key){
+        ActionListenerProxy.getDispatcher().beforekeyPress();
         if(isExist()){
             this.element.sendKeys(key);
             logger.info("["+id+"]元素处按住左键");
@@ -636,9 +646,11 @@ public class CauliElement implements IElement {
             logger.error("["+id+"]元素查找失败，可能这个元素不存在，元素处按住左键失败！");
             throw new NoSuchElementException("["+id+"]元素查找失败，可能这个元素不存在，元素处按住左键失败！");
         }
+        ActionListenerProxy.getDispatcher().afterkeyPress();
 	}
 	
 	public void release(){
+        ActionListenerProxy.getDispatcher().beforeRelease();
         if(isExist()){
             this.actions.release(this.element).build().perform();
             logger.info("["+id+"]元素处松开鼠标或者按键");
@@ -646,11 +658,12 @@ public class CauliElement implements IElement {
             logger.error("["+id+"]元素查找失败，可能这个元素不存在，鼠标或者按键失败！");
             throw new NoSuchElementException("["+id+"]元素查找失败，可能这个元素不存在，鼠标或者按键失败！");
         }
-
+        ActionListenerProxy.getDispatcher().afterRelease();
 	}
 
 	@Override
 	public void keyPress(String keys) {
+        ActionListenerProxy.getDispatcher().beforekeyPress();
         if(isExist()){
             this.element.sendKeys(Keys.chord(keys));
             logger.info("["+id+"]元素处按住左键");
@@ -658,7 +671,7 @@ public class CauliElement implements IElement {
             logger.error("["+id+"]元素查找失败，可能这个元素不存在，元素处按住左键失败！");
             throw new NoSuchElementException("["+id+"]元素查找失败，可能这个元素不存在，元素处按住左键失败！");
         }
-
+        ActionListenerProxy.getDispatcher().afterkeyPress();
 	}
 
 

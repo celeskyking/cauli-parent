@@ -99,11 +99,7 @@ public class ParameterGenerator implements ParameterProvider {
                     }
                 }
                 objects[j] = object;
-            } else if (MethodUtils.isParameterAnnotationPresent(method,SQL.class)){
-                Field field = MethodUtils.getParameterAnnotation(method,Field.class,j);
-                SQL sql = method.getAnnotation(SQL.class);
-                objects[j]= setDBVaule(clazz,field,sql);
-            } else {
+            }  else {
                 String string = rowParameter.getParams().get(j);
                 objects[j]= TypeConverterManager.convertType(string,clazz);
             }
@@ -112,52 +108,5 @@ public class ParameterGenerator implements ParameterProvider {
         DefaultInfoProvider infoProvider = new DefaultInfoProvider();
         FrameworkMethodWithParameters frameworkMethodWithParameters = new FrameworkMethodWithParameters(method, objects, infoProvider.testInfo(method, objects));
         return frameworkMethodWithParameters;
-    }
-
-    /**
-     *
-     * @param clazz 作为一个方法的参数必须当存在一个注解为Field的时候才能够调用此方法
-     * */
-    private Object setDBVaule(Class clazz,Field field,SQL sql) {
-        Object object=null;
-        String id = sql.id();
-        String dbSql = sql.value();
-
-        DBCore dbCore = DbManager.getDBCore(id);
-        if(dbCore==null){
-            logger.error("无法查找到该数据库...{}",id);
-            throw new RuntimeException("查找数据库失败.."+id);
-        }
-        if(ClassUtils.isSimpleType(clazz)){
-            if(org.apache.commons.lang3.StringUtils.startsWith(dbSql.toLowerCase(),"select")){
-                String fieldValue = field.value();
-                List<Map<String,Object>> maps = dbCore.queryForList(dbSql);
-                if(ClassUtils.isListType(clazz)){
-                    object=maps;
-                }else if(ClassUtils.isMapType(clazz)){
-                    if(maps!=null&&maps.size()!=0){
-                        object= maps.get(0);
-                    }
-                }else{
-                    if(maps!=null&&maps.size()!=0){
-                        object= maps.get(0).get(fieldValue);
-                    }
-                    if(object==null){
-                        throw new RuntimeException("查询数据库的时候出现了错误..");
-                    }
-                }
-            }
-        }else{
-            //必须为bean
-            Class<? extends RowMapper> typeClass = field.mapper();
-            try {
-                RowMapper rowMapper = typeClass.newInstance();
-                object=dbCore.query(dbSql,rowMapper);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("数据库的参数配置有错误...",e);
-            }
-        }
-        return object;
     }
 }
