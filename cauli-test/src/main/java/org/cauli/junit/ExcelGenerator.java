@@ -32,6 +32,9 @@ public class ExcelGenerator extends FileGenerator{
                 this.sheet=this.workbook.getSheetAt(0);
             }else{
                 this.sheet=this.workbook.getSheet(method.getName());
+                if(this.sheet==null){
+                    this.sheet=this.workbook.getSheetAt(0);
+                }
             }
 
         }

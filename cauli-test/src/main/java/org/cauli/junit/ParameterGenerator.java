@@ -29,7 +29,7 @@ public class ParameterGenerator implements ParameterProvider {
     private File file;
     private FileGenerator fileGenerator;
     private String readType;
-    private Logger logger = LoggerFactory.getLogger(ParameterGenerator.class);
+    //private Logger logger = LoggerFactory.getLogger(ParameterGenerator.class);
 
     public ParameterGenerator(File file) {
         this.file = file;
@@ -95,12 +95,12 @@ public class ParameterGenerator implements ParameterProvider {
                 for (int i = 0; i < headers.size(); i++) {
                     if (headers.get(i).contains(value)) {
                         String beanValue = org.apache.commons.lang3.StringUtils.substringAfter(headers.get(i), ".");
-                        BeanUtils.setProperty(object, beanValue, rowParameter.getParams().get(i));
+                        BeanUtils.setProperty(object, beanValue, valueTransfer(rowParameter.getParams().get(i)));
                     }
                 }
                 objects[j] = object;
             }  else {
-                String string = rowParameter.getParams().get(j);
+                String string = valueTransfer(rowParameter.getParams().get(j));
                 objects[j]= TypeConverterManager.convertType(string,clazz);
             }
             j++;
@@ -108,5 +108,15 @@ public class ParameterGenerator implements ParameterProvider {
         DefaultInfoProvider infoProvider = new DefaultInfoProvider();
         FrameworkMethodWithParameters frameworkMethodWithParameters = new FrameworkMethodWithParameters(method, objects, infoProvider.testInfo(method, objects));
         return frameworkMethodWithParameters;
+    }
+
+
+    private String valueTransfer(String rowValue){
+        if("<null>".equalsIgnoreCase(rowValue)){
+            return null;
+        }else if("<empty>".equalsIgnoreCase(rowValue)){
+            return "";
+        }
+        return rowValue;
     }
 }
