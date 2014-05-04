@@ -39,6 +39,11 @@
         <module>cauli-ui</module>
         <module>cauli-test</module>
         <module>cauli-server</module>
+        <module>cauli-log</module>
+        <module>cauli-spring-support</module>
+        <module>cauli-mock</module>
+        <module>cauli-maven-plugin</module>
+        <module>cauli-common</module>
     </modules>
 
     <properties>
