@@ -178,7 +178,6 @@ public class CauliElement implements IElement {
         if(isExist()){
             element.click();
             logger.info("["+id+"]点击操作成功");
-
         }else{
             logger.error("["+id+"]元素查找失败，可能这个元素不存在，点击失败！");
             throw new NoSuchElementException("["+id+"]元素查找失败，可能这个元素不存在，点击失败！");

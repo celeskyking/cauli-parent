@@ -1,6 +1,9 @@
 package org.cauli.ui.test;
 
 
+import org.cauli.junit.JUnitBaseRunner;
+import org.cauli.junit.anno.Bean;
+import org.cauli.junit.anno.Param;
 import org.cauli.junit.anno.ThreadRunner;
 import org.cauli.ui.runner.CauliUIRunner;
 import org.junit.Ignore;
@@ -11,32 +14,23 @@ import org.junit.runner.RunWith;
 /**
  * Created by tianqing.wang on 14-3-31
  */
-@RunWith(CauliUIRunner.class)
+@RunWith(JUnitBaseRunner.class)
 //@Retry(1)
 //@Filter
-@ThreadRunner(threads = 2)
+//@ThreadRunner(threads = 2)
 //@Require(Engine.FIREFOX)
-@Ignore
+//@Ignore
 public class xpathTest {
 
 
-    @Test
-    //@Ignore
-    //@Tag(release = "good")
-    public void xpathTest(){
-//        go("http://www.baidu.com");
-//        $("#kw1").input(text/
-//        $("#su1").click();
-//        quit();
-        System.out.println("test_first");
-        //quit();
-    }
+    //@Test
+    @Param("test.xls")
+    public void xlsTest(@Bean("user")UserDto userDto){
+        if(userDto.getName()==null){
+            System.out.println("null!!!!");
+        }else{
+            System.out.println(userDto.getName()+"->"+userDto.getAge());
+        }
 
-    @Test
-    //@Ignore
-    //@Tag(release = "good")
-    public void xpathTwo(){
-        System.out.println("test");
-        //quit();
     }
 }

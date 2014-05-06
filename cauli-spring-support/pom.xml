@@ -10,6 +10,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cauli-spring-support</artifactId>
+    <groupId>${parent.groupId}</groupId>
+    <version>${parent.version}</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>3.2.8.RELEASE</version>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -304,7 +304,7 @@ public class Page implements ICurrentPage {
 
     @Override
     public String dealPrompt(boolean isyes, String text) {
-        ActionListenerProxy.getDispatcher().beforedealConfirm();
+        ActionListenerProxy.getDispatcher().beforedealPrompt();
         String alerMessage=null;
         try{
             Alert alert=this.browser.getCurrentBrowserDriver().switchTo().alert();
@@ -315,10 +315,10 @@ public class Page implements ICurrentPage {
             }else{
                 alert.dismiss();
             }
-            ActionListenerProxy.getDispatcher().afterdealConfirm();
+            ActionListenerProxy.getDispatcher().afterdealPrompt();
             return alerMessage;
         }catch(Exception e){
-            ActionListenerProxy.getDispatcher().afterdealConfirm();
+            ActionListenerProxy.getDispatcher().afterdealPrompt();
             logger.warn("["+this.commit+"]没有找到prompt窗口，程序将继续运行，可能会出现异常，请查看代码是否正确");
             return null;
         }

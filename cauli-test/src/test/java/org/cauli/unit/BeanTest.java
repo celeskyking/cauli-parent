@@ -28,16 +28,7 @@ public class BeanTest {
     @Test
     @Tag(release = "test_card")
     public void userTest() throws InvocationTargetException, IllegalAccessException, InterruptedException {
-        Thread.sleep(4000);
-        Map<String,Object> map = Maps.newHashMap();
-        Brother brother = new Brother();
-        brother.setAmount(new BigDecimal("0.01"));
-        map.put("brother",brother);
-        User user = new User();
-        long start = System.currentTimeMillis();
-        BeanUtils.copyProperties(map,user);
-        //System.out.println(System.currentTimeMillis() - start);
-        System.out.println(JSON.toJSONString(user, true));
+
     }
 
     @Test
