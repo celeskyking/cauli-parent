@@ -39,11 +39,11 @@
         <module>cauli-ui</module>
         <module>cauli-test</module>
         <module>cauli-server</module>
-        <module>cauli-log</module>
-        <module>cauli-spring-support</module>
-        <module>cauli-mock</module>
-        <module>cauli-maven-plugin</module>
-        <module>cauli-common</module>
+        <!--<module>cauli-log</module>-->
+        <!--<module>cauli-spring-support</module>-->
+        <!--<module>cauli-mock</module>-->
+        <!--<module>cauli-maven-plugin</module>-->
+        <!--<module>cauli-common</module>-->
     </modules>
 
     <properties>
@@ -283,19 +283,19 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-gpg-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>sign-artifacts</id>-->
+                        <!--<phase>verify</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>sign</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 

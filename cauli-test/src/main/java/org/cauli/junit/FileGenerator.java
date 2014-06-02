@@ -24,6 +24,7 @@ public abstract class FileGenerator {
         setType("row");
     }
 
+
     abstract public List<RowParameter>  generator();
 
     abstract public List<String> getHeaders();

@@ -5,5 +5,5 @@ package org.cauli.junit;
  */
 public interface GeneratorConverter {
 
-    public <T>T convert(Class<T> clazz,FileGenerator fileGenerator);
+    public <T  extends ParameterProvider>T convert(Class<T> clazz,FileGenerator fileGenerator);
 }
