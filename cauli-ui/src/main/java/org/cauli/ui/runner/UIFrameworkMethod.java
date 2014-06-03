@@ -12,12 +12,9 @@ public class UIFrameworkMethod extends FrameworkMethodWithParameters{
 
     private Engine engine;
     protected Object[] parameters;
-    protected Integer threadPoolSize;
-    protected long timeout;
 
-    public UIFrameworkMethod(Method method, Object[] parameters, Integer threadPoolSize, long timeout, String info) {
-        super(method,parameters,threadPoolSize,timeout,info);
-    }
+
+
 
     public UIFrameworkMethod(Method method,Engine engine){
         super(method);
@@ -25,7 +22,7 @@ public class UIFrameworkMethod extends FrameworkMethodWithParameters{
     }
 
     public UIFrameworkMethod(Method method,Object[] parameters,String info,Engine engines){
-        this(method,parameters,null,3000,info);
+        super(method,parameters,info);
         this.engine=engines;
     }
 

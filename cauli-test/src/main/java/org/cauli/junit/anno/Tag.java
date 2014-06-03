@@ -13,4 +13,5 @@ public @interface Tag {
 
     String feature() default "default";
     String release();
+    int level() default 1;
 }
