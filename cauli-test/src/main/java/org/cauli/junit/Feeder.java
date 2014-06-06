@@ -2,13 +2,18 @@
 package org.cauli.junit;
 
 import org.cauli.junit.build.FrameworksBuilderFactory;
+import org.cauli.junit.statement.InterceptorStatement;
 import org.junit.Test;
+import org.junit.internal.runners.model.ReflectiveCallable;
+import org.junit.internal.runners.statements.Fail;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,13 +50,11 @@ public class Feeder extends BlockJUnit4ClassRunner {
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
 		if (children == null) {
-			children = new ArrayList<FrameworkMethod>();
 			TestClass testClass = getTestClass();
-			children= FrameworksBuilderFactory.getInstance().getFrameworkBuilder().build(testClass);
+			List<FrameworkMethodWithParameters> list= FrameworksBuilderFactory.getInstance().getFrameworkBuilder().build(testClass);
+            children.addAll(list);
+            MethodManager.load(children);
 		}
 		return children;
 	}
-
-
-
 }

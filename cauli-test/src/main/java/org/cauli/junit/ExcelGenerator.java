@@ -17,7 +17,7 @@ public class ExcelGenerator extends FileGenerator{
     private Workbook workbook;
     private Sheet sheet;
 
-    public ExcelGenerator(File excel,String type,Method method){
+    public ExcelGenerator(File excel,String type){
         super(excel,type);
         if(!excel.exists()){
             throw new RuntimeException("没有找到excel文件");
@@ -28,14 +28,7 @@ public class ExcelGenerator extends FileGenerator{
                 e.printStackTrace();
                 throw new RuntimeException("初始化excel文件的时候出现了错误");
             }
-            if(excel.getName().contains(method.getName())){
-                this.sheet=this.workbook.getSheetAt(0);
-            }else{
-                this.sheet=this.workbook.getSheet(method.getName());
-                if(this.sheet==null){
-                    this.sheet=this.workbook.getSheetAt(0);
-                }
-            }
+            this.sheet=this.workbook.getSheetAt(0);
 
         }
         this.headers=Lists.newArrayList();

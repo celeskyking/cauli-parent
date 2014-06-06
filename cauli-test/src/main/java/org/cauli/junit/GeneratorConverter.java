@@ -1,9 +1,15 @@
 package org.cauli.junit;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
 /**
  * Created by celeskyking on 2014/4/23
  */
-public interface GeneratorConverter {
+public interface GeneratorConverter<K extends Annotation,V> {
 
-    public <T  extends ParameterProvider>T convert(Class<T> clazz,FileGenerator fileGenerator);
+    public V convert(K t, Class<V> v,RowParameter parameter,List<String> headers) throws IllegalAccessException, InstantiationException, InvocationTargetException;
+
+    public Class<K> genAnnotationType();
 }

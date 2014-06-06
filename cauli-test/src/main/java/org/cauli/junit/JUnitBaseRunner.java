@@ -11,6 +11,7 @@ import org.cauli.junit.anno.CauliRule;
 import org.cauli.junit.anno.Listener;
 import org.cauli.junit.statement.InterceptorStatement;
 import org.junit.Rule;
+import org.junit.internal.runners.statements.InvokeMethod;
 import org.junit.rules.TestRule;
 import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
@@ -29,6 +30,7 @@ import java.util.Set;
 public class JUnitBaseRunner extends Feeder{
     private Logger logger = LoggerFactory.getLogger(JUnitBaseRunner.class);
     private CauliFilter filter;
+    private int runLevel;
 
     public CauliFilter getFilter() {
         return filter;
@@ -58,8 +60,13 @@ public class JUnitBaseRunner extends Feeder{
     }
 
     protected Statement methodInvoker(FrameworkMethod method, Object test) {
-        InterceptorStatement statement = new InterceptorStatement(method, test);
-        return statement;
+        if(method instanceof FrameworkMethodWithParameters){
+            InterceptorStatement statement = new InterceptorStatement((FrameworkMethodWithParameters) method, test);
+            return statement;
+        }else{
+            return new InvokeMethod(method,test);
+        }
+
     }
 
 

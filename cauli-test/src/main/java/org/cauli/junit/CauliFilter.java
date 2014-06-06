@@ -5,9 +5,6 @@ import org.cauli.junit.anno.Tag;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by celeskyking on 14-3-1
  */

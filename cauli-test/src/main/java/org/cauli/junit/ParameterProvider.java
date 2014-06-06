@@ -1,5 +1,6 @@
 package org.cauli.junit;
 
+import org.cauli.exception.FileGeneratorException;
 import org.junit.runners.model.FrameworkMethod;
 
 import java.io.IOException;
@@ -10,5 +11,5 @@ import java.util.List;
  */
 public interface ParameterProvider {
 
-    public List<FrameworkMethodWithParameters> generator(FrameworkMethod method) throws IOException;
+    public List<FrameworkMethodWithParameters> generator(FrameworkMethod method) throws IOException, FileGeneratorException;
 }

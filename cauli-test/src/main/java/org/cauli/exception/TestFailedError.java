@@ -1,13 +1,12 @@
-package org.cauli.junit.exception;
+package org.cauli.exception;
 
 /**
  * @author 王天庆
  * */
-public class TestFailedError extends ContorlError {
+public class TestFailedError extends CauliException {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 6284386446873779699L;
 	public TestFailedError(){
         super();
     }

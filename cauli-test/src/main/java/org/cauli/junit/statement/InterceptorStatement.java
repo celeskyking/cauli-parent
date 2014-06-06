@@ -1,11 +1,9 @@
 package org.cauli.junit.statement;
 
-import org.apache.commons.lang3.StringUtils;
-import org.cauli.db.DBCore;
-import org.cauli.db.DbManager;
-import org.cauli.db.annotation.SQL;
-import org.cauli.junit.anno.Retry;
-import org.cauli.junit.exception.TestFailedError;
+import jodd.util.StringUtil;
+import org.cauli.junit.FrameworkMethodWithParameters;
+import org.cauli.junit.MethodManager;
+import org.cauli.exception.TestFailedError;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
@@ -17,12 +15,20 @@ import java.util.List;
 
 public class InterceptorStatement extends Statement {
 	private Logger logger = LoggerFactory.getLogger(InterceptorStatement.class);
-	protected final FrameworkMethod testMethod;
+	protected final FrameworkMethodWithParameters testMethod;
     protected Object target;
-    protected int times=0;
-	public InterceptorStatement(FrameworkMethod testMethod, Object target) {
-		this.testMethod=testMethod;
+    private int level;
+    private InterceptorStatement dependencyStatement;
+    protected int retryTimes=0;
+    private int runLevel;
+	public InterceptorStatement(FrameworkMethodWithParameters methodWithParameters, Object target) {
+		this.testMethod=methodWithParameters;
 		this.target=target;
+        String depName = methodWithParameters.getDependencyMethodName();
+        if(StringUtil.isNotEmpty(depName)){
+            this.dependencyStatement=new InterceptorStatement(MethodManager.get(depName),target);
+        }
+        this.level=methodWithParameters.getLevel();
 	}
     private List<Interceptor> interceptors = new ArrayList<Interceptor>();
 
@@ -44,25 +50,32 @@ public class InterceptorStatement extends Statement {
     }
 
     protected void runRetry(){
-        execSQL();
-        initRetryTimes();
-        for(int i=0;i<=times;i++){
+        for(Interceptor interceptor:interceptors){
+            interceptor.interceptorBeforeRetryTimeConfig(this);
+        }
+        for(int i=0;i<=retryTimes;i++){
             try{
                 for(Interceptor interceptor:interceptors){
-                    interceptor.interceptorBefore(testMethod, target);
+                    interceptor.interceptorBefore(this);
                 }
-                testMethod.invokeExplosively(target);
+                if(this.dependencyStatement==null){
+                    testMethod.invokeExplosively(target);
+                }else{
+                    this.dependencyStatement.evaluate();
+                    testMethod.invokeExplosively(target);
+                }
+
                 for(Interceptor interceptor:interceptors){
-                    interceptor.interceptorAfter(testMethod, target);
+                    interceptor.interceptorAfter(this);
                 }
                 break;
             }catch(Throwable e){
                 e.printStackTrace();
                 for(Interceptor interceptor:interceptors){
-                    interceptor.interceptorAfterForce(testMethod, target);
+                    interceptor.interceptorAfterForce(this);
                 }
                 logger.error("用例执行失败了,异常信息->" + e.getMessage());
-                if(i==times){
+                if(i==retryTimes){
                     throw new TestFailedError("["+this.testMethod.getName()+"]用例执行失败了！",e);
                 }else{
                     logger.info("用例执行失败，重新执行失败的方法-->"+testMethod.getName());
@@ -71,46 +84,48 @@ public class InterceptorStatement extends Statement {
         }
     }
 
-    public int getTimes() {
-        return times;
+    public int getRetryTimes() {
+        return retryTimes;
     }
 
-    public void setTimes(int times) {
-        this.times = times;
+    public void setRetryTimes(int retryTimes) {
+        this.retryTimes = retryTimes;
     }
 
     public void setTarget(Object target) {
         this.target = target;
     }
 
-    private void execSQL(){
-        if(getTestMethod().getMethod().isAnnotationPresent(SQL.class)){
-            SQL sql = getTestMethod().getAnnotation(SQL.class);
-            String id = sql.id();
-            String value = sql.value();
-            if(!StringUtils.startsWith(value.toLowerCase(),"select")){
-                if(DbManager.getDBCore(id)!=null){
-                    DBCore core = DbManager.getDBCore(id);
-                    core.update(value);
-                }
-            }
-        }
+
+
+
+
+
+    public int getLevel() {
+        return level;
     }
 
-    private void initRetryTimes(){
-        if(getTestMethod().getMethod().isAnnotationPresent(Retry.class)){
-            setTimes(getTestMethod().getMethod().getAnnotation(Retry.class).value());
-            logger.info("["+getTestMethod().getName()+"]>>>这个case执行失败的话会被重新执行"+getTimes()+"次");
-            //System.out.println(this.testMethod.getMethod().getDeclaringClass().getName());
-        }else if(getTestMethod().getMethod().getDeclaringClass().isAnnotationPresent(Retry.class)){
-            setTimes(getTestMethod().getMethod().getDeclaringClass().getAnnotation(Retry.class).value());
-            logger.info("["+getTestMethod().getName()+"]>>>这个case执行失败的话会被重新执行"+getTimes()+"次");
-        }else{
-            setTimes(0);
-        }
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public InterceptorStatement getDependencyStatement() {
+        return dependencyStatement;
+    }
+
+    public void setDependencyStatement(InterceptorStatement dependencyStatement) {
+        this.dependencyStatement = dependencyStatement;
     }
 
     public void addInterceptor(Interceptor interceptor){
         interceptors.add(interceptor);
+    }
+
+    public int getRunLevel() {
+        return runLevel;
+    }
+
+    public void setRunLevel(int runLevel) {
+        this.runLevel = runLevel;
     }
 }

@@ -26,13 +26,6 @@ public class UIFrameworkMethod extends FrameworkMethodWithParameters{
         this.engine=engines;
     }
 
-    public Integer getThreadPoolSize() {
-        return threadPoolSize;
-    }
-
-    public long getTimeout() {
-        return timeout;
-    }
 
     @Override
     public Object invokeExplosively(Object target, Object... parameters) throws Throwable {

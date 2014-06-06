@@ -14,6 +14,9 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 	
 	protected Object[] parameters;
 	protected String info;
+    private String name;
+    private int level;
+    private String dependencyMethodName;
 
 
     public FrameworkMethodWithParameters(Method method){
@@ -24,6 +27,15 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
         super(method);
         this.parameters=parameters;
         this.info=info;
+    }
+
+    public FrameworkMethodWithParameters(Method method,Object[] parameters,String info,int level,String dependencyMethodName,String tagName){
+        super(method);
+        this.parameters=parameters;
+        this.info=info;
+        this.level=level;
+        this.dependencyMethodName=dependencyMethodName;
+        this.name=tagName;
     }
 
 
@@ -53,5 +65,30 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public String getDependencyMethodName() {
+        return dependencyMethodName;
+    }
+
+    public void setDependencyMethodName(String dependencyMethodName) {
+        this.dependencyMethodName = dependencyMethodName;
     }
 }

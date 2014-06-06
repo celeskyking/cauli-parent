@@ -1,4 +1,4 @@
-package org.cauli.junit.exception;
+package org.cauli.exception;
 
 /**
  * Created with IntelliJ IDEA.
@@ -7,11 +7,7 @@ package org.cauli.junit.exception;
  * Time: 下午3:26
  * To change this template use File | Settings | File Templates.
  */
-public class ConfigWrongException extends ContorlError {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class ConfigWrongException extends CauliException {
 
 	public ConfigWrongException(){
         super();

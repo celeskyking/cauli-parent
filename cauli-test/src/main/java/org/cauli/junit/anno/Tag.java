@@ -10,8 +10,8 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Inherited
 public @interface Tag {
-
+    String name();
     String feature() default "default";
     String release();
-    int level() default 1;
+    int level() default 2;
 }
