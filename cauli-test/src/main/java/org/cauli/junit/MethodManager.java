@@ -1,8 +1,10 @@
 package org.cauli.junit;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.cauli.junit.anno.Dependency;
+import org.cauli.junit.anno.Tag;
 import org.junit.runners.model.FrameworkMethod;
 
 import java.util.List;
@@ -12,22 +14,24 @@ import java.util.Map;
  * Created by tianqing.wang on 2014/6/5
  */
 public class MethodManager {
-    private static Map<String,FrameworkMethodWithParameters> methodMap= Maps.newHashMap();
+    private static Map<String,List<FrameworkMethodWithParameters>> methodMap= Maps.newHashMap();
 
 
-    public static void load(List<FrameworkMethod> methods){
-        for(FrameworkMethod method:methods){
-            if(method.getMethod().isAnnotationPresent(Dependency.class)){
-                Dependency dependency = method.getAnnotation(Dependency.class);
-                if(method instanceof FrameworkMethodWithParameters){
-                    methodMap.put(dependency.value(), (FrameworkMethodWithParameters) method);
-                }
-
+    public static void load(List<FrameworkMethodWithParameters> methods){
+        for(FrameworkMethodWithParameters method:methods){
+            List<FrameworkMethodWithParameters> list;
+            if(methodMap.containsKey(method.getName())){
+                list= methodMap.get(method.getName());
+                list.add(method);
+            }else{
+                list=Lists.newArrayList();
+                list.add(method);
             }
+            methodMap.put(method.getName(),list);
         }
     }
 
-    public static FrameworkMethodWithParameters get(String name){
+    public static List<FrameworkMethodWithParameters> get(String name){
         return methodMap.get(name);
     }
 

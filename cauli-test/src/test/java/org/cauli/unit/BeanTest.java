@@ -1,43 +1,40 @@
 package org.cauli.unit;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
-import org.cauli.instrument.BeanUtils;
-import org.cauli.junit.JUnitBaseRunner;
-import org.cauli.junit.anno.Filter;
-import org.cauli.junit.anno.Param;
-import org.cauli.junit.anno.Tag;
-import org.cauli.junit.anno.ThreadRunner;
+import org.cauli.junit.CauliRunner;
+import org.cauli.junit.anno.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.Map;
-
 /**
  * Created by celeskyking on 2014/3/30
  */
-@RunWith(JUnitBaseRunner.class)
-@Ignore
-@Filter
-@ThreadRunner(threads = 2)
+@RunWith(CauliRunner.class)
 public class BeanTest {
 
     @Test
-    @Tag(release = "test_card")
-    public void userTest() throws InvocationTargetException, IllegalAccessException, InterruptedException {
-
+    @Tag(release = "test_card",name = "user")
+    //@Dependency("test")
+    @Ignore
+    public void userTest() {
+        System.out.println("依赖我的");
     }
 
     @Test
-    @Tag(release = "card")
+    @Tag(release = "card",name = "param",level = 0)
     @Param("test.txt")
-    //@Source("test.xls")
-    public void paramTest(String name) throws InterruptedException {
-        Thread.sleep(4000);
+    @Ignore
+    public void paramTest(@Named("name")String name,@Bean("user")User user) throws InterruptedException {
+        //assertThat("校验参数化", name + "___" + user.getBrother().getAmount(), containsString("北京___0.01"));
         System.out.println(name);
+    }
+
+
+    @Test
+    @Tag(release = "1",name="test",level = 2)
+    @Dependency("param")
+    public void test(){
+        System.out.println("just for test");
     }
 
 

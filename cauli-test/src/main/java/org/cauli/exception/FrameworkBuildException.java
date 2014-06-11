@@ -3,7 +3,7 @@ package org.cauli.exception;
 /**
  * Created by tianqing.wang on 2014/6/6
  */
-public class FrameworkBuildException  extends Exception{
+public class FrameworkBuildException  extends RuntimeException{
 
     public FrameworkBuildException() {
         super();

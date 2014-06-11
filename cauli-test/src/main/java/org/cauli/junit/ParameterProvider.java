@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface ParameterProvider {
 
-    public List<FrameworkMethodWithParameters> generator(FrameworkMethod method) throws IOException, FileGeneratorException;
+    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException;
 }

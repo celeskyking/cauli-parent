@@ -1,2 +1,3 @@
-地点
-北京
+name|user.brother.amount
+北京|0.01
+天津|0.02

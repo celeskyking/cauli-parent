@@ -1,64 +1,67 @@
 package org.cauli.junit;
 
+
 import jodd.util.StringUtil;
-import org.cauli.junit.anno.Tag;
-import org.junit.runner.Description;
-import org.junit.runner.manipulation.Filter;
 
 /**
- * Created by celeskyking on 14-3-1
+ * Created by tianqing.wang on 2014/6/9
  */
-public class CauliFilter extends Filter{
-    private String filterContent="";
-    @Override
-    public boolean shouldRun(Description description) {
-        if(!description.getTestClass().isAnnotationPresent(org.cauli.junit.anno.Filter.class)){
-            if(null!=filterContent&&!getFilterContent().equals("")){
-                return isMatch(getFilterContent(),description);
-            }
-            return true;
+public class CauliFilter {
+
+    private int runLevel;
+    private String runFeature;
+    private String runRelease;
+
+
+    public int getRunLevel() {
+        return runLevel;
+    }
+
+    protected boolean isMatch(FrameworkMethodWithParameters frameworkMethodWithParameters){
+        if(frameworkMethodWithParameters.getLevel()<=runLevel){
+            return isMatchFeatureAndRelease(frameworkMethodWithParameters);
         }else{
-            org.cauli.junit.anno.Filter filter = description.getTestClass().getAnnotation(org.cauli.junit.anno.Filter.class);
-            return isMatch(filter.feature()+"."+filter.release(),description);
-        }
-    }
-
-    @Override
-    public String describe() {
-        return "all tests";
-    }
-
-    protected boolean isMatch(String text,Description description){
-        String filterFeature = StringUtil.split(text,".")[0];
-        String filterRelease = "";
-        if(text.contains(".")){
-            filterRelease = StringUtil.split(text,".")[1];
-        }
-        org.cauli.junit.anno.Tag tag = description.getAnnotation(Tag.class);
-        if(null==tag){
             return false;
         }
-        if("".equals(filterRelease)){
-            if (filterFeature.equals(tag.feature())){
-                return true;
-            }else{
-                return false;
-            }
+    }
+
+    public void setRunLevel(int runLevel) {
+        this.runLevel = runLevel;
+    }
+
+    public String getRunFeature() {
+        return runFeature;
+    }
+
+    public void setRunFeature(String runFeature) {
+        this.runFeature = runFeature;
+    }
+
+    public String getRunRelease() {
+        return runRelease;
+    }
+
+    public void setRunRealease(String runRealease) {
+        this.runRelease = runRealease;
+    }
+
+
+    private boolean isMatchFeatureAndRelease(FrameworkMethodWithParameters method){
+        if("default".equals(runFeature)){
+            return true;
         }else{
-            if(filterFeature.equals(tag.feature())&&filterRelease.equals(tag.release())){
-                return true;
+            if(runFeature.equals(method.getFeature())){
+                if(StringUtil.isEmpty(runRelease)||StringUtil.isEmpty(method.getRelease())){
+                    return true;
+                }else if(StringUtil.equals(runRelease,method.getRelease())){
+                    return true;
+                }else{
+                    return false;
+                }
             }else{
                 return false;
             }
         }
 
-    }
-
-    public String getFilterContent() {
-        return filterContent;
-    }
-
-    public void setFilterContent(String filter) {
-        this.filterContent = filter;
     }
 }

@@ -4,7 +4,10 @@ import com.google.common.collect.Lists;
 import org.cauli.exception.ConverterError;
 import org.cauli.exception.FileGeneratorException;
 import org.cauli.instrument.MethodUtils;
+import org.cauli.junit.anno.Dependency;
 import org.cauli.junit.anno.Param;
+import org.cauli.junit.anno.Tag;
+import org.cauli.junit.build.NamedConverter;
 import org.cauli.junit.info.DefaultInfoProvider;
 import org.junit.runners.model.FrameworkMethod;
 
@@ -49,11 +52,20 @@ public class AnnotationParameterProvider implements ParameterProvider{
     }
 
     @Override
-    public List<FrameworkMethodWithParameters> generator(FrameworkMethod method) throws IOException, FileGeneratorException {
+    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException {
         List<FrameworkMethodWithParameters> result = Lists.newArrayList();
-        setFile(getParamFile(method));;
+        FrameworkMethodWithParameters frameworkMethodWithParameters = new FrameworkMethodWithParameters(method.getMethod());
+        setFile(getParamFile(method));
         if (null==file||!file.exists()) {
-            result.add(new FrameworkMethodWithParameters(method.getMethod()));
+            frameworkMethodWithParameters.setDependencyMethodName(method.getAnnotation(Dependency.class) == null ? null : method.getAnnotation(Dependency.class).value());
+            Tag tag = frameworkMethodWithParameters.getAnnotation(Tag.class);
+            if(tag!=null){
+                frameworkMethodWithParameters.setName(tag.name());
+                frameworkMethodWithParameters.setLevel(tag.level());
+            }else{
+                frameworkMethodWithParameters.setName(method.getMethod().getName());
+            }
+            result.add(frameworkMethodWithParameters);
             return result;
         } else {
             this.fileGenerator = FileGeneratorFactory.loadGenerator().createFileGenerator(file,readType);
@@ -75,20 +87,32 @@ public class AnnotationParameterProvider implements ParameterProvider{
     }
 
 
-    private FrameworkMethodWithParameters parseMethod(FrameworkMethod method,RowParameter parameter,List<String> headers) throws ConverterError {
-        Class[] classes = method.getMethod().getParameterTypes();
+    private FrameworkMethodWithParameters parseMethod(FrameworkMethodWithParameters frameworkMethodWithParameters,RowParameter parameter,List<String> headers) throws ConverterError {
+        Class[] classes = frameworkMethodWithParameters.getMethod().getParameterTypes();
         Object[] objects = new Object[classes.length];
         for(int i=0;i<classes.length;i++){
-            Annotation annotation = MethodUtils.getParameterOnlyAnnotation(method.getMethod(), i);
+            Class<? extends Annotation> annotationType = MethodUtils.getParameterOnlyAnnotationType(frameworkMethodWithParameters.getMethod(), i);
+            Annotation annotation = MethodUtils.getParameterOnlyAnnotation(frameworkMethodWithParameters.getMethod(),i);
             try {
-                objects[i] =GeneratorManager.getGeneratorConverter(annotation).convert(annotation,classes[i],parameter,headers);
+                GeneratorConverter converter = GeneratorManager.getGeneratorConverter(annotationType);
+                objects[i] =converter.convert(annotation,classes[i],parameter,headers);
             } catch (Exception e) {
-                throw new ConverterError("解析方法"+method.getName()+"参数bean的时候出现了错误..",e);
+                throw new ConverterError("解析方法"+frameworkMethodWithParameters.getName()+"参数bean的时候出现了错误..",e);
             }
         }
         DefaultInfoProvider infoProvider = new DefaultInfoProvider();
-        FrameworkMethodWithParameters frameworkMethodWithParameters = new FrameworkMethodWithParameters(method.getMethod(), objects, infoProvider.testInfo(method.getMethod(), objects));
-        return frameworkMethodWithParameters;
+        FrameworkMethodWithParameters method = new FrameworkMethodWithParameters(frameworkMethodWithParameters.getMethod());
+        method.setInfo(infoProvider.testInfo(method.getMethod(),objects));
+        method.setParameters(objects);
+        method.setDependencyMethodName(method.getAnnotation(Dependency.class) == null ? null : method.getAnnotation(Dependency.class).value());
+        Tag tag = method.getAnnotation(Tag.class);
+        if(tag!=null){
+            method.setName(tag.name());
+            method.setLevel(tag.level());
+        }else{
+            method.setName(method.getMethod().getName());
+        }
+        return method;
     }
 
 

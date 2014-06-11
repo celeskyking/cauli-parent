@@ -1,5 +1,6 @@
 package org.cauli.junit.statement;
 
+import com.google.common.collect.Lists;
 import jodd.util.StringUtil;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.cauli.junit.MethodManager;
@@ -18,7 +19,7 @@ public class InterceptorStatement extends Statement {
 	protected final FrameworkMethodWithParameters testMethod;
     protected Object target;
     private int level;
-    private InterceptorStatement dependencyStatement;
+    private List<InterceptorStatement> dependencyStatement= Lists.newArrayList();
     protected int retryTimes=0;
     private int runLevel;
 	public InterceptorStatement(FrameworkMethodWithParameters methodWithParameters, Object target) {
@@ -26,18 +27,21 @@ public class InterceptorStatement extends Statement {
 		this.target=target;
         String depName = methodWithParameters.getDependencyMethodName();
         if(StringUtil.isNotEmpty(depName)){
-            this.dependencyStatement=new InterceptorStatement(MethodManager.get(depName),target);
+            List<FrameworkMethodWithParameters> methods = MethodManager.get(depName);
+            for(FrameworkMethodWithParameters method:methods){
+                if(method!=null){
+                    this.dependencyStatement.add(new InterceptorStatement(method,target));
+                }
+            }
         }
         this.level=methodWithParameters.getLevel();
+        this.interceptors.add(new AnnotationInterceptor());
 	}
     private List<Interceptor> interceptors = new ArrayList<Interceptor>();
 
     @Override
 	public void evaluate() throws Throwable {
-        logger.info("*******************测试用例["+this.testMethod.getName()+"]开始执行*****************");
-        //*****我们来定义方法级别的监听器注解，可以为专门的一个方法添加注解。也可以去判断类是否有监听器的注解来实现自动的注册和卸载。
-        runRetry();
-        logger.info("*******************测试用例["+testMethod.getName()+"]执行结束****************");
+            runRetry();
 	}
 
 
@@ -61,7 +65,9 @@ public class InterceptorStatement extends Statement {
                 if(this.dependencyStatement==null){
                     testMethod.invokeExplosively(target);
                 }else{
-                    this.dependencyStatement.evaluate();
+                    for(InterceptorStatement statement:this.dependencyStatement){
+                        statement.evaluate();
+                    }
                     testMethod.invokeExplosively(target);
                 }
 
@@ -109,13 +115,6 @@ public class InterceptorStatement extends Statement {
         this.level = level;
     }
 
-    public InterceptorStatement getDependencyStatement() {
-        return dependencyStatement;
-    }
-
-    public void setDependencyStatement(InterceptorStatement dependencyStatement) {
-        this.dependencyStatement = dependencyStatement;
-    }
 
     public void addInterceptor(Interceptor interceptor){
         interceptors.add(interceptor);
@@ -127,5 +126,13 @@ public class InterceptorStatement extends Statement {
 
     public void setRunLevel(int runLevel) {
         this.runLevel = runLevel;
+    }
+
+    public List<InterceptorStatement> getDependencyStatement() {
+        return dependencyStatement;
+    }
+
+    public void setDependencyStatement(List<InterceptorStatement> dependencyStatement) {
+        this.dependencyStatement = dependencyStatement;
     }
 }

@@ -3,7 +3,7 @@ package org.cauli.exception;
 /**
  * @author 王天庆
  * */
-public class TestFailedError extends CauliException {
+public class TestFailedError extends RuntimeException {
     /**
 	 * 
 	 */

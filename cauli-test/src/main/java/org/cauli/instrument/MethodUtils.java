@@ -50,7 +50,15 @@ public class MethodUtils {
         return null;
     }
 
-    public static Annotation getParameterOnlyAnnotation(Method method,int index){
+    public static Class<? extends Annotation> getParameterOnlyAnnotationType(Method method, int index){
+        Annotation[] annotations = method.getParameterAnnotations()[index];
+        for (Annotation annotation:annotations){
+            return annotation.annotationType();
+        }
+        return null;
+    }
+
+    public static Annotation getParameterOnlyAnnotation(Method method, int index){
         Annotation[] annotations = method.getParameterAnnotations()[index];
         for (Annotation annotation:annotations){
             return annotation;

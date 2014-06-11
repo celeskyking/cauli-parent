@@ -9,17 +9,10 @@ import org.cauli.db.annotation.MySQL;
 import org.cauli.instrument.ClassPool;
 import org.cauli.junit.anno.CauliRule;
 import org.cauli.junit.anno.Listener;
-import org.cauli.junit.statement.InterceptorStatement;
 import org.junit.Rule;
-import org.junit.internal.runners.statements.InvokeMethod;
 import org.junit.rules.TestRule;
-import org.junit.runner.manipulation.NoTestsRemainException;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -28,45 +21,11 @@ import java.util.Set;
  * @author 王天庆
  * */
 public class JUnitBaseRunner extends Feeder{
-    private Logger logger = LoggerFactory.getLogger(JUnitBaseRunner.class);
-    private CauliFilter filter;
-    private int runLevel;
-
-    public CauliFilter getFilter() {
-        return filter;
-    }
-
-    public void setFilter(CauliFilter filter) {
-        this.filter = filter;
-    }
 
     public JUnitBaseRunner(final Class<?> klass)
             throws InitializationError {
         super(klass);
         setScheduler(new ExcuteScheduler(klass));
-        filter=new CauliFilter();
-        initDB();
-        initFilter();
-
-    }
-
-    protected void initFilter(){
-        try {
-            filter(filter);
-        } catch (NoTestsRemainException e) {
-            logger.warn("过滤器加载失败,将会执行所有的case..");
-            e.printStackTrace();
-        }
-    }
-
-    protected Statement methodInvoker(FrameworkMethod method, Object test) {
-        if(method instanceof FrameworkMethodWithParameters){
-            InterceptorStatement statement = new InterceptorStatement((FrameworkMethodWithParameters) method, test);
-            return statement;
-        }else{
-            return new InvokeMethod(method,test);
-        }
-
     }
 
 

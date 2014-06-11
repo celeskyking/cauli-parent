@@ -15,8 +15,10 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 	protected Object[] parameters;
 	protected String info;
     private String name;
-    private int level;
+    private int level=2;
     private String dependencyMethodName;
+    private String feature="default";
+    private String release="";
 
 
     public FrameworkMethodWithParameters(Method method){
@@ -48,7 +50,12 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 
 	@Override
 	public String toString() {
-		return getMethod().getName() + '<' + info + '>';
+        if(info==null){
+            return getMethod().getName();
+        }else{
+            return getMethod().getName() + '<' + info + '>';
+        }
+
 	}
 
     public Object[] getParameters() {
@@ -90,5 +97,21 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 
     public void setDependencyMethodName(String dependencyMethodName) {
         this.dependencyMethodName = dependencyMethodName;
+    }
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+
+    public String getRelease() {
+        return release;
+    }
+
+    public void setRelease(String release) {
+        this.release = release;
     }
 }
