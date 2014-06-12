@@ -42,5 +42,10 @@ public class CauliUIStatment extends InterceptorStatement{
         public void interceptorAfterForce(InterceptorStatement statement) {
 
         }
+
+        @Override
+        public void interceptorBeforeRetryTimeConfig(InterceptorStatement statement) {
+
+        }
     }
 }

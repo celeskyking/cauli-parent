@@ -27,15 +27,15 @@ public class CauliUIRunner extends JUnitBaseRunner{
         super(klass);
     }
 
-    @Override
-    protected void initFilter() {
-        try{
-            getFilter().setFilterContent(CauliConfigUtil.getInstance().get("filter"));
-        }catch (Exception e){
-            logger.error("没有查找系统的配置文件：config.properties",e);
-        }
-        super.initFilter();
-    }
+//    @Override
+//    protected void initFilter() {
+//        try{
+//            getFilter().setFilterContent(CauliConfigUtil.getInstance().get("filter"));
+//        }catch (Exception e){
+//            logger.error("没有查找系统的配置文件：config.properties",e);
+//        }
+//        super.initFilter();
+//    }
 
 
 

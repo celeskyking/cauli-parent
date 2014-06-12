@@ -19,7 +19,7 @@ public class FrameworksBuilderFactory {
     }
 
 
-    public static FrameworksBuilderFactory getInstrance(FrameworksBuilder frameworksBuilder){
+    public static FrameworksBuilderFactory getInstance(FrameworksBuilder frameworksBuilder){
         if(factory==null){
             synchronized (FrameworksBuilderFactory.class){
                 if(factory==null){

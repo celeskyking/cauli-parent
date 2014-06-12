@@ -2,9 +2,11 @@ package org.cauli.junit;
 
 import com.google.common.collect.Lists;
 import org.cauli.CauliListener;
+import org.cauli.Constant;
 import org.cauli.junit.build.FrameworksBuilder;
 import org.cauli.junit.build.FrameworksBuilderFactory;
 import org.cauli.junit.statement.InterceptorStatement;
+import org.junit.rules.TestRule;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunListener;
 import org.junit.runners.model.Statement;
@@ -17,17 +19,17 @@ import java.util.List;
  */
 public class TestPlan {
 
-    private int runLevel=2;
+    private int runLevel= Constant.DEFAULT_RUN_LEVEL;
+    private int threads=Constant.DEFAULT_THREAD_NUM;
     private Filter filter;
-    private int retryTimes=0;
-    private int timeout;
-    private String runFeature="default";
-    private String runRelease="";
+    private int retryTimes=Constant.DEFAULT_RETRY_TIMES;
+    private long timeout=Constant.DEFAULT_TIME_OUT;
+    private String runFeature=Constant.DEFAULT_RUN_FEATURE;
+    private String runRelease=Constant.DEFAULT_RUN_RELEASE;
     private String reportPath;
     private FrameworksBuilder frameworksBuilder= FrameworksBuilderFactory.getInstance().getFrameworkBuilder();
     private List<RunListener> runListeners=new ArrayList<RunListener>();
-    private InterceptorStatement runStatement;
-    private List<CauliListener> listeners= Lists.newArrayList();
+    private List<TestRule> listeners= Lists.newArrayList();
 
     public int getRunLevel() {
         return runLevel;
@@ -45,11 +47,11 @@ public class TestPlan {
         this.retryTimes = retryTimes;
     }
 
-    public int getTimeout() {
+    public long getTimeout() {
         return timeout;
     }
 
-    public void setTimeout(int timeout) {
+    public void setTimeout(long timeout) {
         this.timeout = timeout;
     }
 
@@ -77,19 +79,11 @@ public class TestPlan {
         this.runListeners = runListeners;
     }
 
-    public Statement getRunStatement() {
-        return runStatement;
-    }
-
-    public void setRunStatement(InterceptorStatement runStatement) {
-        this.runStatement = runStatement;
-    }
-
-    public List<CauliListener> getListeners() {
+    public List<TestRule> getListeners() {
         return listeners;
     }
 
-    public void setListeners(List<CauliListener> listeners) {
+    public void setListeners(List<TestRule> listeners) {
         this.listeners = listeners;
     }
 
@@ -115,5 +109,13 @@ public class TestPlan {
 
     public void setFilter(Filter filter) {
         this.filter = filter;
+    }
+
+    public int getThreads() {
+        return threads;
+    }
+
+    public void setThreads(int threads) {
+        this.threads = threads;
     }
 }

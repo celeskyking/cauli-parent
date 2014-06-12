@@ -1,12 +1,13 @@
 package org.cauli.junit;
 
 import com.google.common.collect.Lists;
-import jodd.util.StringUtil;
 import org.cauli.exception.FrameworkBuildException;
 import org.cauli.instrument.ClassPool;
+import org.cauli.instrument.ClassUtils;
 import org.cauli.junit.anno.CauliRule;
 import org.cauli.junit.anno.Filter;
 import org.cauli.junit.anno.Listener;
+import org.cauli.junit.anno.ThreadRunner;
 import org.cauli.junit.build.FrameworksBuilderFactory;
 import org.cauli.junit.statement.InterceptorStatement;
 import org.junit.*;
@@ -42,9 +43,47 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     private List<FrameworkMethodWithParameters> children;
 
+
     public CauliRunner(Class<?> testClass) throws InitializationError {
         super(testClass);
-        setScheduler(new ExcuteScheduler(testClass));
+
+    }
+
+
+    protected void init(){
+        this.testPlan=new TestPlan();
+        this.children=Lists.newArrayList();
+        this.logger = LoggerFactory.getLogger(CauliRunner.class);
+        int threads= getTestClass().getJavaClass().isAnnotationPresent(ThreadRunner.class)?getTestClass().getJavaClass().getAnnotation(ThreadRunner.class).threads():1;
+        testPlan.setThreads(threads);
+        if(getClass().isAnnotationPresent(Filter.class)){
+            Filter filter = getClass().getAnnotation(Filter.class);
+            testPlan.setRunLevel(filter.runLevel());
+            testPlan.setRunFeature(filter.feature());
+            testPlan.setRunRelease(filter.release());
+        }
+        testPlan.setListeners(getListeners());
+        setScheduler(new ExcuteScheduler(testPlan.getThreads()));
+    }
+
+    protected List<TestRule> getListeners(){
+        List<TestRule> testRules = Lists.newArrayList();
+        Set<Class<?>> classes = ClassPool.getClassPool();
+        for(Class<?> clazz :classes){
+            if(!ClassUtils.isAssignableFromSubClass(TestRule.class,clazz)){
+                continue;
+            }
+            if(clazz.isAnnotationPresent(CauliRule.class)||clazz.isAnnotationPresent(Listener.class)){
+                try {
+                    testRules.add((TestRule) clazz.newInstance());
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return testRules;
     }
 
     @Override
@@ -99,6 +138,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         InterceptorStatement statement = new InterceptorStatement(method, test);
         statement.setRunLevel(testPlan.getRunLevel());
         statement.setRetryTimes(testPlan.getRetryTimes());
+        logger.info(String.valueOf(testPlan.getThreads()));
         return statement;
     }
 
@@ -126,7 +166,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     private long getTimeout(Test annotation) {
         if (annotation == null) {
-            return 0;
+            return testPlan.getTimeout();
         }
         return annotation.timeout();
     }
@@ -151,19 +191,12 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         CauliFilter cauliFilter=new CauliFilter();
         if (children == null||children.size()==0) {
             TestClass testClass = getTestClass();
-            Filter filter = testClass.getJavaClass().getAnnotation(Filter.class);
-            if(null!=filter){
-                cauliFilter.setRunLevel(testPlan.getRunLevel()!=0?testPlan.getRunLevel():filter.runLevel());
-                cauliFilter.setRunFeature(StringUtil.isNotEmpty(testPlan.getRunFeature())?testPlan.getRunFeature():filter.feature());
-                cauliFilter.setRunRealease(StringUtil.isNotEmpty(testPlan.getRunRelease())?testPlan.getRunRelease():filter.release());
-            }else{
-                cauliFilter.setRunLevel(testPlan.getRunLevel());
-                cauliFilter.setRunFeature(testPlan.getRunFeature());
-                cauliFilter.setRunRealease(testPlan.getRunRelease());
-            }
+            cauliFilter.setRunLevel(testPlan.getRunLevel());
+            cauliFilter.setRunFeature(testPlan.getRunFeature());
+            cauliFilter.setRunRealease(testPlan.getRunRelease());
             List<FrameworkMethodWithParameters> list;
             try {
-                list = FrameworksBuilderFactory.getInstance().getFrameworkBuilder().build(testClass);
+                list = FrameworksBuilderFactory.getInstance(testPlan.getFrameworksBuilder()).getFrameworkBuilder().build(testClass);
             } catch (FrameworkBuildException e) {
                 throw new RuntimeException(e);
             }
@@ -180,20 +213,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
     }
 
     public List<TestRule> getRules()  {
-        List<TestRule> testRules = Lists.newArrayList();
-        Set<Class<?>> classes = ClassPool.getClassPool();
-        for(Class<?> clazz :classes){
-            if(clazz.isAnnotationPresent(CauliRule.class)||clazz.isAnnotationPresent(Listener.class)){
-                try {
-                    testRules.add((TestRule) clazz.newInstance());
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return testRules;
+        return this.testPlan.getListeners();
     }
 
 
@@ -224,7 +244,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
     @Deprecated
     protected Statement withPotentialTimeout(FrameworkMethodWithParameters method,
                                              Object test, Statement next) {
-        long timeout = getTimeout(method.getAnnotation(Test.class));
+        long timeout = method.getTimeout();
         return timeout > 0 ? new FailOnTimeout(next, timeout) : next;
     }
 
@@ -305,9 +325,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     @Override
     protected void collectInitializationErrors(List<Throwable> errors) {
-        this.testPlan=new TestPlan();
-        this.children=Lists.newArrayList();
-        this.logger = LoggerFactory.getLogger(CauliRunner.class);
+        init();
         super.collectInitializationErrors(errors);
 
         validateNoNonStaticInnerClass(errors);
@@ -393,9 +411,6 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
     protected String testName(FrameworkMethodWithParameters method) {
         return method.toString();
     }
-
-
-
 
 
 }

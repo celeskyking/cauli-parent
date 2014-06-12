@@ -2,6 +2,9 @@ package org.cauli.junit.statement;
 
 import com.google.common.collect.Lists;
 import jodd.util.StringUtil;
+import org.cauli.RunConfig;
+import org.cauli.junit.CauliRunner;
+import org.cauli.junit.ExcuteScheduler;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.cauli.junit.MethodManager;
 import org.cauli.exception.TestFailedError;
@@ -65,9 +68,20 @@ public class InterceptorStatement extends Statement {
                 if(this.dependencyStatement==null){
                     testMethod.invokeExplosively(target);
                 }else{
-                    for(InterceptorStatement statement:this.dependencyStatement){
-                        statement.evaluate();
+                    ExcuteScheduler scheduler = new ExcuteScheduler(target.getClass());
+                    for(final InterceptorStatement statement:this.dependencyStatement){
+                        scheduler.schedule(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    statement.evaluate();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                            }
+                        });
                     }
+                    scheduler.finished();
                     testMethod.invokeExplosively(target);
                 }
 
@@ -101,11 +115,6 @@ public class InterceptorStatement extends Statement {
     public void setTarget(Object target) {
         this.target = target;
     }
-
-
-
-
-
 
     public int getLevel() {
         return level;

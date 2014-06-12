@@ -5,36 +5,44 @@ import org.cauli.junit.anno.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by celeskyking on 2014/3/30
  */
 @RunWith(CauliRunner.class)
+@Filter(runLevel = 3)
+@ThreadRunner(threads = 2)
 public class BeanTest {
 
+    private Logger logger = LoggerFactory.getLogger(BeanTest.class);
+
     @Test
-    @Tag(release = "test_card",name = "user")
-    //@Dependency("test")
+    @Tag(release = "3",name = "user",level = 2,feature = "test")
     @Ignore
-    public void userTest() {
-        System.out.println("依赖我的");
+    public void userTest() throws InterruptedException {
+        Thread.sleep(4000);
+        logger.info("依赖我的");
     }
 
     @Test
-    @Tag(release = "card",name = "param",level = 0)
+    @Tag(release = "2",name = "param",level = 2,feature = "test")
     @Param("test.txt")
     @Ignore
     public void paramTest(@Named("name")String name,@Bean("user")User user) throws InterruptedException {
         //assertThat("校验参数化", name + "___" + user.getBrother().getAmount(), containsString("北京___0.01"));
-        System.out.println(name);
+        Thread.sleep(3000);
+        logger.info(name);
     }
 
 
     @Test
-    @Tag(release = "1",name="test",level = 2)
+    @Tag(release = "1",name="test",level = 2,feature = "test")
     @Dependency("param")
-    public void test(){
-        System.out.println("just for test");
+    public void test() throws InterruptedException {
+        Thread.sleep(5000);
+        logger.info("just for test");
     }
 
 

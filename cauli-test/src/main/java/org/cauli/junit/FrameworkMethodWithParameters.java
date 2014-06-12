@@ -1,5 +1,6 @@
 package org.cauli.junit;
 
+import org.cauli.Constant;
 import org.junit.runners.model.FrameworkMethod;
 
 import java.lang.reflect.Method;
@@ -15,10 +16,11 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 	protected Object[] parameters;
 	protected String info;
     private String name;
-    private int level=2;
+    private int level=Constant.DEFAULT_LEVEL;
     private String dependencyMethodName;
-    private String feature="default";
-    private String release="";
+    private String feature=Constant.DEFAULT_FEATURE;
+    private String release=Constant.DEFAULT_RELEASE;
+    private long timeout= Constant.DEFAULT_TIME_OUT;
 
 
     public FrameworkMethodWithParameters(Method method){
@@ -113,5 +115,13 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 
     public void setRelease(String release) {
         this.release = release;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
     }
 }

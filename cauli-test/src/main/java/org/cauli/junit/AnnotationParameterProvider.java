@@ -9,6 +9,7 @@ import org.cauli.junit.anno.Param;
 import org.cauli.junit.anno.Tag;
 import org.cauli.junit.build.NamedConverter;
 import org.cauli.junit.info.DefaultInfoProvider;
+import org.junit.Test;
 import org.junit.runners.model.FrameworkMethod;
 
 import java.io.File;
@@ -62,6 +63,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
             if(tag!=null){
                 frameworkMethodWithParameters.setName(tag.name());
                 frameworkMethodWithParameters.setLevel(tag.level());
+                frameworkMethodWithParameters.setTimeout(method.getAnnotation(Test.class).timeout());
             }else{
                 frameworkMethodWithParameters.setName(method.getMethod().getName());
             }
@@ -105,6 +107,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
         method.setInfo(infoProvider.testInfo(method.getMethod(),objects));
         method.setParameters(objects);
         method.setDependencyMethodName(method.getAnnotation(Dependency.class) == null ? null : method.getAnnotation(Dependency.class).value());
+        method.setTimeout(method.getAnnotation(Test.class).timeout());
         Tag tag = method.getAnnotation(Tag.class);
         if(tag!=null){
             method.setName(tag.name());
