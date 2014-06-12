@@ -138,7 +138,6 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         InterceptorStatement statement = new InterceptorStatement(method, test);
         statement.setRunLevel(testPlan.getRunLevel());
         statement.setRetryTimes(testPlan.getRetryTimes());
-        logger.info(String.valueOf(testPlan.getThreads()));
         return statement;
     }
 
