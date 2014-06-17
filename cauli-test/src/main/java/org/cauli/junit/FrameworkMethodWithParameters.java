@@ -17,7 +17,7 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
 	protected String info;
     private String name;
     private int level=Constant.DEFAULT_LEVEL;
-    private String dependencyMethodName;
+    private String[] dependencyMethodName;
     private String feature=Constant.DEFAULT_FEATURE;
     private String release=Constant.DEFAULT_RELEASE;
     private long timeout= Constant.DEFAULT_TIME_OUT;
@@ -33,7 +33,7 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
         this.info=info;
     }
 
-    public FrameworkMethodWithParameters(Method method,Object[] parameters,String info,int level,String dependencyMethodName,String tagName){
+    public FrameworkMethodWithParameters(Method method,Object[] parameters,String info,int level,String[] dependencyMethodName,String tagName){
         super(method);
         this.parameters=parameters;
         this.info=info;
@@ -93,11 +93,11 @@ public class FrameworkMethodWithParameters extends FrameworkMethod {
         this.level = level;
     }
 
-    public String getDependencyMethodName() {
+    public String[] getDependencyMethodName() {
         return dependencyMethodName;
     }
 
-    public void setDependencyMethodName(String dependencyMethodName) {
+    public void setDependencyMethodName(String[] dependencyMethodName) {
         this.dependencyMethodName = dependencyMethodName;
     }
 

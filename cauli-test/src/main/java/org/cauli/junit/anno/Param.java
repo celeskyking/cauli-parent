@@ -1,5 +1,7 @@
 package org.cauli.junit.anno;
 
+import org.cauli.junit.PairwiseFilter;
+
 import java.lang.annotation.*;
 
 /**
@@ -11,5 +13,7 @@ import java.lang.annotation.*;
 public @interface Param {
     String value() default "default";
     String type() default "row";
+    boolean pairwise() default  false;
+    Class<? extends PairwiseFilter>  filter() default PairwiseFilter.class;
 }
 

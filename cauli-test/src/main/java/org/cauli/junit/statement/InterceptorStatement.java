@@ -2,12 +2,11 @@ package org.cauli.junit.statement;
 
 import com.google.common.collect.Lists;
 import jodd.util.StringUtil;
-import org.cauli.RunConfig;
-import org.cauli.junit.CauliRunner;
+import org.cauli.exception.NotFoundNamedMethodException;
+import org.cauli.exception.TestFailedError;
 import org.cauli.junit.ExcuteScheduler;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.cauli.junit.MethodManager;
-import org.cauli.exception.TestFailedError;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
@@ -24,19 +23,28 @@ public class InterceptorStatement extends Statement {
     private int level;
     private List<InterceptorStatement> dependencyStatement= Lists.newArrayList();
     protected int retryTimes=0;
-    private int runLevel;
 	public InterceptorStatement(FrameworkMethodWithParameters methodWithParameters, Object target) {
 		this.testMethod=methodWithParameters;
 		this.target=target;
-        String depName = methodWithParameters.getDependencyMethodName();
-        if(StringUtil.isNotEmpty(depName)){
-            List<FrameworkMethodWithParameters> methods = MethodManager.get(depName);
-            for(FrameworkMethodWithParameters method:methods){
-                if(method!=null){
-                    this.dependencyStatement.add(new InterceptorStatement(method,target));
+        String[] depNames = methodWithParameters.getDependencyMethodName();
+        if(depNames!=null&&depNames.length>0){
+            for(String depName:depNames){
+                if(StringUtil.isNotEmpty(depName)){
+                    List<FrameworkMethodWithParameters> methods = MethodManager.get(depName);
+                    if(methods!=null){
+                        for(FrameworkMethodWithParameters method:methods){
+                            if(method!=null){
+                                this.dependencyStatement.add(new InterceptorStatement(method,target));
+                            }
+                        }
+                    }else{
+                        logger.warn("没有找到依赖的Method->name：{}",depName);
+                    }
                 }
             }
         }
+
+
         this.level=methodWithParameters.getLevel();
         this.interceptors.add(new AnnotationInterceptor());
 	}
@@ -68,21 +76,12 @@ public class InterceptorStatement extends Statement {
                 if(this.dependencyStatement==null){
                     testMethod.invokeExplosively(target);
                 }else{
-                    ExcuteScheduler scheduler = new ExcuteScheduler(target.getClass());
                     for(final InterceptorStatement statement:this.dependencyStatement){
-                        scheduler.schedule(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    statement.evaluate();
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
-                            }
-                        });
+                        statement.evaluate();
                     }
-                    scheduler.finished();
-                    testMethod.invokeExplosively(target);
+                        testMethod.invokeExplosively(target);
+
+
                 }
 
                 for(Interceptor interceptor:interceptors){
@@ -129,13 +128,6 @@ public class InterceptorStatement extends Statement {
         interceptors.add(interceptor);
     }
 
-    public int getRunLevel() {
-        return runLevel;
-    }
-
-    public void setRunLevel(int runLevel) {
-        this.runLevel = runLevel;
-    }
 
     public List<InterceptorStatement> getDependencyStatement() {
         return dependencyStatement;

@@ -3,8 +3,8 @@ package org.cauli.ui.runner;
 import com.google.common.collect.Lists;
 import jodd.util.StringUtil;
 import org.cauli.instrument.ClassPool;
+import org.cauli.junit.CauliRunner;
 import org.cauli.junit.FrameworkMethodWithParameters;
-import org.cauli.junit.JUnitBaseRunner;
 import org.cauli.ui.annotation.Action;
 import org.cauli.ui.annotation.Require;
 import org.cauli.ui.selenium.browser.Engine;
@@ -12,7 +12,6 @@ import org.cauli.ui.selenium.listener.ActionListenerProxy;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ import java.util.List;
 /**
  * Created by celeskyking on 14-3-1
  */
-public class CauliUIRunner extends JUnitBaseRunner{
+public class CauliUIRunner extends CauliRunner{
     private static Logger logger = LoggerFactory.getLogger(CauliUIRunner.class);
     public CauliUIRunner(Class<?> klass) throws InitializationError {
         super(klass);
@@ -39,11 +38,7 @@ public class CauliUIRunner extends JUnitBaseRunner{
 
 
 
-    @Override
-    protected Statement methodInvoker(FrameworkMethod method, Object test) {
-        CauliUIStatment statement = new CauliUIStatment((UIFrameworkMethod) method, test);
-        return statement;
-    }
+
 
     @Override
     public void run(final RunNotifier notifier) {
@@ -57,16 +52,16 @@ public class CauliUIRunner extends JUnitBaseRunner{
     }
 
     @Override
-    protected List<FrameworkMethod> computeTestMethods() {
-        List<FrameworkMethod> frameworkMethods=super.computeTestMethods();
+    protected List<FrameworkMethodWithParameters> computeTestMethods() {
+        List<FrameworkMethodWithParameters> frameworkMethods=super.computeTestMethods();
         return createUIMethod(frameworkMethods);
 
     }
 
 
-    private List<FrameworkMethod> createUIMethod(List<FrameworkMethod> frameworkMethods){
-        List<FrameworkMethod> methods = Lists.newArrayList();
-        for(FrameworkMethod frameworkMethod:frameworkMethods){
+    private List<FrameworkMethodWithParameters> createUIMethod(List<FrameworkMethodWithParameters> frameworkMethods){
+        List<FrameworkMethodWithParameters> methods = Lists.newArrayList();
+        for(FrameworkMethodWithParameters frameworkMethod:frameworkMethods){
             if(frameworkMethod instanceof FrameworkMethodWithParameters){
                 Engine[] engines=getConfigEngines(frameworkMethod);
                 if(engines==null){
@@ -74,22 +69,12 @@ public class CauliUIRunner extends JUnitBaseRunner{
                 }else{
                     for(Engine engine:engines){
                         UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),
-                                ((FrameworkMethodWithParameters) frameworkMethod).getParameters(),
-                                ((FrameworkMethodWithParameters) frameworkMethod).getInfo(),engine);
+                                (frameworkMethod).getParameters(),
+                                (frameworkMethod).getInfo(),engine);
                         methods.add(method);
                     }
                 }
 
-            }else if(frameworkMethod instanceof FrameworkMethod){
-                Engine[] engines=getConfigEngines(frameworkMethod);
-                if(engines==null){
-                    methods.add(frameworkMethod);
-                    continue;
-                }
-                for(Engine engine:engines){
-                    UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),engine);
-                    methods.add(method);
-                }
             }
         }
         return methods;

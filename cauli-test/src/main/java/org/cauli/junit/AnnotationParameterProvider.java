@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tianqing.wang on 2014/6/6
@@ -27,6 +28,8 @@ public class AnnotationParameterProvider implements ParameterProvider{
     private File file;
     private FileGenerator fileGenerator;
     private String readType;
+    private PairwiseFilter pairwiseFilter;
+    private boolean isPairwise;
 
     public File getFile() {
         return file;
@@ -53,7 +56,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
     }
 
     @Override
-    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException {
+    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException, InstantiationException, IllegalAccessException {
         List<FrameworkMethodWithParameters> result = Lists.newArrayList();
         FrameworkMethodWithParameters frameworkMethodWithParameters = new FrameworkMethodWithParameters(method.getMethod());
         setFile(getParamFile(method));
@@ -64,6 +67,8 @@ public class AnnotationParameterProvider implements ParameterProvider{
                 frameworkMethodWithParameters.setName(tag.name());
                 frameworkMethodWithParameters.setLevel(tag.level());
                 frameworkMethodWithParameters.setTimeout(method.getAnnotation(Test.class).timeout());
+                frameworkMethodWithParameters.setFeature(tag.feature());
+                frameworkMethodWithParameters.setRelease(tag.release());
             }else{
                 frameworkMethodWithParameters.setName(method.getMethod().getName());
             }
@@ -71,12 +76,13 @@ public class AnnotationParameterProvider implements ParameterProvider{
             return result;
         } else {
             this.fileGenerator = FileGeneratorFactory.loadGenerator().createFileGenerator(file,readType);
+            this.fileGenerator.setFilter(this.pairwiseFilter);
+            this.fileGenerator.setPairwise(this.isPairwise);
         }
-        List<RowParameter> rowParameters = fileGenerator.generator();
-        List<String> headers = fileGenerator.getHeaders();
-        for (RowParameter parameter : rowParameters) {
+        List<PairParameter> pairParameters = fileGenerator.generator();
+        for (PairParameter parameter : pairParameters) {
             try {
-                FrameworkMethodWithParameters parameters = parseMethod(method, parameter,headers);
+                FrameworkMethodWithParameters parameters = parseMethod(method, parameter);
                 result.add(parameters);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -89,7 +95,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
     }
 
 
-    private FrameworkMethodWithParameters parseMethod(FrameworkMethodWithParameters frameworkMethodWithParameters,RowParameter parameter,List<String> headers) throws ConverterError {
+    private FrameworkMethodWithParameters parseMethod(FrameworkMethodWithParameters frameworkMethodWithParameters,PairParameter parameter) throws ConverterError {
         Class[] classes = frameworkMethodWithParameters.getMethod().getParameterTypes();
         Object[] objects = new Object[classes.length];
         for(int i=0;i<classes.length;i++){
@@ -97,9 +103,9 @@ public class AnnotationParameterProvider implements ParameterProvider{
             Annotation annotation = MethodUtils.getParameterOnlyAnnotation(frameworkMethodWithParameters.getMethod(),i);
             try {
                 GeneratorConverter converter = GeneratorManager.getGeneratorConverter(annotationType);
-                objects[i] =converter.convert(annotation,classes[i],parameter,headers);
+                objects[i] =converter.convert(annotation,classes[i],parameter);
             } catch (Exception e) {
-                throw new ConverterError("解析方法"+frameworkMethodWithParameters.getName()+"参数bean的时候出现了错误..",e);
+                throw new ConverterError("解析方法"+frameworkMethodWithParameters.getMethod().getName()+"参数bean的时候出现了错误..",e);
             }
         }
         DefaultInfoProvider infoProvider = new DefaultInfoProvider();
@@ -112,6 +118,8 @@ public class AnnotationParameterProvider implements ParameterProvider{
         if(tag!=null){
             method.setName(tag.name());
             method.setLevel(tag.level());
+            method.setRelease(tag.release());
+            method.setFeature(tag.feature());
         }else{
             method.setName(method.getMethod().getName());
         }
@@ -120,9 +128,16 @@ public class AnnotationParameterProvider implements ParameterProvider{
 
 
 
-    private File getParamFile(FrameworkMethod frameworkMethod) throws FileNotFoundException {
+    private File getParamFile(FrameworkMethod frameworkMethod) throws FileNotFoundException, IllegalAccessException, InstantiationException {
         Param param = frameworkMethod.getAnnotation(Param.class);
         if(param!=null){
+            this.isPairwise=param.pairwise();
+            this.pairwiseFilter=param.filter()!=PairwiseFilter.class?param.filter().newInstance():new PairwiseFilter() {
+                @Override
+                public boolean isMatch(Map<String, String> params) {
+                    return true;
+                }
+            };
             if("default".equals(param.value())){
                 setReadType(param.type());
                 return getSimilarFile("data/"+frameworkMethod.getMethod().getDeclaringClass().getSimpleName(),frameworkMethod.getName());

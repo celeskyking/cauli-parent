@@ -44,7 +44,7 @@ public class DefaultFrameworksBuilder  implements FrameworksBuilder{
                 try {
                     methods = provider.generator(method);
                 } catch (Exception e) {
-                    throw new FrameworkBuildException("初始化方法的时候出现了错误.."+method.getName(),e);
+                    throw new FrameworkBuildException("初始化方法的时候出现了错误.."+method.getMethod().getName(),e);
                 }
             children.addAll(methods);
             }

@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 import static org.junit.internal.runners.rules.RuleFieldValidator.RULE_METHOD_VALIDATOR;
@@ -56,8 +58,8 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         this.logger = LoggerFactory.getLogger(CauliRunner.class);
         int threads= getTestClass().getJavaClass().isAnnotationPresent(ThreadRunner.class)?getTestClass().getJavaClass().getAnnotation(ThreadRunner.class).threads():1;
         testPlan.setThreads(threads);
-        if(getClass().isAnnotationPresent(Filter.class)){
-            Filter filter = getClass().getAnnotation(Filter.class);
+        if(getTestClass().getJavaClass().isAnnotationPresent(Filter.class)){
+            Filter filter = getTestClass().getJavaClass().getAnnotation(Filter.class);
             testPlan.setRunLevel(filter.runLevel());
             testPlan.setRunFeature(filter.feature());
             testPlan.setRunRelease(filter.release());
@@ -136,7 +138,6 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     protected Statement methodInvoker(FrameworkMethodWithParameters method, Object test) {
         InterceptorStatement statement = new InterceptorStatement(method, test);
-        statement.setRunLevel(testPlan.getRunLevel());
         statement.setRetryTimes(testPlan.getRetryTimes());
         return statement;
     }
@@ -187,6 +188,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
 
     protected List<FrameworkMethodWithParameters> computeTestMethods() {
+        Queue<FrameworkMethodWithParameters> queue = new PriorityQueue<FrameworkMethodWithParameters>(10,new FrameworkComparator());
         CauliFilter cauliFilter=new CauliFilter();
         if (children == null||children.size()==0) {
             TestClass testClass = getTestClass();
@@ -196,17 +198,19 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
             List<FrameworkMethodWithParameters> list;
             try {
                 list = FrameworksBuilderFactory.getInstance(testPlan.getFrameworksBuilder()).getFrameworkBuilder().build(testClass);
+                MethodManager.load(list);
             } catch (FrameworkBuildException e) {
                 throw new RuntimeException(e);
             }
             for(FrameworkMethodWithParameters frameworkMethodWithParameters : list){
                 if(cauliFilter.isMatch(frameworkMethodWithParameters)){
-                    children.add(frameworkMethodWithParameters);
-                }else{
-                    logger.info("[{}]被忽略,可能过滤器不匹配或者优先级不匹配",frameworkMethodWithParameters.getName());
+                    queue.offer(frameworkMethodWithParameters);
                 }
             }
-            MethodManager.load(list);
+            while (!queue.isEmpty()){
+                children.add(queue.poll());
+            }
+
         }
         return children;
     }
@@ -324,7 +328,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     @Override
     protected void collectInitializationErrors(List<Throwable> errors) {
-        init();
+
         super.collectInitializationErrors(errors);
 
         validateNoNonStaticInnerClass(errors);
@@ -332,6 +336,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         validateInstanceMethods(errors);
         validateFields(errors);
         validateMethods(errors);
+        init();
     }
 
     protected void validateNoNonStaticInnerClass(List<Throwable> errors) {
@@ -393,9 +398,9 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         validatePublicVoidNoArgMethods(Before.class, false, errors);
         validateTestMethods(errors);
 
-        if (computeTestMethods().size() == 0) {
-            errors.add(new Exception("No runnable methods"));
-        }
+//        if (computeTestMethods().size() == 0) {
+//            errors.add(new Exception("No runnable methods"));
+//        }
     }
 
     protected void validateFields(List<Throwable> errors) {

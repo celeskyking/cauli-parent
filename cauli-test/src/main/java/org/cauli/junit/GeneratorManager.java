@@ -7,7 +7,6 @@ import org.cauli.junit.build.BeanConverter;
 import org.cauli.junit.build.NamedConverter;
 
 import java.lang.annotation.Annotation;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
