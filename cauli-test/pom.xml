@@ -9,7 +9,7 @@
 
     <groupId>com.github.celeskyking.test</groupId>
     <artifactId>cauli-test</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>${parent.version}</version>
 
     <dependencies>
         <dependency>
