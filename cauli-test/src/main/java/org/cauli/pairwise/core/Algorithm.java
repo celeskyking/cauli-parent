@@ -1,5 +1,9 @@
 package org.cauli.pairwise.core;
 
+import freemarker.template.TemplateException;
+
+import java.io.IOException;
+
 public interface Algorithm {
         /**
          * 
@@ -9,6 +13,6 @@ public interface Algorithm {
          * @return
          */
         public CombinationList generate(ParameterList parameters,
-                                        int maxCombinationLimit);
+                                        int maxCombinationLimit) throws IOException, TemplateException;
 
 }

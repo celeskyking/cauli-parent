@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.cauli.exception.FrameworkBuildException;
 import org.cauli.instrument.ClassPool;
 import org.cauli.junit.AnnotationParameterProvider;
+import org.cauli.junit.CauliFilter;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.junit.Test;
 import org.junit.runners.model.FrameworkMethod;

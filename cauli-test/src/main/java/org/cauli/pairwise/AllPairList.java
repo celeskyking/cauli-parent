@@ -2,10 +2,12 @@ package org.cauli.pairwise;
 
 
 
+import freemarker.template.TemplateException;
 import org.cauli.pairwise.core.Parameter;
 import org.cauli.pairwise.core.ParameterList;
 import org.cauli.pairwise.core.ParameterValuePair;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -96,7 +98,7 @@ public class AllPairList {
                 return parameterValuePositions[valueIndex];
         }
 
-        public ParameterValuePair getParameterValuePairByValueIndex(int index) {
+        public ParameterValuePair getParameterValuePairByValueIndex(int index) throws IOException, TemplateException {
                 if (index >= 0 && index < valueCount) {
                         return new ParameterValuePair(parameterIds[index],
                                         parameterNames[index],

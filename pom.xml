@@ -74,11 +74,6 @@
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
-                <artifactId>jodd-petite</artifactId>
-                <version>3.5.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jodd</groupId>
                 <artifactId>jodd-proxetta</artifactId>
                 <version>3.5.2</version>
             </dependency>
@@ -153,16 +148,7 @@
                 <artifactId>jodd-core</artifactId>
                 <version>3.5.2</version>
             </dependency>
-            <dependency>
-                <groupId>org.jodd</groupId>
-                <artifactId>jodd-props</artifactId>
-                <version>3.5.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jodd</groupId>
-                <artifactId>jodd-proxetta</artifactId>
-                <version>3.5.2</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-petite</artifactId>
@@ -182,11 +168,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.5</version>
-            </dependency>
-            <dependency>
-                <groupId>com.opera</groupId>
-                <artifactId>operadriver</artifactId>
-                <version>1.3</version>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>
@@ -213,6 +194,11 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.20</version>
             </dependency>
 
             <dependency>
@@ -336,7 +322,7 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>sonatype</id>
+            <id>sonatype-nexus-snapshots</id>
             <name>sonatype-snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>

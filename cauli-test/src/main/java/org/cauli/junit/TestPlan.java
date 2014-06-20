@@ -1,16 +1,14 @@
 package org.cauli.junit;
 
 import com.google.common.collect.Lists;
-import org.cauli.CauliListener;
+import com.google.common.collect.Maps;
 import org.cauli.Constant;
 import org.cauli.junit.build.FrameworksBuilder;
 import org.cauli.junit.build.FrameworksBuilderFactory;
-import org.cauli.junit.statement.InterceptorStatement;
 import org.junit.rules.TestRule;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunListener;
-import org.junit.runners.model.Statement;
-
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +28,7 @@ public class TestPlan {
     private FrameworksBuilder frameworksBuilder= FrameworksBuilderFactory.getInstance().getFrameworkBuilder();
     private List<RunListener> runListeners=new ArrayList<RunListener>();
     private List<TestRule> listeners= Lists.newArrayList();
+    private Map<String,Object> templateSources = Maps.newHashMap();
 
     public int getRunLevel() {
         return runLevel;
@@ -117,5 +116,13 @@ public class TestPlan {
 
     public void setThreads(int threads) {
         this.threads = threads;
+    }
+
+    public Map<String, Object> getTemplateSources() {
+        return templateSources;
+    }
+
+    public void setTemplateSources(Map<String, Object> templateSources) {
+        this.templateSources = templateSources;
     }
 }

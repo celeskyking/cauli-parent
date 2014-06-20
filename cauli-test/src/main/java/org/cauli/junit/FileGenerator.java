@@ -2,6 +2,7 @@ package org.cauli.junit;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import freemarker.template.TemplateException;
 import org.cauli.pairwise.algorithm.FullCombinationAlgorithm;
 import org.cauli.pairwise.core.*;
 import java.io.File;
@@ -37,7 +38,7 @@ public abstract class FileGenerator {
     }
 
 
-    protected List<PairParameter> transferRowParameter(List<RowParameter> rowParameters){
+    protected List<PairParameter> transferRowParameter(List<RowParameter> rowParameters) throws IOException, TemplateException {
         List<PairParameter> pairParameters= Lists.newArrayList();
         for(RowParameter rowParameter:rowParameters){
             PairParameter pairParameter = new PairParameter();
@@ -52,7 +53,7 @@ public abstract class FileGenerator {
 
     abstract List<RowParameter> getAllRows() throws IOException;
 
-    public List<PairParameter> generator() throws IOException {
+    public List<PairParameter> generator() throws IOException, TemplateException {
         List<RowParameter> parameters;
         if(isPairwise()){
             return parsePairwise(getAllPairwiseRows());
@@ -80,7 +81,7 @@ public abstract class FileGenerator {
         return colParam;
     }
 
-    protected List<PairParameter> parsePairwise(List<Parameter> parameters){
+    protected List<PairParameter> parsePairwise(List<Parameter> parameters) throws IOException, TemplateException {
         List<PairParameter> pairParameters = Lists.newArrayList();
 
         Algorithm algorithm = new FullCombinationAlgorithm();

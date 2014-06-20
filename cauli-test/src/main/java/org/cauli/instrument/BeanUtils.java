@@ -31,4 +31,6 @@ public class BeanUtils {
     public static Object getProperty(Object bean,String name){
         return BeanUtil.getProperty(bean,name);
     }
+
+
 }

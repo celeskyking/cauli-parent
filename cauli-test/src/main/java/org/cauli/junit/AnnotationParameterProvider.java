@@ -1,6 +1,7 @@
 package org.cauli.junit;
 
 import com.google.common.collect.Lists;
+import freemarker.template.TemplateException;
 import org.cauli.exception.ConverterError;
 import org.cauli.exception.FileGeneratorException;
 import org.cauli.instrument.MethodUtils;
@@ -56,7 +57,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
     }
 
     @Override
-    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException, InstantiationException, IllegalAccessException {
+    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException, InstantiationException, IllegalAccessException, TemplateException {
         List<FrameworkMethodWithParameters> result = Lists.newArrayList();
         FrameworkMethodWithParameters frameworkMethodWithParameters = new FrameworkMethodWithParameters(method.getMethod());
         setFile(getParamFile(method));
@@ -105,7 +106,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
                 GeneratorConverter converter = GeneratorManager.getGeneratorConverter(annotationType);
                 objects[i] =converter.convert(annotation,classes[i],parameter);
             } catch (Exception e) {
-                throw new ConverterError("解析方法"+frameworkMethodWithParameters.getMethod().getName()+"参数bean的时候出现了错误..",e);
+                throw new ConverterError("解析方法"+frameworkMethodWithParameters.getMethod().getName()+"参数的时候出现了错误..",e);
             }
         }
         DefaultInfoProvider infoProvider = new DefaultInfoProvider();

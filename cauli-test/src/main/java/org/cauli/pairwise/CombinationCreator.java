@@ -2,9 +2,11 @@ package org.cauli.pairwise;
 
 
 
+import freemarker.template.TemplateException;
 import org.cauli.pairwise.core.Combination;
 import org.cauli.pairwise.core.ParameterValuePair;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -22,7 +24,7 @@ public class CombinationCreator {
                 this.allPairList = pairs;
         }
 
-        public Combination create() {
+        public Combination create() throws IOException, TemplateException {
                 Pair newPair = this.allPairList.nextUnusedPair();
                 if (newPair == null) {
                         return null;
@@ -34,7 +36,7 @@ public class CombinationCreator {
                 return candidate;
         }
 
-        private void useParameterValuePair(int pairIndex) {
+        private void useParameterValuePair(int pairIndex) throws IOException, TemplateException {
                 Pair newPair = this.allPairList.getAvailablePairs()[pairIndex];
                 Long param1Id = this.allPairList.getParameterIdByValueIndex(newPair .getParam1ValueIndex());
                 if (!candidate.getMap().containsKey(param1Id)) {
@@ -70,7 +72,7 @@ public class CombinationCreator {
                 return bestValueIndex;
         }
 
-        private void findCandidateCombinationByOrder(int[] order, Pair fixedPair) {
+        private void findCandidateCombinationByOrder(int[] order, Pair fixedPair) throws IOException, TemplateException {
                 this.candidate = new Combination();
                 useParameterValuePair(fixedPair.getPairIndex());
 

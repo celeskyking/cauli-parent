@@ -3,11 +3,13 @@ package org.cauli.pairwise;
 
 
 
+import freemarker.template.TemplateException;
 import org.cauli.pairwise.core.Algorithm;
 import org.cauli.pairwise.core.Combination;
 import org.cauli.pairwise.core.CombinationList;
 import org.cauli.pairwise.core.ParameterList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class PairWiseAlgorithm implements Algorithm {
         private CombinationCreator creator;
 
         public CombinationList generate(ParameterList parameters,
-                        int maxCombinationLimit) {
+                        int maxCombinationLimit) throws IOException, TemplateException {
                 initializeAllPairs(parameters);
                 int limit = (maxCombinationLimit < 0) ? parameters.getSize()
                                 : maxCombinationLimit;

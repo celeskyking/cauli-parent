@@ -1,5 +1,6 @@
 package org.cauli.junit.build;
 
+import org.cauli.junit.CauliFilter;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.junit.runners.model.TestClass;
 

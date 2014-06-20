@@ -1,5 +1,6 @@
 package org.cauli.junit;
 
+import freemarker.template.TemplateException;
 import org.cauli.exception.FileGeneratorException;
 import org.junit.runners.model.FrameworkMethod;
 
@@ -11,5 +12,5 @@ import java.util.List;
  */
 public interface ParameterProvider {
 
-    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException, InstantiationException, IllegalAccessException;
+    public List<FrameworkMethodWithParameters> generator(FrameworkMethodWithParameters method) throws IOException, FileGeneratorException, InstantiationException, IllegalAccessException, TemplateException;
 }

@@ -4,12 +4,10 @@ import com.google.common.collect.Lists;
 import org.cauli.exception.FrameworkBuildException;
 import org.cauli.instrument.ClassPool;
 import org.cauli.instrument.ClassUtils;
-import org.cauli.junit.anno.CauliRule;
-import org.cauli.junit.anno.Filter;
-import org.cauli.junit.anno.Listener;
-import org.cauli.junit.anno.ThreadRunner;
+import org.cauli.junit.anno.*;
 import org.cauli.junit.build.FrameworksBuilderFactory;
 import org.cauli.junit.statement.InterceptorStatement;
+import org.cauli.template.ValueTransfer;
 import org.junit.*;
 import org.junit.internal.runners.model.ReflectiveCallable;
 import org.junit.internal.runners.statements.*;
@@ -22,8 +20,6 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -41,8 +37,6 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     private TestPlan testPlan;
 
-    private Logger logger;
-
     private List<FrameworkMethodWithParameters> children;
 
 
@@ -52,20 +46,28 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
     }
 
 
-    protected void init(){
-        this.testPlan=new TestPlan();
-        this.children=Lists.newArrayList();
-        this.logger = LoggerFactory.getLogger(CauliRunner.class);
+    protected TestPlan init(){
+        TestPlan plan=new TestPlan();
         int threads= getTestClass().getJavaClass().isAnnotationPresent(ThreadRunner.class)?getTestClass().getJavaClass().getAnnotation(ThreadRunner.class).threads():1;
-        testPlan.setThreads(threads);
+        plan.setThreads(threads);
         if(getTestClass().getJavaClass().isAnnotationPresent(Filter.class)){
             Filter filter = getTestClass().getJavaClass().getAnnotation(Filter.class);
-            testPlan.setRunLevel(filter.runLevel());
-            testPlan.setRunFeature(filter.feature());
-            testPlan.setRunRelease(filter.release());
+            plan.setRunLevel(filter.runLevel());
+            plan.setRunFeature(filter.feature());
+            plan.setRunRelease(filter.release());
         }
-        testPlan.setListeners(getListeners());
-        setScheduler(new ExcuteScheduler(testPlan.getThreads()));
+        if(getTestClass().getJavaClass().isAnnotationPresent(Retry.class)){
+            Retry times = getTestClass().getJavaClass().getAnnotation(Retry.class);
+            plan.setRetryTimes(times.value());
+        }
+        plan.setListeners(getListeners());
+        setScheduler(new ExcuteScheduler(plan.getThreads()));
+        if(getTestClass().getJavaClass().isAnnotationPresent(Interceptor.class)){
+            RunnerInterceptorProxy.register(getTestClass().getJavaClass().getAnnotation(Interceptor.class).value());
+        }
+        RunnerInterceptorProxy.getDispatcher().beforeRunnerStart(plan);
+        ValueTransfer.addModels(plan.getTemplateSources());
+        return plan;
     }
 
     protected List<TestRule> getListeners(){
@@ -181,11 +183,6 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         for (FrameworkMethod eachTestMethod : methods)
             eachTestMethod.validatePublicVoid(isStatic, errors);
     }
-
-
-
-
-
 
     protected List<FrameworkMethodWithParameters> computeTestMethods() {
         Queue<FrameworkMethodWithParameters> queue = new PriorityQueue<FrameworkMethodWithParameters>(10,new FrameworkComparator());
@@ -328,7 +325,8 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     @Override
     protected void collectInitializationErrors(List<Throwable> errors) {
-
+        this.children=Lists.newArrayList();
+        this.testPlan=init();
         super.collectInitializationErrors(errors);
 
         validateNoNonStaticInnerClass(errors);
@@ -336,7 +334,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         validateInstanceMethods(errors);
         validateFields(errors);
         validateMethods(errors);
-        init();
+
     }
 
     protected void validateNoNonStaticInnerClass(List<Throwable> errors) {
