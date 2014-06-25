@@ -1,9 +1,10 @@
-package org.cauli.junit;
+package org.cauli.junit.runner;
 
 import com.google.common.collect.Lists;
 import org.cauli.exception.FrameworkBuildException;
 import org.cauli.instrument.ClassPool;
 import org.cauli.instrument.ClassUtils;
+import org.cauli.junit.*;
 import org.cauli.junit.anno.*;
 import org.cauli.junit.build.FrameworksBuilderFactory;
 import org.cauli.junit.statement.InterceptorStatement;
@@ -197,7 +198,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
                 list = FrameworksBuilderFactory.getInstance(testPlan.getFrameworksBuilder()).getFrameworkBuilder().build(testClass);
                 MethodManager.load(list);
             } catch (FrameworkBuildException e) {
-                throw new RuntimeException(e);
+                throw new FrameworkBuildException("构建方法失败",e);
             }
             for(FrameworkMethodWithParameters frameworkMethodWithParameters : list){
                 if(cauliFilter.isMatch(frameworkMethodWithParameters)){

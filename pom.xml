@@ -39,6 +39,7 @@
         <module>cauli-ui</module>
         <module>cauli-test</module>
         <module>cauli-server</module>
+        <module>cauli-client</module>
         <!--<module>cauli-log</module>-->
         <!--<module>cauli-spring-support</module>-->
         <!--<module>cauli-mock</module>-->
@@ -100,7 +101,7 @@
             <dependency>
                 <groupId>org.skyscreamer</groupId>
                 <artifactId>jsonassert</artifactId>
-                <version>1.2.2</version>
+                <version>1.2.3</version>
             </dependency>
             <dependency>
                 <groupId>com.opera</groupId>
@@ -180,6 +181,11 @@
                 <version>1.1.0</version>
             </dependency>
             <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty</artifactId>
+                <version>3.9.2.Final</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
                 <version>4.0.2.RELEASE</version>
@@ -199,6 +205,12 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>2.3.20</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.corundumstudio.socketio</groupId>
+                <artifactId>netty-socketio</artifactId>
+                <version>1.6.5</version>
             </dependency>
 
             <dependency>

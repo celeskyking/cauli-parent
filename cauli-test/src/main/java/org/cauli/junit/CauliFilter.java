@@ -17,7 +17,7 @@ public class CauliFilter {
         return runLevel;
     }
 
-    protected boolean isMatch(FrameworkMethodWithParameters frameworkMethodWithParameters){
+    public boolean isMatch(FrameworkMethodWithParameters frameworkMethodWithParameters){
         if(frameworkMethodWithParameters.getLevel()<=runLevel){
             return isMatchFeatureAndRelease(frameworkMethodWithParameters);
         }else{

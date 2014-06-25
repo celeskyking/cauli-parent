@@ -1,13 +1,16 @@
 package org.cauli.unit;
 
 
-import org.cauli.junit.CauliRunner;
+import org.cauli.junit.runner.CauliRunner;
 import org.cauli.junit.anno.Interceptor;
 import org.cauli.junit.anno.Named;
 import org.cauli.junit.anno.Param;
+import org.json.JSONException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.skyscreamer.jsonassert.JSONAssert;
+
 import java.util.Map;
 
 /**
@@ -18,15 +21,16 @@ import java.util.Map;
 public class CoreTest {
 
     @Test
-    @Param(value = "test1.txt")
-    @Ignore
-    public void testMap(@Named("params")Map<String,String> params){
-        System.out.println(params.toString());
+    //@Param(value = "test1.txt")
+    public void testMap() throws JSONException {
+        String result = "{id:1,name:\"Juergen\"}";
+        JSONAssert.assertEquals("{id:1}", result, false); // Pass
+        //JSONAssert.assertEquals("{id:1}", result, true); // Fail
     }
 
 
 
-    @Test
+    //@Test
     @Param("test1.txt")
     public void testTemplate(@Named("user")Map<String,String> name){
         System.out.println(name);

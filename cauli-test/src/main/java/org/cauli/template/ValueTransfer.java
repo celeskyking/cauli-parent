@@ -52,7 +52,18 @@ public class ValueTransfer {
             template.process(models,stringWriter);
             return stringWriter.toString();
         }else{
-            return name;
+            return transferValue(name);
+        }
+    }
+
+
+    private static String transferValue(String value){
+        if("<empty>".equals(value)){
+            return "";
+        }else if("<null>".equals(value)){
+            return null;
+        }else{
+            return value;
         }
     }
 }

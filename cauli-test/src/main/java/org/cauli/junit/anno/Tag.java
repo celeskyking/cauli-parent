@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 public @interface Tag {
     String name();
     String feature() default "default";
-    String release();
+    String release() default "";
     int level() default 2;
 }

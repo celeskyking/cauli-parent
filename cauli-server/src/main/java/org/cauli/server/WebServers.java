@@ -36,7 +36,7 @@ public class WebServers {
 
     /**
      * Returns a new {@link org.cauli.server.WebServer} object, adding the executor to the list
-     * of executor services, running on the stated socket address and accessible
+     * of executor services, running on the stated factory address and accessible
      * from the provided public URI.
      *
      * @param executor Since Webbit is designed to be a single threaded non-blocking server,<br />

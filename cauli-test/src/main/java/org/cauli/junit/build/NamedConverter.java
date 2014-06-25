@@ -10,8 +10,6 @@ import org.cauli.junit.GeneratorConverter;
 import org.cauli.junit.PairParameter;
 import org.cauli.junit.anno.Named;
 import org.cauli.pairwise.core.ParameterValuePair;
-
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,7 @@ public class NamedConverter implements GeneratorConverter<Named,Object> {
     @Override
     public Object convert(Named t, Class<Object> v, PairParameter pairParameter) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         String value = t.value();
-        Object object;
+        Object object = null;
         try {
             if(isListType(v)){
                 object= Lists.newArrayList();
@@ -44,19 +42,15 @@ public class NamedConverter implements GeneratorConverter<Named,Object> {
             }else if(v.isInterface()){
                 throw new NamedConverterException("不支持的注入类型"+v.getName());
             }else{
-                Constructor constructor = v.getConstructor();
-                object = constructor.newInstance();
                 for (ParameterValuePair pair:pairParameter.getPairs()) {
                     if (pair.getParameterName().startsWith(value)) {
-                        object= TypeConverterManager.convertType(pair.getParameterValue(),Object.class);
+                        object= TypeConverterManager.convertType(pair.getParameterValue(),v);
                     }
                 }
             }
-        } catch (NoSuchMethodException e) {
-            throw new NamedConverterException("Named.class注解注入参数错误",e);
+        } catch (Exception e) {
+            throw new NamedConverterException("Named.class注解注入参数错误,可能不支持该类型"+v.getName(),e);
         }
-
-
         return object;
     }
 
@@ -67,7 +61,7 @@ public class NamedConverter implements GeneratorConverter<Named,Object> {
 
 
     public boolean isMapType(Class<?> clazz){
-        return ClassUtils.isAssignableFromSubClass(Map.class,clazz);
+        return ClassUtils.isAssignableFromSubClass(Map.class, clazz);
     }
 
     public boolean isListType(Class<?> clazz){

@@ -14,14 +14,14 @@ import org.jboss.netty.util.CharsetUtil;
 import java.util.concurrent.Executor;
 
 /**
- * Responds with a Flash socket policy file.
+ * Responds with a Flash factory policy file.
  * <p/>
  * <p>
  * This implementation is based on the
  * <a href="https://github.com/waywardmonkeys/netty-flash-crossdomain-policy-server"
  * >waywardmonkeys/netty-flash-crossdomain-policy-server</a> project and the
  * <a href="http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html"
- * ><em>Setting up a socket policy file server</em></a> article.
+ * ><em>Setting up a factory policy file server</em></a> article.
  * </p>
  */
 
