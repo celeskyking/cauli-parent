@@ -4,6 +4,7 @@ package org.cauli.instrument;
 
 import com.google.common.collect.Maps;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -22,6 +23,11 @@ public class ClassUtils {
         }else{
             return false;
         }
+    }
+
+
+    public static boolean isPrivmitive(Class<?> clazz){
+        return clazz.isPrimitive();
     }
 
     public static boolean isListType(Class<?> clazz){
@@ -71,6 +77,20 @@ public class ClassUtils {
     public static boolean isAssignableFromSubClass(Class<?> parent,Class<?> subClass){
         return parent.isAssignableFrom(subClass);
     }
+
+    public static boolean isInterface(Class<?> clazz){
+        return clazz.isInterface();
+    }
+
+    public static boolean inInstance(Object object,Class<?> clazz){
+        return clazz.isInstance(object);
+    }
+
+    public static boolean isAnnotationPresent(Class<?> clazz,Class<? extends Annotation> annotation){
+        return clazz.isAnnotationPresent(annotation);
+    }
+
+
 
 
 }
