@@ -1,4 +1,2 @@
-name|user.brother.amount
-北京|0.01
-天津|0.02
-上海|0.03
+酒店.ofdfa|机票
+${user.name}|${user.age}
