@@ -141,7 +141,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
             };
             if("default".equals(param.value())){
                 setReadType(param.type());
-                return getSimilarFile("data/"+frameworkMethod.getMethod().getDeclaringClass().getSimpleName(),frameworkMethod.getName());
+                return getSimilarFile("data/"+frameworkMethod.getMethod().getDeclaringClass().getSimpleName(),frameworkMethod.getMethod().getName());
             }else{
                 setReadType(param.type());
                 return new File(param.value());
@@ -159,7 +159,7 @@ public class AnnotationParameterProvider implements ParameterProvider{
         if(dirFile.isDirectory()){
             File[] files = dirFile.listFiles();
             for(File file:files){
-                if(file.getName().contains(partFileName)){
+                if(file!=null&&file.getName().contains(partFileName)){
                     return file;
                 }
             }

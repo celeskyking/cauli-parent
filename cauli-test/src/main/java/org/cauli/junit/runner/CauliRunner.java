@@ -1,6 +1,10 @@
 package org.cauli.junit.runner;
 
 import com.google.common.collect.Lists;
+import org.cauli.db.DBCore;
+import org.cauli.db.DbManager;
+import org.cauli.db.annotation.DB;
+import org.cauli.db.annotation.MySQL;
 import org.cauli.exception.FrameworkBuildException;
 import org.cauli.instrument.ClassPool;
 import org.cauli.instrument.ClassUtils;
@@ -48,6 +52,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
 
     protected TestPlan init(){
+        initDB();
         TestPlan plan=new TestPlan();
         int threads= getTestClass().getJavaClass().isAnnotationPresent(ThreadRunner.class)?getTestClass().getJavaClass().getAnnotation(ThreadRunner.class).threads():1;
         plan.setThreads(threads);
@@ -413,6 +418,33 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     protected String testName(FrameworkMethodWithParameters method) {
         return method.toString();
+    }
+
+
+    public void initDB(){
+        Set<Class<?>> classes=ClassPool.getClassPool();
+        for(Class<?> clazz:classes){
+            if(clazz.isAnnotationPresent(DB.class)||clazz.isAnnotationPresent(MySQL.class)){
+                if(clazz.isAnnotationPresent(DB.class)){
+                    DB db = clazz.getAnnotation(DB.class);
+                    String username = db.username();
+                    String password = db.password();
+                    String url = db.url();
+                    String id = db.id();
+                    String driver = db.driver();
+                    DBCore dbCore = new DBCore(username,password,url,driver);
+                    DbManager.register(id, dbCore);
+                }else if(clazz.isAnnotationPresent(MySQL.class)){
+                    MySQL db = clazz.getAnnotation(MySQL.class);
+                    String username = db.username();
+                    String password = db.password();
+                    String url = db.url();
+                    String alias = db.id();
+                    DBCore core = DBCore.mysql(username,password,url);
+                    DbManager.register(alias,core);
+                }
+            }
+        }
     }
 
 

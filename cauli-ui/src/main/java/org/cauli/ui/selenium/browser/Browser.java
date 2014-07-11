@@ -175,7 +175,7 @@ public class Browser implements IBrowser {
         Set<String> windows = getCurrentBrowserDriver().getWindowHandles();
         for(String window : windows){
             getCurrentBrowserDriver().switchTo().window(window);
-            String titleName = getCurrentBrowserDriver().getCurrentUrl();
+            String titleName = getCurrentBrowserDriver().getTitle();
             if(titleName.equals(title)){
                 break;
             }
@@ -321,11 +321,11 @@ public class Browser implements IBrowser {
     public <T extends SourcePage> T waitFor(T page){
         String js ="\n"+
                 "if(document.readyState==\"complete\"){\n" +
-                "   return \"down\"  \n"+
+                "   return \"done\"  \n"+
                 "}\n" ;
         String text = (String) runJavaScript(js);
         for(int i=0;i<10;i++){
-            if("down".equals(text)){
+            if("done".equals(text)){
                 return page;
             } else{
                 currentPage().sleep(1);
@@ -381,7 +381,7 @@ public class Browser implements IBrowser {
         Set<String> windows = getCurrentBrowserDriver().getWindowHandles();
         for(String window : windows){
             getCurrentBrowserDriver().switchTo().window(window);
-            String titleName = getCurrentBrowserDriver().getCurrentUrl();
+            String titleName = getCurrentBrowserDriver().getTitle();
             if(titleName.contains(title)){
                 break;
             }
