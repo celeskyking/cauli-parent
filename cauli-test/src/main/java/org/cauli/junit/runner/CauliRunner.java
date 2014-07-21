@@ -27,10 +27,7 @@ import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 
 import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.internal.runners.rules.RuleFieldValidator.RULE_METHOD_VALIDATOR;
 import static org.junit.internal.runners.rules.RuleFieldValidator.RULE_VALIDATOR;
@@ -191,7 +188,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
     }
 
     protected List<FrameworkMethodWithParameters> computeTestMethods() {
-        Queue<FrameworkMethodWithParameters> queue = new PriorityQueue<FrameworkMethodWithParameters>(10,new FrameworkComparator());
+        //Queue<FrameworkMethodWithParameters> queue = new PriorityQueue<FrameworkMethodWithParameters>(10,new FrameworkComparator());
         CauliFilter cauliFilter=new CauliFilter();
         if (children == null||children.size()==0) {
             TestClass testClass = getTestClass();
@@ -207,12 +204,10 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
             }
             for(FrameworkMethodWithParameters frameworkMethodWithParameters : list){
                 if(cauliFilter.isMatch(frameworkMethodWithParameters)){
-                    queue.offer(frameworkMethodWithParameters);
+                    children.add(frameworkMethodWithParameters);
                 }
             }
-            while (!queue.isEmpty()){
-                children.add(queue.poll());
-            }
+            Collections.sort(children,new FrameworkComparator());
 
         }
         return children;

@@ -7,7 +7,7 @@ import org.junit.runner.notification.RunNotifier;
 /**
  * Created by tianqing.wang on 2014/6/23
  */
-public class AbstractRunner extends Runner{
+public class AbstractRunner<T> extends Runner{
 
 
     @Override
