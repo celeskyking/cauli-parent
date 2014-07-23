@@ -1,18 +1,17 @@
 package org.cauli.unit;
 
-import java.math.BigDecimal;
 
 /**
  * Created by celeskyking on 2014/3/30
  */
 public class Brother {
-    private BigDecimal amount;
+    private String amount;
 
-    public BigDecimal getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 }

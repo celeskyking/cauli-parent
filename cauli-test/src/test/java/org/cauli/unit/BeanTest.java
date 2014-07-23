@@ -1,43 +1,25 @@
 package org.cauli.unit;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
-import org.cauli.instrument.BeanUtils;
-import org.cauli.junit.JUnitBaseRunner;
-import org.cauli.junit.anno.Filter;
-import org.cauli.junit.anno.Param;
-import org.cauli.junit.anno.Tag;
-import org.cauli.junit.anno.ThreadRunner;
-import org.junit.Ignore;
+import org.cauli.junit.anno.*;
+import org.cauli.junit.runner.CauliRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * Created by celeskyking on 2014/3/30
  */
-@RunWith(JUnitBaseRunner.class)
-@Ignore
-@Filter
-@ThreadRunner(threads = 2)
+@RunWith(CauliRunner.class)
+@Filter(runLevel = 3)
+@ThreadRunner(threads = 1)
 public class BeanTest {
 
-    @Test
-    @Tag(release = "test_card")
-    public void userTest() throws InvocationTargetException, IllegalAccessException, InterruptedException {
-
-    }
 
     @Test
-    @Tag(release = "card")
-    @Param("test.txt")
-    //@Source("test.xls")
-    public void paramTest(String name) throws InterruptedException {
-        Thread.sleep(4000);
-        System.out.println(name);
+    @Tag(name = "test1",level = 0)
+    @Param("test1.txt")
+    public void test1(@Named("result")int result){
+        System.out.println(result);
     }
 
 

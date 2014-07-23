@@ -51,8 +51,31 @@ public class FieldUtils {
         }
     }
 
+    public static Class[] getGenericTypes(Field field) throws ClassNotFoundException {
+        Type type = field.getGenericType();
+        String classinfo= type.toString();
+        classinfo= classinfo.substring(field.getType().getName().length()).replace("<","").replace(">","");
+        if(classinfo.contains(",")){
+            String[] strings =  StringUtils.stripAll(classinfo.split(","));
+            Class[] classes=new Class[strings.length];
+            for(int i=0;i<strings.length;i++){
+                classes[i]=Class.forName(strings[i]);
+            }
+            return classes;
+        }else{
+            Class[] classes = new Class[1];
+            classes[0]=Class.forName(classinfo);
+            return classes;
+        }
+
+    }
+
     public static boolean isFinal(Field field){
         return Modifier.isFinal(field.getModifiers());
+    }
+
+    public static boolean isStatis(Field field){
+        return Modifier.isStatic(field.getModifiers());
     }
 
 }

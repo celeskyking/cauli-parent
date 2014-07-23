@@ -18,7 +18,23 @@ public class FrameworksBuilderFactory {
         return factory;
     }
 
+
+    public static FrameworksBuilderFactory getInstance(FrameworksBuilder frameworksBuilder){
+        if(factory==null){
+            synchronized (FrameworksBuilderFactory.class){
+                if(factory==null){
+                    factory=new FrameworksBuilderFactory(frameworksBuilder);
+                }
+            }
+        }
+        return factory;
+    }
+
     private FrameworksBuilder frameworksBuilder;
+
+    private FrameworksBuilderFactory(FrameworksBuilder frameworksBuilder){
+        this.frameworksBuilder=frameworksBuilder;
+    }
 
     public FrameworksBuilder getFrameworkBuilder() {
         return frameworksBuilder;

@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface GeneratorConverter<K extends Annotation,V> {
 
-    public V convert(K t, Class<V> v,RowParameter parameter,List<String> headers) throws IllegalAccessException, InstantiationException, InvocationTargetException;
+    public V convert(K t, Class<V> v,PairParameter pairParameter) throws IllegalAccessException, InstantiationException, InvocationTargetException;
 
     public Class<K> genAnnotationType();
 }

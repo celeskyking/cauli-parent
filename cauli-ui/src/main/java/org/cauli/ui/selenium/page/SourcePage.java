@@ -36,7 +36,7 @@ public abstract class SourcePage extends CurrentPage {
                 browser.selectWindowContainsUrl(this.getClass().getAnnotation(At.class).value());
             }
         }else if(this.getClass().isAnnotationPresent(Title.class)){
-            if(!browser.getCurrentBrowserDriver().getCurrentUrl().contains(this.getClass().getAnnotation(Title.class).value())){
+            if(!browser.getCurrentBrowserDriver().getTitle().contains(this.getClass().getAnnotation(Title.class).value())){
                 this.configTitle=this.getClass().getAnnotation(Title.class).value();
                 browser.selectWindowContainsTitle(this.getClass().getAnnotation(Title.class).value());
             }

@@ -27,6 +27,13 @@ public class ExcuteScheduler implements RunnerScheduler{
         this.completionService = new ExecutorCompletionService<Void>(executorService);
         this.tasks = new LinkedList<Future<Void>>();
     }
+
+
+    public ExcuteScheduler(int threads){
+        this.executorService=  Executors.newFixedThreadPool(threads,new NamedThreadFactory(Thread.currentThread().getName()));
+        this.completionService = new ExecutorCompletionService<Void>(executorService);
+        this.tasks = new LinkedList<Future<Void>>();
+    }
     public void schedule(Runnable childStatement) {
         tasks.offer(completionService.submit(childStatement, null));
     }

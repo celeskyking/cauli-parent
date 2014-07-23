@@ -11,4 +11,5 @@ import java.lang.annotation.*;
 public @interface Filter {
     String feature() default "default";
     String release() default "";
+    int runLevel() default 2;
 }

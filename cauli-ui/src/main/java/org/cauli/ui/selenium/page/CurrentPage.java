@@ -2,7 +2,9 @@ package org.cauli.ui.selenium.page;
 
 import com.google.common.collect.Maps;
 import org.cauli.ui.annotation.Description;
+import org.cauli.ui.annotation.Find;
 import org.cauli.ui.selenium.browser.IBrowser;
+import org.cauli.ui.selenium.element.CauliElement;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -32,7 +34,7 @@ public class CurrentPage extends Page{
         Method method = this.dslMethods.get(methodDesc);
         return method.invoke(this,objects);
 
-    }
 
+    }
 
 }

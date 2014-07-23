@@ -3,8 +3,6 @@ package org.cauli.ui.runner;
 
 import org.cauli.junit.statement.Interceptor;
 import org.cauli.junit.statement.InterceptorStatement;
-import org.cauli.ui.selenium.browser.Auto;
-import org.junit.runners.model.FrameworkMethod;
 
 
 /**
@@ -40,6 +38,11 @@ public class CauliUIStatment extends InterceptorStatement{
 
         @Override
         public void interceptorAfterForce(InterceptorStatement statement) {
+
+        }
+
+        @Override
+        public void interceptorBeforeRetryTimeConfig(InterceptorStatement statement) {
 
         }
     }

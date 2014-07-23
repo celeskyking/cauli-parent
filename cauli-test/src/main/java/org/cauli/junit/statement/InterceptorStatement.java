@@ -1,9 +1,12 @@
 package org.cauli.junit.statement;
 
+import com.google.common.collect.Lists;
 import jodd.util.StringUtil;
+import org.cauli.exception.NotFoundNamedMethodException;
+import org.cauli.exception.TestFailedError;
+import org.cauli.junit.ExcuteScheduler;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.cauli.junit.MethodManager;
-import org.cauli.exception.TestFailedError;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
@@ -18,26 +21,38 @@ public class InterceptorStatement extends Statement {
 	protected final FrameworkMethodWithParameters testMethod;
     protected Object target;
     private int level;
-    private InterceptorStatement dependencyStatement;
+    private List<InterceptorStatement> dependencyStatement= Lists.newArrayList();
     protected int retryTimes=0;
-    private int runLevel;
 	public InterceptorStatement(FrameworkMethodWithParameters methodWithParameters, Object target) {
 		this.testMethod=methodWithParameters;
 		this.target=target;
-        String depName = methodWithParameters.getDependencyMethodName();
-        if(StringUtil.isNotEmpty(depName)){
-            this.dependencyStatement=new InterceptorStatement(MethodManager.get(depName),target);
+        String[] depNames = methodWithParameters.getDependencyMethodName();
+        if(depNames!=null&&depNames.length>0){
+            for(String depName:depNames){
+                if(StringUtil.isNotEmpty(depName)){
+                    List<FrameworkMethodWithParameters> methods = MethodManager.get(depName);
+                    if(methods!=null){
+                        for(FrameworkMethodWithParameters method:methods){
+                            if(method!=null){
+                                this.dependencyStatement.add(new InterceptorStatement(method,target));
+                            }
+                        }
+                    }else{
+                        logger.warn("没有找到依赖的Method->name：{}",depName);
+                    }
+                }
+            }
         }
+
+
         this.level=methodWithParameters.getLevel();
+        this.interceptors.add(new AnnotationInterceptor());
 	}
     private List<Interceptor> interceptors = new ArrayList<Interceptor>();
 
     @Override
 	public void evaluate() throws Throwable {
-        logger.info("*******************测试用例["+this.testMethod.getName()+"]开始执行*****************");
-        //*****我们来定义方法级别的监听器注解，可以为专门的一个方法添加注解。也可以去判断类是否有监听器的注解来实现自动的注册和卸载。
-        runRetry();
-        logger.info("*******************测试用例["+testMethod.getName()+"]执行结束****************");
+            runRetry();
 	}
 
 
@@ -61,8 +76,12 @@ public class InterceptorStatement extends Statement {
                 if(this.dependencyStatement==null){
                     testMethod.invokeExplosively(target);
                 }else{
-                    this.dependencyStatement.evaluate();
-                    testMethod.invokeExplosively(target);
+                    for(final InterceptorStatement statement:this.dependencyStatement){
+                        statement.evaluate();
+                    }
+                        testMethod.invokeExplosively(target);
+
+
                 }
 
                 for(Interceptor interceptor:interceptors){
@@ -96,11 +115,6 @@ public class InterceptorStatement extends Statement {
         this.target = target;
     }
 
-
-
-
-
-
     public int getLevel() {
         return level;
     }
@@ -109,23 +123,17 @@ public class InterceptorStatement extends Statement {
         this.level = level;
     }
 
-    public InterceptorStatement getDependencyStatement() {
-        return dependencyStatement;
-    }
-
-    public void setDependencyStatement(InterceptorStatement dependencyStatement) {
-        this.dependencyStatement = dependencyStatement;
-    }
 
     public void addInterceptor(Interceptor interceptor){
         interceptors.add(interceptor);
     }
 
-    public int getRunLevel() {
-        return runLevel;
+
+    public List<InterceptorStatement> getDependencyStatement() {
+        return dependencyStatement;
     }
 
-    public void setRunLevel(int runLevel) {
-        this.runLevel = runLevel;
+    public void setDependencyStatement(List<InterceptorStatement> dependencyStatement) {
+        this.dependencyStatement = dependencyStatement;
     }
 }
