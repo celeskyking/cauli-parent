@@ -8,10 +8,6 @@ import org.openqa.selenium.NoSuchElementException;
 public class RichTextField extends CauliElement {
     private Logger logger = Logger.getLogger(RichTextField.class);
 
-    public RichTextField(IBrowser browser, TempElement tempElement) {
-        super(browser, tempElement);
-    }
-
     public RichTextField(IBrowser browser) {
         super(browser);
     }

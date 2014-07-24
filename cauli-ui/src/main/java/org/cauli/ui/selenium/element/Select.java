@@ -14,11 +14,6 @@ public class Select extends CauliElement {
     private Logger logger = LoggerFactory.getLogger(Select.class);
     public org.openqa.selenium.support.ui.Select select;
 
-    public Select(IBrowser browser, TempElement tempElement) {
-        super(browser, tempElement);
-        this.select=new org.openqa.selenium.support.ui.Select(getElement());
-    }
-
     public Select(IBrowser browser) {
         super(browser);
     }
@@ -27,6 +22,7 @@ public class Select extends CauliElement {
         super(browser, location);
         this.select=new org.openqa.selenium.support.ui.Select(getElement());
     }
+
 
 
     /**根据comobobox中的索引值来进行选择，索引值从0开始的

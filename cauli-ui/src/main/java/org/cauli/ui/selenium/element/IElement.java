@@ -47,8 +47,6 @@ public interface IElement {
     public void keyPress(String keys);
     public void release();
     public WebElement getElement();
-//    public IElement next();
-//    public List<IElement> brothers();
     public IElement child(String location);
     public IElement child(String location, int index);
     public CauliElements children(String location);

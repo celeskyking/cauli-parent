@@ -9,10 +9,6 @@ import org.slf4j.LoggerFactory;
 public class CheckBox extends CauliElement {
     private Logger logger = LoggerFactory.getLogger(CheckBox.class);
 
-    public CheckBox(IBrowser browser, TempElement tempElement) {
-        super(browser, tempElement);
-    }
-
     public CheckBox(IBrowser browser) {
         super(browser);
     }

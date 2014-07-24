@@ -13,10 +13,6 @@ import java.util.List;
 public class Table extends CauliElement {
     private Logger logger = LoggerFactory.getLogger(Table.class);
 
-    public Table(IBrowser browser, TempElement tempElement) {
-        super(browser, tempElement);
-    }
-
     public Table(IBrowser browser) {
         super(browser);
     }

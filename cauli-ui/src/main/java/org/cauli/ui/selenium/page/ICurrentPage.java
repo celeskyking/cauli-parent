@@ -79,8 +79,6 @@ public interface ICurrentPage extends IPage {
 
     public void addCauliElements(CauliElements cauliElements);
 
-    public <T extends IElement> T waitFor(T cauliElement);
-
     public void sleep(int seconds);
 
 }

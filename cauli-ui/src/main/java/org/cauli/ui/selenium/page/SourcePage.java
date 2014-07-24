@@ -5,12 +5,10 @@ import org.cauli.ui.annotation.At;
 import org.cauli.ui.annotation.Commit;
 import org.cauli.ui.annotation.Find;
 import org.cauli.ui.annotation.Title;
-import org.cauli.ui.selenium.browser.Auto;
 import org.cauli.ui.selenium.browser.IBrowser;
 import org.cauli.ui.selenium.element.CauliElement;
 import org.cauli.ui.selenium.element.CauliElements;
 import org.cauli.ui.selenium.element.IElement;
-import org.cauli.ui.selenium.element.TempElement;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -73,25 +71,7 @@ public abstract class SourcePage extends CurrentPage {
     	for(Field field:fields){
     		field.setAccessible(true);
     		if(field.isAnnotationPresent(Find.class)){
-                if((field.getType()== TempElement.class)){
-                    Find find = field.getAnnotation(Find.class);
-                    String id = find.id();
-                    if("".equals(id)){
-                        throw new RuntimeException("页面定义的tempElement必须有id值，否则无法通过id查找元素的...");
-                    }
-                    if(!"".equals(find.value())){
-                        String value = find.value();
-                        TempElement tempElement = new TempElement(id,value);
-                        try {
-                            field.set(this, tempElement);
-                            addElement(find.id(),(TempElement) field.get(this));
-                        } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }else if(IElement.class.isAssignableFrom(field.getType())){
+                if(IElement.class.isAssignableFrom(field.getType())){
                     Find find = field.getAnnotation(Find.class);
                     String id = find.id();
                     if(!"".equals(find.value())){
@@ -106,6 +86,7 @@ public abstract class SourcePage extends CurrentPage {
                                 cauliElement.setId(id);
                             }
                             field.set(this, cauliElement);
+                            addCauliElement(cauliElement);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

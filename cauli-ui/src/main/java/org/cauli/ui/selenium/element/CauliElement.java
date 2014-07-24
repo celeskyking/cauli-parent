@@ -29,10 +29,6 @@ public class CauliElement implements IElement {
     private Actions actions;
     private String id;
     private String Locate;
-    public CauliElement(IBrowser browser,TempElement tempElement){
-        this(browser,tempElement.getBy());
-        this.setId(tempElement.getId());
-    }
 
     public String getLocate() {
         return Locate;
@@ -552,26 +548,17 @@ public class CauliElement implements IElement {
 
     public boolean isExist(){
         if(this.element==null){
-            if(getLocate()!=null){
-                try{
-                    WebDriver driver = this.getBrowser().getCurrentBrowserDriver();
-                    if(this.browser.isUseJQuery()){
-                        if(getLocate().contains("->")){
-                            By by = LocationParse.parseLocation(getLocate(),driver.getPageSource());
-                            this.element=driver.findElement(by);
-                            this.id= by.toString();
-                        }else{
-                            this.element = jquery(getLocate());
-                            this.id=getLocate();
-                        }
-                    }else{
-                        this.element=driver.findElement(LocationParse.parseLocation(getLocate(),driver.getPageSource()));
+            for(int i=0;i<10;i++){
+                if(this.element==null){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                }catch (Exception e){
-                    logger.warn("元素{}不存在...",this.id);
-                    this.element=null;
+                    continue;
+                }else {
+                    locateInit();
                 }
-
             }
             if(this.element==null){
                 return false;
@@ -582,6 +569,32 @@ public class CauliElement implements IElement {
             return true;
         }
 
+    }
+
+
+    private void locateInit(){
+        if(getLocate()!=null){
+            try{
+                WebDriver driver = this.getBrowser().getCurrentBrowserDriver();
+                if(this.browser.isUseJQuery()){
+                    if(getLocate().contains("->")){
+                        By by = LocationParse.parseLocation(getLocate(),driver.getPageSource());
+                        this.element=driver.findElement(by);
+                        this.id= by.toString();
+                    }else{
+                        this.element = jquery(getLocate());
+                        this.id=getLocate();
+                    }
+                }else{
+                    this.element=driver.findElement(LocationParse.parseLocation(getLocate(),driver.getPageSource()));
+                    setId(getLocate());
+                }
+            }catch (Exception e){
+                logger.warn("元素{}不存在...",this.id);
+                this.element=null;
+            }
+
+        }
     }
 
     public IBrowser getBrowser() {
@@ -672,8 +685,4 @@ public class CauliElement implements IElement {
         }
         ActionListenerProxy.getDispatcher().afterkeyPress();
 	}
-
-
-    
-    
 }

@@ -23,11 +23,19 @@ import java.util.Set;
 public class Page implements ICurrentPage {
     private Logger logger = LoggerFactory.getLogger(Page.class);
     private String commit;
-    private Map<String, TempElement> elementMap;
-    private Map<String,CauliElements> elementsMap;
+    private Map<String, CauliElement> cauliElementMap=Maps.newHashMap();
+    private Map<String,CauliElements> elementsMap=Maps.newHashMap();
     private Actions actions;
     public WebDriver getCurrentwindow() {
         return currentwindow;
+    }
+
+    public Map<String, CauliElement> getCauliElementMap() {
+        return cauliElementMap;
+    }
+
+    public void addCauliElement(CauliElement cauliElement) {
+        this.cauliElementMap.put(cauliElement.getId(),cauliElement);
     }
 
     public String getCommit() {
@@ -43,23 +51,16 @@ public class Page implements ICurrentPage {
     public IBrowser getBrowser() {
         return browser;
     }
-    protected Page(){
-    	  this.setElements(new HashMap<String,TempElement>());
-        this.elementsMap= Maps.newHashMap();
-    }
+
     private IBrowser browser;
     public Page(IBrowser browser){
         this.browser=browser;
         this.currentwindow=browser.getCurrentBrowserDriver();
-        this.setElements(new HashMap<String,TempElement>());
         this.actions=new Actions(getCurrentwindow());
-        this.elementsMap=Maps.newHashMap();
     }
 
     public Page(WebDriver driver){
         this.currentwindow=driver;
-        this.setElements(new HashMap<String,TempElement>());
-        this.elementsMap=Maps.newHashMap();
     }
 
     public void setBrowser(IBrowser browser){
@@ -186,7 +187,7 @@ public class Page implements ICurrentPage {
     public Select select(String location){
         Select select;
         if(location.startsWith("@")){
-            select = new Select(getBrowser(),this.elementMap.get(StringUtils.substringAfter(location,"@")));
+            select = new Select(getBrowser(),this.cauliElementMap.get(StringUtils.substringAfter(location,"@")));
         }else{
             select = new Select(getBrowser(),location);
         }
@@ -457,18 +458,7 @@ public class Page implements ICurrentPage {
         this.elementsMap.put(cauliElements.getId(),cauliElements);
     }
 
-    @Override
-    public <T extends IElement> T waitFor(T cauliElement) {
-        for(int i=0;i<10;i++){
-            if(cauliElement.getElement()==null){
-                sleep(1);
-                continue;
-            }else {
-                return cauliElement;
-            }
-        }
-        throw new NoSuchElementException("没有找到这个元素"+cauliElement.getId());
-    }
+
 
 
 
