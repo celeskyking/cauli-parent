@@ -10,6 +10,7 @@ import org.cauli.server.HttpControl;
 import org.cauli.server.HttpHandler;
 import org.cauli.server.WebbitException;
 
+import java.nio.channels.ClosedChannelException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -85,18 +86,20 @@ public class NettyHttpChannelHandler extends SimpleChannelUpstreamHandler {
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final ExceptionEvent e) {
         connectionHelper.fireConnectionException(e);
-        final NettyHttpResponse nettyHttpResponse = new NettyHttpResponse(ctx, new DefaultHttpResponse(HTTP_1_1, INTERNAL_SERVER_ERROR), true, exceptionHandler);
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ctx.setAttachment(IGNORE_REQUEST);
-                    nettyHttpResponse.error(e.getCause());
-                } catch (Exception exception) {
-                    exceptionHandler.uncaughtException(Thread.currentThread(), WebbitException.fromException(exception, ctx.getChannel()));
-                }
-            }
-        });
-    }
 
+        if (!(e.getCause() instanceof ClosedChannelException)) {
+            final NettyHttpResponse nettyHttpResponse = new NettyHttpResponse(ctx, new DefaultHttpResponse(HTTP_1_1, INTERNAL_SERVER_ERROR), true, exceptionHandler);
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ctx.setAttachment(IGNORE_REQUEST);
+                        nettyHttpResponse.error(e.getCause());
+                    } catch (Exception exception) {
+                        exceptionHandler.uncaughtException(Thread.currentThread(), WebbitException.fromException(exception, ctx.getChannel()));
+                    }
+                }
+            });
+        }
+    }
 }

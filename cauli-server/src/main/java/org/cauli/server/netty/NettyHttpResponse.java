@@ -149,10 +149,10 @@ public class NettyHttpResponse implements org.cauli.server.HttpResponse {
     @Override
     public NettyHttpResponse write(String content) {
         if (response.isChunked()) {
-            ctx.getChannel().write(new DefaultHttpChunk(wrappedBuffer(content.getBytes(CharsetUtil.UTF_8))));  
+            ctx.getChannel().write(new DefaultHttpChunk(wrappedBuffer(content.getBytes(CharsetUtil.UTF_8))));
         } else {
             write(copiedBuffer(content, CharsetUtil.UTF_8));
-        }    
+        }
         return this;
     }
 
@@ -167,7 +167,6 @@ public class NettyHttpResponse implements org.cauli.server.HttpResponse {
         header("Content-Type", "text/plain");
         content(message);
         flushResponse();
-
         exceptionHandler.uncaughtException(Thread.currentThread(),
                 WebbitException.fromException(error, ctx.getChannel()));
 
@@ -207,5 +206,4 @@ public class NettyHttpResponse implements org.cauli.server.HttpResponse {
         response.setContent(responseBuffer);
         return ctx.getChannel().write(response);
     }
-
 }
