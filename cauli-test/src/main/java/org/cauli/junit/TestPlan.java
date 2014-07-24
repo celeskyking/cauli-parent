@@ -5,6 +5,8 @@ import com.google.common.collect.Maps;
 import org.cauli.Constant;
 import org.cauli.junit.build.FrameworksBuilder;
 import org.cauli.junit.build.FrameworksBuilderFactory;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.notification.RunListener;
@@ -29,6 +31,16 @@ public class TestPlan {
     private List<RunListener> runListeners=new ArrayList<RunListener>();
     private List<TestRule> listeners= Lists.newArrayList();
     private Map<String,Object> templateSources = Maps.newHashMap();
+
+    private List<Rule> rules = Lists.newArrayList();
+
+    public List<Rule> getRules() {
+        return rules;
+    }
+
+    public void setRules(List<Rule> rules) {
+        this.rules = rules;
+    }
 
     public int getRunLevel() {
         return runLevel;

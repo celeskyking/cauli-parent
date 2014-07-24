@@ -27,7 +27,9 @@ import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.internal.runners.rules.RuleFieldValidator.RULE_METHOD_VALIDATOR;
 import static org.junit.internal.runners.rules.RuleFieldValidator.RULE_VALIDATOR;
@@ -44,7 +46,6 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
 
     public CauliRunner(Class<?> testClass) throws InitializationError {
         super(testClass);
-
     }
 
 
