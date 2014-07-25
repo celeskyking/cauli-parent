@@ -25,6 +25,8 @@ public class CurrentPage extends Page{
             if(method.isAnnotationPresent(Description.class)){
                 this.dslMethods.put(method.getAnnotation(Description.class).value(),method);
                 this.dslMethods.put(method.getName(),method);
+            }else{
+                this.dslMethods.put(method.getName(),method);
             }
         }
 
@@ -33,8 +35,6 @@ public class CurrentPage extends Page{
     public Object exec(String methodDesc,Object...objects) throws InvocationTargetException, IllegalAccessException {
         Method method = this.dslMethods.get(methodDesc);
         return method.invoke(this,objects);
-
-
     }
 
 }

@@ -16,16 +16,12 @@ public interface ICurrentPage extends IPage {
     public Select select(String location);
 
     public void open(String url);
-
-    public <T>T find(Class<T> clazz, String location);
     
-    public <T>T find(Class<T> clazz);
-
-    public IElement find(String location);
+    public <T extends IElement>T element(Class<T> clazz);
 
     public IElement element(String id);
 
-    public <T>T element(Class<T> clazz, String id);
+    public <T extends IElement>T element(Class<T> clazz, String id);
 
     public void assertAlert();
 
@@ -59,13 +55,9 @@ public interface ICurrentPage extends IPage {
 
     public <T> T frame(Class<T> clazz);
 
-    public ICurrentPage frame(int index);
+    public Frame frame(int index);
 
-    public ICurrentPage frame(String nameOrId);
-
-    public ICurrentPage frame(By by);
-
-    public ICurrentPage frame(By by, int index);
+    public Frame frame(String locate);
     
     public IElement $(String jquery);
 
@@ -80,5 +72,6 @@ public interface ICurrentPage extends IPage {
     public void addCauliElements(CauliElements cauliElements);
 
     public void sleep(int seconds);
+
 
 }

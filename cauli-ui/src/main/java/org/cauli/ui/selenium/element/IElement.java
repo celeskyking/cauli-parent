@@ -52,5 +52,7 @@ public interface IElement {
     public CauliElements children(String location);
     public void contextClick();
 
+    public void setElement(WebElement webElement);
+
     public String getLocate();
 }

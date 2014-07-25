@@ -90,12 +90,9 @@ public class Auto {
     public static IElement $(String jquery){
     	return browser().currentPage().$(jquery);
     }
-    public static IElement find(String location){
-        return currentPage().find(location);
-    }
 
-    public static <T>T find(Class<T> clazz,String location){
-        return currentPage().find(clazz,location);
+    public static <T extends IElement>T element(Class<T> clazz){
+        return currentPage().element(clazz);
     }
 
     public static void maxWindow(){
@@ -113,6 +110,7 @@ public class Auto {
     public static void openNew(String url){
         browser().openNew(url);
     }
+
     public static void refresh(){
         browser().refresh();
     }
@@ -217,10 +215,6 @@ public class Auto {
 
     public CauliElements elements(String location){
         return currentPage().elements(location);
-    }
-
-    public static <T extends IElement> T waitFor(T cauliElement){
-        return currentPage().waitFor(cauliElement);
     }
 
     public static <T extends SourcePage> T waitFor(T page){

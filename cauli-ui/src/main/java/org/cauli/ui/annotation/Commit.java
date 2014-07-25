@@ -11,4 +11,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Commit {
     String value();
+    String url() default "";
+    String title() default "";
 }

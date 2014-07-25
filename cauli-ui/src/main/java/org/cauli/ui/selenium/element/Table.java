@@ -21,6 +21,10 @@ public class Table extends CauliElement {
         super(browser, location);
     }
 
+    public Table(IBrowser browser,CauliElement cauliElement){
+        super(browser,cauliElement.getLocate());
+    }
+
     /**
 	 *获得table的第row行，col列的值，这个方法只能返回td的值，对于标题th标签是不支持的，可以用getTableTitle的方法，</br>
 	 *都是在同一个table中，按正常的行数数就可以。 

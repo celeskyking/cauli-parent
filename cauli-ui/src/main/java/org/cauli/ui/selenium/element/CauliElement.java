@@ -96,26 +96,16 @@ public class CauliElement implements IElement {
                         this.id=location;
                     }
                 }else{
-
-                    this.element=driver.findElement(LocationParse.parseLocation(location,driver.getPageSource()));
-                    this.id=location;
-                }
-            }else{
-                if(this.browser.isUseJQuery()){
-                    if(location.contains("->")){
-                        By by = LocationParse.parseLocation(location,driver.getPageSource());
-                        this.element=getElement().findElement(by);
-                        this.id= by.toString();
+                    if(this.element==null){
+                        this.element=driver.findElement(LocationParse.parseLocation(location,driver.getPageSource()));
+                        this.id=location;
                     }else{
-                        this.element = jquery(location);
+                        this.element=getElement().findElement(LocationParse.parseLocation(location, driver.getPageSource()));
                         this.id=location;
                     }
-                }else{
-                    this.element=getElement().findElement(LocationParse.parseLocation(location, driver.getPageSource()));
-                    this.id=location;
+
                 }
             }
-
         }catch (NoSuchElementException e){
             this.element=null;
         }
@@ -127,35 +117,24 @@ public class CauliElement implements IElement {
     public <T> T find(String location, Class<T> tClass) {
         WebDriver driver = getBrowser().getCurrentBrowserDriver();
         try {
-            if(this.element==null){
-                if(this.browser.isUseJQuery()){
-                    if(location.contains("->")){
-                        By by = LocationParse.parseLocation(location,driver.getPageSource());
-                        this.element=driver.findElement(by);
-                        this.id= by.toString();
-                    }else{
-                        this.element = jquery(location);
-                        this.id=location;
-                    }
+            if(this.browser.isUseJQuery()){
+                if(location.contains("->")){
+                    By by = LocationParse.parseLocation(location,driver.getPageSource());
+                    this.element=driver.findElement(by);
+                    this.id= by.toString();
                 }else{
-
-                    this.element=driver.findElement(LocationParse.parseLocation(location,driver.getPageSource()));
+                    this.element = jquery(location);
+                    this.id=location;
                 }
             }else{
-                if(this.browser.isUseJQuery()){
-                    if(location.contains("->")){
-                        By by = LocationParse.parseLocation(location,driver.getPageSource());
-                        this.element=getElement().findElement(by);
-                        this.id= by.toString();
-                    }else{
-                        this.element = jquery(location);
-                        this.id=location;
-                    }
-                }else{
+                if(this.element==null) {
+                    this.element=driver.findElement(LocationParse.parseLocation(location,driver.getPageSource()));
+                    setId(location);
+                }else {
                     this.element=getElement().findElement(LocationParse.parseLocation(location,driver.getPageSource()));
+                    setId(location);
                 }
             }
-
         }catch (NoSuchElementException e){
             this.element=null;
         }
@@ -549,15 +528,16 @@ public class CauliElement implements IElement {
     public boolean isExist(){
         if(this.element==null){
             for(int i=0;i<10;i++){
-                if(this.element==null){
+                locateInit();
+                if(getElement()==null){
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     continue;
-                }else {
-                    locateInit();
+                }else{
+                    break;
                 }
             }
             if(this.element==null){

@@ -4,12 +4,12 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.cauli.ui.selenium.browser.IBrowser;
 import org.cauli.ui.selenium.element.*;
+import org.cauli.ui.selenium.element.Select;
 import org.cauli.ui.selenium.listener.ActionListenerProxy;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +23,9 @@ import java.util.Set;
 public class Page implements ICurrentPage {
     private Logger logger = LoggerFactory.getLogger(Page.class);
     private String commit;
-    private Map<String, CauliElement> cauliElementMap=Maps.newHashMap();
+    private Map<String,CauliElement> cauliElementMap=Maps.newHashMap();
     private Map<String,CauliElements> elementsMap=Maps.newHashMap();
+
     private Actions actions;
     public WebDriver getCurrentwindow() {
         return currentwindow;
@@ -37,6 +38,8 @@ public class Page implements ICurrentPage {
     public void addCauliElement(CauliElement cauliElement) {
         this.cauliElementMap.put(cauliElement.getId(),cauliElement);
     }
+
+
 
     public String getCommit() {
         return commit;
@@ -84,30 +87,18 @@ public class Page implements ICurrentPage {
     }
 
     @Override
-    public ICurrentPage frame(int index) {
+    public Frame frame(int index) {
         browser.getCurrentBrowserDriver().switchTo().frame(index);
         return this;
     }
 
     @Override
-    public ICurrentPage frame(String nameOrId) {
+    public Frame frame(String locate) {
         this.browser.getCurrentBrowserDriver().switchTo().frame(nameOrId);
         return this;
     }
 
-    @Override
-    public ICurrentPage frame(By by) {
-        WebDriver driver = browser.getCurrentBrowserDriver();
-        driver.switchTo().frame(driver.findElement(by));
-        return this;
-    }
 
-    @Override
-    public ICurrentPage frame(By by, int index) {
-        WebDriver driver = browser.getCurrentBrowserDriver();
-        driver.switchTo().frame(driver.findElements(by).get(index));
-        return this;
-    }
 
 
     @Override
@@ -140,13 +131,9 @@ public class Page implements ICurrentPage {
         try {
             T currentpage= (T) Class.forName(clazz.getName()).newInstance();
             return currentpage;
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("没有找到这个class类"+clazz.getName()+",请检查类是否被加载或者类名是否正确");
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("没有找到这个class类"+clazz.getName()+",请检查类是否被加载或者类名是否正确");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("没有找到这个class类"+clazz.getName()+",请检查类是否被加载或者类名是否正确");
+            throw new RuntimeException("没有找到这个class类"+clazz.getName()+",请检查类是否被加载或者类名是否正确",e);
         }
     }
 
@@ -158,36 +145,22 @@ public class Page implements ICurrentPage {
     }
 
     @Override
-    public <T> T find(Class<T> clazz, String location) {
-        try {
-            Constructor constructor = clazz.getConstructor(IBrowser.class,String.class);
-            return (T) constructor.newInstance(getBrowser(),location);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new NoSuchElementException("没有找到此类型的元素:"+clazz.getName()) ;
-        }
-    }
-
-    @Override
-    public <T> T find(Class<T> clazz) {
+    public <T extends IElement> T element(Class<T> clazz) {
         try {
             Constructor constructor = clazz.getConstructor(getBrowser().getClass());
             return (T) constructor.newInstance(getBrowser());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("没有找到此类型的元素:"+clazz.getName(),e) ;
+            throw new NoSuchElementException("没有找到此类型的元素:"+clazz.getName(),e) ;
         }
     }
 
-    @Override
-    public IElement find(String location) {
-        return new CauliElement(getBrowser(),location);
-    }
 
     public Select select(String location){
         Select select;
         if(location.startsWith("@")){
-            select = new Select(getBrowser(),this.cauliElementMap.get(StringUtils.substringAfter(location,"@")));
+            select = new Select(getBrowser());
+            select.setSelectElement(cauliElementMap.get(StringUtils.substringBefore(location,"@")).getElement());
         }else{
             select = new Select(getBrowser(),location);
         }
@@ -207,8 +180,8 @@ public class Page implements ICurrentPage {
     public IElement element(String location) {
         if(StringUtils.startsWith(location,"@")){
             String id = StringUtils.substringAfter(location,"@");
-            if(this.elementMap.get(id)!=null){
-                return new CauliElement(this.browser, getTempElements().get(id));
+            if(this.cauliElementMap.get(id)!=null){
+                return getCauliElementMap().get(id);
             }
         }else{
             return new CauliElement(getBrowser(),location);
@@ -362,13 +335,15 @@ public class Page implements ICurrentPage {
 
 
 	@Override
-	public <T> T element(Class<T> clazz, String location) {
+	public <T extends IElement> T element(Class<T> clazz, String location) {
 		try {
             if(StringUtils.startsWith(location,"@")){
-                TempElement tempElement= getTempElements().get(StringUtils.substringAfter(location, "@"));
-                if(tempElement!=null){
-                    Constructor<T> ctor1=clazz.getConstructor(IBrowser.class,TempElement.class);
-                    return ctor1.newInstance(getBrowser(),tempElement);
+                String id = StringUtils.substringAfter(location, "@");
+                CauliElement element = getCauliElementMap().get(id);
+                if(element!=null){
+                    Constructor<T> ctor1=clazz.getConstructor(IBrowser.class);
+                    T t= ctor1.newInstance(getBrowser());
+                    t.setElement(element.getElement());
                 }
             }else {
                 Constructor<T> ctor = clazz.getConstructor(IBrowser.class,String.class);
@@ -381,25 +356,6 @@ public class Page implements ICurrentPage {
 		return null;
 	}
 
-	public Map<String, TempElement> getTempElements() {
-		return elementMap;
-	}
-	
-	public TempElement getTempElement(String id){
-		return elementMap.get(id);
-	}
-	
-	public void setElements(Map<String, TempElement> elementMap) {
-		this.elementMap = elementMap;
-	}
-	
-	public void addElement(String id,TempElement element){
-		this.elementMap.put(id, element);
-	}
-
-    public void addElements(Map<String,TempElement>map){
-        this.elementMap.putAll(map);
-    }
 	
 	public IElement $(String jquery) {
 		CauliElement cauliElement= new CauliElement(browser,jquery);
@@ -426,8 +382,8 @@ public class Page implements ICurrentPage {
         Table table=null;
         if(StringUtils.startsWith(location,"@")){
             String id=StringUtils.substringAfter(location,"@");
-            if(getTempElements().get(id)!=null){
-                 table=new Table(getBrowser(), getTempElements().get(id));
+            if(getCauliElementMap().get(id)!=null){
+                 table=new Table(getBrowser(), getCauliElementMap().get(id));
             }
 
         }else{
@@ -442,7 +398,7 @@ public class Page implements ICurrentPage {
         CauliElements cauliElements=null;
         if(StringUtils.startsWith(location,"@")){
             String id=StringUtils.substringAfter(location,"@");
-            if(getTempElements().get(id)!=null){
+            if(getCauliElementMap().get(id)!=null){
                 cauliElements=elementsMap.get(location);
             }
 

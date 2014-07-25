@@ -1,5 +1,7 @@
 package org.cauli.ui.annotation;
 
+import org.cauli.ui.FrameLocateType;
+
 import java.lang.annotation.*;
 
 /**
@@ -10,6 +12,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface FindFrame {
 
-    int index() default 0;
-    String location() default "";
+    String value();
+    FrameLocateType type();
 }

@@ -1,0 +1,3 @@
+<page name="百度首页">
+    <element id="百度搜索框" locate="id->kw1"/>
+</page>

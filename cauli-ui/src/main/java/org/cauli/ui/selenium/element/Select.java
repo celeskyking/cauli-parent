@@ -24,6 +24,20 @@ public class Select extends CauliElement {
     }
 
 
+    public void setSelectElement(WebElement element){
+        setElement(element);
+        this.select=new org.openqa.selenium.support.ui.Select(getElement());
+    }
+
+
+    public Select(IBrowser browser,CauliElement cauliElement){
+        super(browser,cauliElement.getLocate());
+    }
+
+
+    public void setSelect(org.openqa.selenium.support.ui.Select select) {
+        this.select = select;
+    }
 
     /**根据comobobox中的索引值来进行选择，索引值从0开始的
      * @param index 要选择的索引号
