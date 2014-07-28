@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.celeskyking.server</groupId>
+    <groupId>com.github.celeskyking</groupId>
     <artifactId>cauli-server</artifactId>
     <version>${parent.version}</version>
     <dependencies>

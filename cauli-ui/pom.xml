@@ -7,13 +7,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.celeskyking.ui</groupId>
+    <groupId>com.github.celeskyking</groupId>
     <artifactId>cauli-ui</artifactId>
     <version>${parent.version}</version>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.celeskyking.test</groupId>
+            <groupId>com.github.celeskyking</groupId>
             <artifactId>cauli-test</artifactId>
             <version>${project.version}</version>
         </dependency>
