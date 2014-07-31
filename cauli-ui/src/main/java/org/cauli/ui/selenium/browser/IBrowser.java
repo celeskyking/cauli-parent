@@ -37,11 +37,10 @@ public interface IBrowser {
 
     public ICurrentPage selectDefaultWindow();
 
-    public ICurrentPage selectFrame(By by);
 
     public ICurrentPage selectFrame(int index);
 
-    public ICurrentPage selectFrame(By by, int index);
+    public ICurrentPage selectFrame(String locate);
 
     public ICurrentPage selectLastOpenedPage();
 

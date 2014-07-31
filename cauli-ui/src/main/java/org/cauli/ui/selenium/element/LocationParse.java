@@ -47,7 +47,7 @@ public class LocationParse {
         }
     }
 
-    public static By getLocationType(String by,String location){
+    private static By getLocationType(String by,String location){
         try {
             By local = (By) MethodUtils.invokeStaticMethod(By.class, by, location);
             return local;

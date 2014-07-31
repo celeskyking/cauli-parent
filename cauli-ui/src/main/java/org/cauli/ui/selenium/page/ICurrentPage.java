@@ -1,6 +1,7 @@
 package org.cauli.ui.selenium.page;
 
 
+import org.cauli.ui.exception.FrameEnterException;
 import org.cauli.ui.selenium.browser.IBrowser;
 import org.cauli.ui.selenium.element.*;
 import org.openqa.selenium.By;
@@ -55,9 +56,9 @@ public interface ICurrentPage extends IPage {
 
     public <T> T frame(Class<T> clazz);
 
-    public Frame frame(int index);
+    public Frame frame(int index) throws FrameEnterException;
 
-    public Frame frame(String locate);
+    public Frame frame(String locate) throws FrameEnterException;
     
     public IElement $(String jquery);
 

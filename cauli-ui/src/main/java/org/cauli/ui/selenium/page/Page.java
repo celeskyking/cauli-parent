@@ -2,6 +2,7 @@ package org.cauli.ui.selenium.page;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.ui.exception.FrameEnterException;
 import org.cauli.ui.selenium.browser.IBrowser;
 import org.cauli.ui.selenium.element.*;
 import org.cauli.ui.selenium.element.Select;
@@ -87,18 +88,24 @@ public class Page implements ICurrentPage {
     }
 
     @Override
-    public Frame frame(int index) {
-        browser.getCurrentBrowserDriver().switchTo().frame(index);
-        return this;
+    public Frame frame(int index) throws FrameEnterException {
+        try {
+            return new Frame(this.browser,this,index);
+        } catch (Exception e) {
+            logger.error("切换Frame[索引:{}]失败,异常信息:{}", index, e);
+            throw new FrameEnterException("无法切入Frame,索引:"+index,e);
+        }
     }
 
     @Override
-    public Frame frame(String locate) {
-        this.browser.getCurrentBrowserDriver().switchTo().frame(nameOrId);
-        return this;
+    public Frame frame(String locate) throws FrameEnterException {
+        try {
+            return new Frame(this.browser,this,locate);
+        } catch (Exception e) {
+            logger.error("切换Frame[{}]失败,异常信息:{}",locate,e);
+            throw new FrameEnterException("无法切入Frame"+locate,e);
+        }
     }
-
-
 
 
     @Override
@@ -168,11 +175,11 @@ public class Page implements ICurrentPage {
         return select;
     }
 
-    public Map<String, CauliElements> getElementsMap() {
+    protected Map<String, CauliElements> getElementsMap() {
         return elementsMap;
     }
 
-    public void setElementsLists(Map<String, CauliElements> elementsLists) {
+    protected void setElementsLists(Map<String, CauliElements> elementsLists) {
         this.elementsMap = elementsLists;
     }
 

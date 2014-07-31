@@ -3,6 +3,7 @@ package org.cauli.ui.selenium.page;
 import com.google.common.collect.Maps;
 import com.thoughtworks.xstream.XStream;
 import jodd.util.StringUtil;
+import org.cauli.instrument.ClassPool;
 import org.cauli.ui.FrameLocateType;
 import org.cauli.ui.annotation.Commit;
 import org.cauli.ui.annotation.Find;
@@ -23,6 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author 
@@ -61,6 +63,11 @@ public abstract class SourcePage extends CurrentPage implements LocateSource{
             throw new Exception("SourcePage必须定义Commimt注解信息");
         }
         init();
+    }
+
+
+    public void initFrameAndSubPage(){
+        Set<Class<?>> classSet = ClassPool.getClassPool();
     }
 
     public String getConfigUrl() {

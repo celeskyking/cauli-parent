@@ -1,6 +1,7 @@
 package org.cauli.ui.selenium.browser;
 
 import org.apache.commons.io.FileUtils;
+import org.cauli.ui.selenium.element.LocationParse;
 import org.cauli.ui.selenium.listener.ActionListenerProxy;
 import org.cauli.ui.selenium.page.CurrentPage;
 import org.cauli.ui.selenium.page.ICurrentPage;
@@ -134,13 +135,6 @@ public class Browser implements IBrowser {
     }
 
     @Override
-    public ICurrentPage selectFrame(By by) {
-        this.driver.switchTo().frame(this.driver.findElement(by));
-        this.page.setBrowser(this);
-        return this.page;
-    }
-
-    @Override
     public ICurrentPage selectFrame(int index) {
         this.driver.switchTo().frame(index);
         this.page.setBrowser(this);
@@ -148,11 +142,12 @@ public class Browser implements IBrowser {
     }
 
     @Override
-    public ICurrentPage selectFrame(By by, int index) {
-        this.driver.switchTo().frame(this.driver.findElements(by).get(index));
-        this.page.setBrowser(this);
+    public ICurrentPage selectFrame(String locate) {
+        By by = LocationParse.parseLocation(locate,driver.getPageSource());
+        this.driver.switchTo().frame(driver.findElement(by));
         return this.page;
     }
+
 
     @Override
     public ICurrentPage selectLastOpenedPage() {
