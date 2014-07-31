@@ -344,14 +344,8 @@ public class Browser implements IBrowser {
 			Constructor constructor=pageClass.getConstructor(IBrowser.class);
             T page =  (T) constructor.newInstance(this);
             return waitFor(page);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            logger.error("切换页面失败..",e);
         }
 
         return null;

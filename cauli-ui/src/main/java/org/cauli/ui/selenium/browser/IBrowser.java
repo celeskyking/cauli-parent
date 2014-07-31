@@ -37,7 +37,6 @@ public interface IBrowser {
 
     public ICurrentPage selectDefaultWindow();
 
-
     public ICurrentPage selectFrame(int index);
 
     public ICurrentPage selectFrame(String locate);
