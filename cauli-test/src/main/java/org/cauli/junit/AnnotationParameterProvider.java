@@ -1,14 +1,16 @@
 package org.cauli.junit;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import freemarker.template.TemplateException;
+import jodd.paramo.MethodParameter;
+import jodd.paramo.Paramo;
 import org.cauli.exception.ConverterError;
 import org.cauli.exception.FileGeneratorException;
 import org.cauli.instrument.MethodUtils;
 import org.cauli.junit.anno.Dependency;
 import org.cauli.junit.anno.Param;
 import org.cauli.junit.anno.Tag;
-import org.cauli.junit.build.NamedConverter;
 import org.cauli.junit.info.DefaultInfoProvider;
 import org.junit.Test;
 import org.junit.runners.model.FrameworkMethod;
@@ -17,7 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -97,14 +99,15 @@ public class AnnotationParameterProvider implements ParameterProvider{
 
 
     private FrameworkMethodWithParameters parseMethod(FrameworkMethodWithParameters frameworkMethodWithParameters,PairParameter parameter) throws ConverterError {
-        Class[] classes = frameworkMethodWithParameters.getMethod().getParameterTypes();
+        Method ownmethod = frameworkMethodWithParameters.getMethod();
+        Class[] classes = ownmethod.getParameterTypes();
         Object[] objects = new Object[classes.length];
+        Map<String,Class<?>> paramTypes= parseMethodParamTypes(ownmethod);
         for(int i=0;i<classes.length;i++){
             Class<? extends Annotation> annotationType = MethodUtils.getParameterOnlyAnnotationType(frameworkMethodWithParameters.getMethod(), i);
-            Annotation annotation = MethodUtils.getParameterOnlyAnnotation(frameworkMethodWithParameters.getMethod(),i);
             try {
                 GeneratorConverter converter = GeneratorManager.getGeneratorConverter(annotationType);
-                objects[i] =converter.convert(annotation,classes[i],parameter);
+                objects[i] =converter.convert(paramParamName(ownmethod,i),classes[i],parameter,paramTypes);
             } catch (Exception e) {
                 throw new ConverterError("解析方法"+frameworkMethodWithParameters.getMethod().getName()+"参数的时候出现了错误..",e);
             }
@@ -153,8 +156,8 @@ public class AnnotationParameterProvider implements ParameterProvider{
 
     private File getSimilarFile(String dir,String partFileName) throws FileNotFoundException {
         File dirFile = new File(dir);
-        if(dirFile==null){
-            throw new FileNotFoundException("文件没有找到,查找的目录不存在");
+        if(dirFile==null||!dirFile.exists()){
+            throw new FileNotFoundException("文件没有找到,查找的目录不存在"+dir);
         }
         if(dirFile.isDirectory()){
             File[] files = dirFile.listFiles();
@@ -169,5 +172,20 @@ public class AnnotationParameterProvider implements ParameterProvider{
             throw new FileNotFoundException("文件没有找到,查找的目录不存在");
         }
         return null;
+    }
+
+    private Map<String,Class<?>> parseMethodParamTypes(Method method){
+        MethodParameter[] parameters= Paramo.resolveParameters(method);
+        Map<String,Class<?>> paramTypes = Maps.newHashMap();
+        Class<?>[] types = method.getParameterTypes();
+        for(int i=0; i<parameters.length;i++){
+            paramTypes.put(parameters[i].getName(),types[i]);
+        }
+        return paramTypes;
+    }
+
+    private String paramParamName(Method method,int paramIndex){
+        MethodParameter[] parameters= Paramo.resolveParameters(method);
+        return parameters[paramIndex].getName();
     }
 }

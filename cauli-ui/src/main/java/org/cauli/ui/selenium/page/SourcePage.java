@@ -10,6 +10,7 @@ import org.cauli.ui.annotation.Find;
 import org.cauli.ui.annotation.FindFrame;
 import org.cauli.ui.annotation.Source;
 import org.cauli.ui.selenium.LocateSource;
+import org.cauli.ui.selenium.PageHelper;
 import org.cauli.ui.selenium.browser.IBrowser;
 import org.cauli.ui.selenium.element.CauliElement;
 import org.cauli.ui.selenium.element.CauliElements;
@@ -35,17 +36,8 @@ public abstract class SourcePage extends CurrentPage implements LocateSource{
     private String configUrl;
     private String configTitle;
 
-    private Map<String,Frame> frameMap = Maps.newHashMap();
 
-    private Map<String,SubPage> subPageMap = Maps.newHashMap();
 
-    public void addFrame(Frame frame){
-        this.frameMap.put(frame.getCommit(),frame);
-    }
-
-    public void addSubPage(SubPage subPage){
-        this.subPageMap.put(subPage.getCommit(),subPage);
-    }
     public SourcePage(IBrowser browser) throws Exception {
         super(browser);
         setBrowser(browser);
@@ -60,15 +52,14 @@ public abstract class SourcePage extends CurrentPage implements LocateSource{
                 getBrowser().selectWindowContainsUrl(configUrl);
             }
         }else{
-            throw new Exception("SourcePage必须定义Commimt注解信息");
+            throw new Exception(getClass().getSimpleName()+"必须定义Commimt注解信息");
         }
         init();
+        initFrameAndSubPage();
     }
 
 
-    public void initFrameAndSubPage(){
-        Set<Class<?>> classSet = ClassPool.getClassPool();
-    }
+
 
     public String getConfigUrl() {
         return configUrl;

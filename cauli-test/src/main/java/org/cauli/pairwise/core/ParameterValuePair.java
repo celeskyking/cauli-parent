@@ -1,26 +1,21 @@
 package org.cauli.pairwise.core;
 
-import freemarker.template.TemplateException;
-import org.cauli.template.ValueTransfer;
-
-import java.io.IOException;
-
 public class ParameterValuePair {
         private final Long parameterId;
         private final String parameterName;
         private final String parameterValue;
 
-        public ParameterValuePair(String parameterName,String parameterValue) throws IOException, TemplateException {
+        public ParameterValuePair(String parameterName,String parameterValue) {
             this.parameterId=null;
             this.parameterName=parameterName;
-            this.parameterValue= ValueTransfer.getValue(parameterValue);
+            this.parameterValue= parameterValue;
         }
 
         public ParameterValuePair(Long parameterId, String parameterName,
-                        String parameterValue) throws IOException, TemplateException {
+                        String parameterValue) {
                 this.parameterId = parameterId;
                 this.parameterName = parameterName;
-                this.parameterValue = ValueTransfer.getValue(parameterValue);
+                this.parameterValue = parameterValue;
         }
 
         public Long getParameterId() {

@@ -21,21 +21,20 @@ import java.util.Map;
  */
 public class NamedConverter implements GeneratorConverter<Named,Object> {
     @Override
-    public Object convert(Named t, Class<Object> v, PairParameter pairParameter) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        String value = t.value();
+    public Object convert(String parameterName, Class<Object> v, PairParameter pairParameter,Map<String,Class<?>>paramTypes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         Object object = null;
         try {
             if(isListType(v)){
                 object= Lists.newArrayList();
                 for (ParameterValuePair pair:pairParameter.getPairs()) {
-                    if (pair.getParameterName().startsWith(value)) {
+                    if (pair.getParameterName().startsWith(parameterName)) {
                         ((List)object).add(pair.getParameterValue());
                     }
                 }
             }else if(isMapType(v)){
                 object= Maps.newHashMap();
                 for (ParameterValuePair pair:pairParameter.getPairs()) {
-                    if (pair.getParameterName().startsWith(value)) {
+                    if (pair.getParameterName().startsWith(parameterName)) {
                         ((Map)object).put(StringUtils.substringAfter(pair.getParameterName(), "."), pair.getParameterValue());
                     }
                 }
@@ -43,7 +42,7 @@ public class NamedConverter implements GeneratorConverter<Named,Object> {
                 throw new NamedConverterException("不支持的注入类型"+v.getName());
             }else{
                 for (ParameterValuePair pair:pairParameter.getPairs()) {
-                    if (pair.getParameterName().startsWith(value)) {
+                    if (pair.getParameterName().startsWith(parameterName)) {
                         object= TypeConverterManager.convertType(pair.getParameterValue(),v);
                     }
                 }

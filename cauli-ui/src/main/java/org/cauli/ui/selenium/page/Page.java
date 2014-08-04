@@ -3,6 +3,7 @@ package org.cauli.ui.selenium.page;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.cauli.ui.exception.FrameEnterException;
+import org.cauli.ui.selenium.PageHelper;
 import org.cauli.ui.selenium.browser.IBrowser;
 import org.cauli.ui.selenium.element.*;
 import org.cauli.ui.selenium.element.Select;
@@ -26,6 +27,9 @@ public class Page implements ICurrentPage {
     private String commit;
     private Map<String,CauliElement> cauliElementMap=Maps.newHashMap();
     private Map<String,CauliElements> elementsMap=Maps.newHashMap();
+    private Map<String,Class<? extends Frame>> frameMap = Maps.newHashMap();
+
+    private Map<String,Class<? extends SubPage>> subPageMap = Maps.newHashMap();
 
     private Actions actions;
     public WebDriver getCurrentwindow() {
@@ -38,6 +42,11 @@ public class Page implements ICurrentPage {
 
     public void addCauliElement(CauliElement cauliElement) {
         this.cauliElementMap.put(cauliElement.getId(),cauliElement);
+    }
+
+    public void initFrameAndSubPage(){
+        frameMap.putAll(PageHelper.getInstance().getFrameMap());
+        subPageMap.putAll(PageHelper.getInstance().getSubPageMap());
     }
 
 
@@ -61,6 +70,7 @@ public class Page implements ICurrentPage {
         this.browser=browser;
         this.currentwindow=browser.getCurrentBrowserDriver();
         this.actions=new Actions(getCurrentwindow());
+        initFrameAndSubPage();
     }
 
     public Page(WebDriver driver){

@@ -30,10 +30,10 @@ public class CoreTest {
 
 
 
-    //@Test
+    @Test
     @Param("test1.txt")
-    public void testTemplate(@Named("user")Map<String,String> name){
-        System.out.println(name);
+    public void testTemplate(@Named("user")Map<String,String> name,@Named("result")String result){
+        System.out.println(name+result);
     }
 
 

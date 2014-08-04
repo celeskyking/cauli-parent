@@ -1,6 +1,7 @@
 package org.cauli.junit;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.cauli.pairwise.core.ParameterValuePair;
 import java.util.List;
 
@@ -23,6 +24,18 @@ public class PairParameter {
             }
         }
         return null;
+    }
+
+    public boolean isContainsAliasName(String name){
+        for(ParameterValuePair parameterValuePair:params){
+            if(parameterValuePair.getParameterName().contains(".")&&name.equals(StringUtils.substringBefore(parameterValuePair.getParameterName(),"."))){
+                return true;
+            }else if(!parameterValuePair.getParameterName().contains(".")&&name.equals(parameterValuePair.getParameterName())){
+                return true;
+            }
+
+        }
+        return false;
     }
 
     public void addParam(ParameterValuePair pair)  {
