@@ -38,6 +38,16 @@ public class PairParameter {
         return false;
     }
 
+
+    public boolean isContainsKey(String key){
+        for(ParameterValuePair parameterValuePair:params){
+            if(key.equals(parameterValuePair.getParameterName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addParam(ParameterValuePair pair)  {
         this.params.add(pair);
 
@@ -46,5 +56,8 @@ public class PairParameter {
     public void addParams(List<ParameterValuePair> pairs){
         this.params.addAll(pairs);
     }
+
+
+
 
 }

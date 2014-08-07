@@ -4,8 +4,17 @@ public class ParameterValuePair {
         private final Long parameterId;
         private final String parameterName;
         private final String parameterValue;
+        private int priority;
 
-        public ParameterValuePair(String parameterName,String parameterValue) {
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public ParameterValuePair(String parameterName,String parameterValue) {
             this.parameterId=null;
             this.parameterName=parameterName;
             this.parameterValue= parameterValue;

@@ -4,6 +4,7 @@ package org.cauli.instrument;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.cauli.algorithm.Tree;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * @author tianqing.wang
  */
-public class FieldTree implements Tree<FieldNode>{
+public class FieldTree implements Tree<FieldNode> {
     private FieldNode root;
     private List<FieldNode> leafNodes;
     //private Logger logger= LoggerFactory.getLogger(FieldTree.class);

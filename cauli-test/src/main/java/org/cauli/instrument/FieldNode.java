@@ -1,6 +1,7 @@
 package org.cauli.instrument;
 
 import com.google.common.base.Joiner;
+import org.cauli.algorithm.Node;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
  * @author tianqing.wang
  * 多叉树的遍历
  */
-public class FieldNode implements Node<FieldNode>{
+public class FieldNode implements Node<FieldNode> {
     private Field field;
     private List<FieldNode> children;
     private FieldNode parent;
