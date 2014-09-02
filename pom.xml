@@ -40,6 +40,7 @@
         <module>cauli-test</module>
         <module>cauli-server</module>
         <module>cauliunit</module>
+        <module>cauli-ActiveRecord</module>
         <!--<module>cauli-client</module>-->
         <!--<module>cauli-log</module>-->
         <!--<module>cauli-spring-support</module>-->
@@ -191,7 +192,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
-                <version>4.0.2.RELEASE</version>
+                <version>4.0.6.RELEASE</version>
             </dependency>
 
             <dependency>
@@ -254,6 +255,11 @@
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-server</artifactId>
                 <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>4.0.6.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>dom4j</groupId>

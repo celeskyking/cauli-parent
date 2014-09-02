@@ -1,5 +1,6 @@
 package org.cauli.junit.build;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cauli.exception.BeanClassNotMatchException;
 import org.cauli.instrument.BeanUtils;
 import org.cauli.junit.GeneratorConverter;
@@ -29,9 +30,9 @@ public class BeanConverter implements GeneratorConverter<Bean,Object>{
         }
 
         for (ParameterValuePair pair:pairParameter.getPairs()) {
-            if (pair.getParameterName().startsWith(parameterName)) {
+            if (StringUtils.substringBefore(pair.getParameterName(),".").equalsIgnoreCase(parameterName)) {
                 String beanValue = org.apache.commons.lang3.StringUtils.substringAfter(pair.getParameterName(), ".");
-                BeanUtils.setProperty(object, beanValue, VauleUtil.valueTransfer(ValueTransfer.getValue(pair.getParameterValue(), pairParameter,paramTypes)));
+                BeanUtils.setProperty(object, beanValue, VauleUtil.valueTransfer(pair.getParameterValue()));
             }
         }
         return object;
