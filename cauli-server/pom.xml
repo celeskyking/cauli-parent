@@ -17,6 +17,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.celeskyking</groupId>
+            <artifactId>cauli-test</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.corundumstudio.socketio</groupId>

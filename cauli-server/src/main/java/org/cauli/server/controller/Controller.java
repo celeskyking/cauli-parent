@@ -42,6 +42,15 @@ public class Controller {
         return request;
     }
 
+    public Controller charset(Charset charset){
+        response.charset(charset);
+        return this;
+    }
+    public String body(){
+        return request.body();
+    }
+
+
     public HttpResponse response(){
         return response;
     }
@@ -119,9 +128,6 @@ public class Controller {
         response.content(content).end();
     }
 
-    public void charset(Charset charset){
-        response.charset(charset);
-    }
 
     public Controller produces(String produce){
         response.header("Content-Type",produce);
@@ -165,7 +171,7 @@ public class Controller {
         this.rootPath = rootPath;
     }
 
-    public void parseAction(){
+    protected void parseAction(){
         Method[] methods=this.getClass().getDeclaredMethods();
         for(Method method:methods){
             if(method.getReturnType()==Void.TYPE&&Modifier.isPublic(method.getModifiers())){
@@ -176,11 +182,11 @@ public class Controller {
     }
 
 
-    public Map<String,Action> getActions(){
+    protected Map<String,Action> getActions(){
         return actionMap;
     }
 
-    public Action getMatchAction(String uri){
+    protected Action getMatchAction(String uri){
         for(Map.Entry<String,Action> entry:actionMap.entrySet()){
             UriTemplate uriTemplate= new UriTemplate(entry.getKey());
             if(uriTemplate.matches(uri)){
@@ -195,7 +201,7 @@ public class Controller {
         return request;
     }
 
-    public void setRequest(HttpRequest request) {
+    protected void setRequest(HttpRequest request) {
         this.request = request;
     }
 
@@ -203,7 +209,7 @@ public class Controller {
         return response;
     }
 
-    public void setResponse(HttpResponse response) {
+    protected void setResponse(HttpResponse response) {
         this.response = response;
     }
 
