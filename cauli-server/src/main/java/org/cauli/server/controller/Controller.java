@@ -171,7 +171,7 @@ public class Controller {
         this.rootPath = rootPath;
     }
 
-    protected void parseAction(){
+    public void parseAction(){
         Method[] methods=this.getClass().getDeclaredMethods();
         for(Method method:methods){
             if(method.getReturnType()==Void.TYPE&&Modifier.isPublic(method.getModifiers())){
@@ -182,11 +182,11 @@ public class Controller {
     }
 
 
-    protected Map<String,Action> getActions(){
+    public Map<String,Action> getActions(){
         return actionMap;
     }
 
-    protected Action getMatchAction(String uri){
+    public Action getMatchAction(String uri){
         for(Map.Entry<String,Action> entry:actionMap.entrySet()){
             UriTemplate uriTemplate= new UriTemplate(entry.getKey());
             if(uriTemplate.matches(uri)){
@@ -201,7 +201,7 @@ public class Controller {
         return request;
     }
 
-    protected void setRequest(HttpRequest request) {
+    public void setRequest(HttpRequest request) {
         this.request = request;
     }
 
@@ -209,7 +209,7 @@ public class Controller {
         return response;
     }
 
-    protected void setResponse(HttpResponse response) {
+    public void setResponse(HttpResponse response) {
         this.response = response;
     }
 
