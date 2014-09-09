@@ -2,11 +2,14 @@ package org.cauli.server.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import org.cauli.server.HttpRequest;
 import org.cauli.server.HttpResponse;
 import org.cauli.server.action.Action;
 import org.cauli.server.annotation.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriTemplate;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -21,10 +24,10 @@ import java.util.Set;
 /**
  * Created by tianqing.wang on 2014/9/1
  */
-public class Controller {
+public abstract class Controller {
 
 
-
+    private Logger logger = LoggerFactory.getLogger(Controller.class);
 
     private String rootPath;
 
@@ -38,9 +41,23 @@ public class Controller {
 
     private HttpResponse response;
 
+
+    public abstract void before();
+
+    public abstract void after();
+
     public HttpRequest request(){
         return request;
     }
+
+    public Controller charset(Charset charset){
+        response.charset(charset);
+        return this;
+    }
+    public String body(){
+        return request.body();
+    }
+
 
     public HttpResponse response(){
         return response;
@@ -119,9 +136,6 @@ public class Controller {
         response.content(content).end();
     }
 
-    public void charset(Charset charset){
-        response.charset(charset);
-    }
 
     public Controller produces(String produce){
         response.header("Content-Type",produce);
@@ -135,7 +149,23 @@ public class Controller {
 
     public void renderJson(Object model){
         produces("application/json");
-        response.content(JSON.toJSONString(model));
+        if(model instanceof String){
+            try{
+                JSONObject jsonObject=JSON.parseObject((String) model);
+                if(jsonObject==null){
+                    response.status(405).end();
+                    return;
+                }else{
+                    response.content((String) model).end();
+                }
+            }catch (Exception e){
+                logger.error("json解析错误",e);
+                response.status(405).end();
+                return;
+            }
+
+        }
+        response.content(JSON.toJSONString(model)).end();
     }
 
     public void renderFreemarker(String view)throws Exception{
