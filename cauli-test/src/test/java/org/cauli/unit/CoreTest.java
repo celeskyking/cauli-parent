@@ -20,7 +20,7 @@ import java.util.Map;
 @Interceptor(MyRunnerInterceptor.class)
 public class CoreTest {
 
-    @Test
+    //@Test
     //@Param(value = "test1.txt")
     public void testMap() throws JSONException {
         String result = "{id:1,name:\"Juergen\"}";
@@ -32,7 +32,7 @@ public class CoreTest {
 
     @Test
     @Param("test1.txt")
-    public void testTemplate(@Named("user")Map<String,String> name,@Named("result")String result){
+    public void testTemplate(@Named String name,@Named String result){
         System.out.println(name+result);
     }
 

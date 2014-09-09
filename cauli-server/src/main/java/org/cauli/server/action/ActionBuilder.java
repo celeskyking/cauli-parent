@@ -25,9 +25,19 @@ public class ActionBuilder {
         if(action.getMethod().isAnnotationPresent(Path.class)){
             Path path = action.getMethod().getAnnotation(Path.class);
             String uri = path.value();
-            return rootPath+uri;
+            if(rootPath.equals("/")){
+                return uri;
+            }else{
+                return rootPath+uri;
+            }
+
+        }else{
+            if(rootPath.equals("/")){
+                return "/"+action.getMethod().getName();
+            }else{
+                return rootPath+action.getMethod().getName();
+            }
         }
-        return rootPath+"/"+action.getMethod().getName();
     }
 
     public List<HttpMethod> getMethods(){

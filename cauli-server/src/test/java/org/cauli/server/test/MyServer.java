@@ -11,7 +11,7 @@ public class MyServer extends CauliServer{
 
     @Override
     public void configRoute(Router router) {
-        router.add("/test",MyController.class);
+        router.add("/",MyController.class);
     }
 
     @Override

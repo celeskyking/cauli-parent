@@ -9,5 +9,4 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 @Inherited
 public @interface Named {
-    String value();
 }

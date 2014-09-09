@@ -9,11 +9,14 @@ import org.cauli.server.controller.Controller;
 public class MyController extends Controller{
 
 
-    @Path("/hello")
+    @Path("/hello/{user}")
     public void hello() throws Exception {
-        data("name","tianqing.wang");
+        String user = pathParam("user");
+        data("name",user);
         renderFreemarker("index.ftl");
     }
+
+
 
 
 

@@ -53,7 +53,13 @@ public class CauliHandler implements HttpHandler{
             }else{
                 logger.debug("映射的Action:{}",action.getMethod().getName());
             }
-            action.invoke();
+            if(action.methods().contains(request.method())){
+                action.invoke();
+            }else{
+                response.status(404).end();
+                return;
+            }
+
         }catch (Exception e){
             logger.error("程序发生未知错误",e);
             response.status(500).content("程序发生了错误,请查看日志检查").end();

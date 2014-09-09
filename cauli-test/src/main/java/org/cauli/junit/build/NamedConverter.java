@@ -27,14 +27,14 @@ public class NamedConverter implements GeneratorConverter<Named,Object> {
             if(isListType(v)){
                 object= Lists.newArrayList();
                 for (ParameterValuePair pair:pairParameter.getPairs()) {
-                    if (pair.getParameterName().startsWith(parameterName)) {
+                    if (parameterName.equalsIgnoreCase(pair.getParameterName())) {
                         ((List)object).add(pair.getParameterValue());
                     }
                 }
             }else if(isMapType(v)){
                 object= Maps.newHashMap();
                 for (ParameterValuePair pair:pairParameter.getPairs()) {
-                    if (pair.getParameterName().startsWith(parameterName)) {
+                    if (parameterName.equalsIgnoreCase(StringUtils.substringBefore(pair.getParameterName(),"."))) {
                         ((Map)object).put(StringUtils.substringAfter(pair.getParameterName(), "."), pair.getParameterValue());
                     }
                 }
@@ -42,7 +42,7 @@ public class NamedConverter implements GeneratorConverter<Named,Object> {
                 throw new NamedConverterException("不支持的注入类型"+v.getName());
             }else{
                 for (ParameterValuePair pair:pairParameter.getPairs()) {
-                    if (pair.getParameterName().startsWith(parameterName)) {
+                    if (pair.getParameterName().equalsIgnoreCase(parameterName)) {
                         object= TypeConverterManager.convertType(pair.getParameterValue(),v);
                     }
                 }
