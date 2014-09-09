@@ -1,2 +1,2 @@
-user.age|user.sex|result
-12|man|${PayFacade.paySubmit(user.sex,user.age)}
+name|result
+tianqing|wang

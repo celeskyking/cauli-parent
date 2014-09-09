@@ -18,7 +18,7 @@ public class BeanTest {
     @Test
     @Tag(name = "test1",level = 0)
     @Param("test1.txt")
-    public void test1(@Named("result")int result){
+    public void test1(@Named String result){
         System.out.println(result);
     }
 
