@@ -11,12 +11,12 @@ public class MyServer extends CauliServer{
 
     @Override
     public void configRoute(Router router) {
-        router.add("/",MyController.class);
+
     }
 
     @Override
     public void configServer(Configuration configuration) {
-        configuration.setPort(9999);
+        configuration.setPort(4444);
         configuration.setStaticFile("public");
 
     }

@@ -1,16 +1,11 @@
 package org.cauli.ui.selenium.page;
 
-import com.google.common.collect.Maps;
 import com.thoughtworks.xstream.XStream;
 import jodd.util.StringUtil;
-import org.cauli.instrument.ClassPool;
-import org.cauli.ui.FrameLocateType;
 import org.cauli.ui.annotation.Commit;
 import org.cauli.ui.annotation.Find;
-import org.cauli.ui.annotation.FindFrame;
 import org.cauli.ui.annotation.Source;
 import org.cauli.ui.selenium.LocateSource;
-import org.cauli.ui.selenium.PageHelper;
 import org.cauli.ui.selenium.browser.IBrowser;
 import org.cauli.ui.selenium.element.CauliElement;
 import org.cauli.ui.selenium.element.CauliElements;
@@ -24,8 +19,6 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author 

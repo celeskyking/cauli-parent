@@ -1,9 +1,6 @@
 package org.cauli.server.handler;
 
-import org.cauli.server.HttpControl;
-import org.cauli.server.HttpHandler;
-import org.cauli.server.HttpRequest;
-import org.cauli.server.HttpResponse;
+import org.cauli.server.*;
 import org.cauli.server.action.Action;
 import org.cauli.server.controller.Controller;
 import org.cauli.server.router.Router;
@@ -38,11 +35,11 @@ public class CauliHandler implements HttpHandler{
         }
         try{
             Controller controller = router.matchController(uri);
-            logger.debug("映射的Controller:{}",controller.getClass().getName());
             if(controller==null){
                 response.status(404).end();
                 return;
             }
+            logger.debug("映射的Controller:{}",controller.getClass().getName());
             controller.setRequest(request);
             controller.setResponse(response);
             controller.parseAction();
@@ -53,7 +50,7 @@ public class CauliHandler implements HttpHandler{
             }else{
                 logger.debug("映射的Action:{}",action.getMethod().getName());
             }
-            if(action.methods().contains(request.method())){
+            if(action.methods().contains(HttpMethod.valueOf(request.method().toUpperCase()))){
                 controller.before();
                 action.invoke();
                 controller.after();

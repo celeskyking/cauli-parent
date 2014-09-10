@@ -5,6 +5,8 @@ import org.cauli.instrument.ClassPool;
 import org.cauli.instrument.ClassUtils;
 import org.cauli.server.annotation.Path;
 import org.cauli.server.controller.Controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.lang.reflect.Constructor;
@@ -16,7 +18,9 @@ import java.util.Set;
  */
 public class Router {
 
-    public void Router(){
+    private Logger logger = LoggerFactory.getLogger(Router.class);
+
+    public  Router(){
         Set<Class<?>> classes= ClassPool.getClassPool();
         for(Class<?> clazz:classes){
             if(ClassUtils.isAssignableFromSubClass(Controller.class,clazz)
@@ -37,12 +41,17 @@ public class Router {
 
 
     public Controller matchController(String uri) throws Exception{
-        for(Map.Entry<String,Class<? extends Controller>> entry:routes.entrySet()){
-            if(uri.contains(entry.getKey())){
-                Controller controller= routes.get(entry.getKey()).newInstance();
-                controller.setRootPath(entry.getKey());
-                return controller;
+        try{
+            for(Map.Entry<String,Class<? extends Controller>> entry:routes.entrySet()){
+                if(uri.startsWith(entry.getKey())){
+                    Controller controller= routes.get(entry.getKey()).newInstance();
+                    controller.setRootPath(entry.getKey());
+                    return controller;
+                }
             }
+        }catch (Exception e){
+            logger.error("没有发现Controller,URI:{}",uri);
+            return null;
         }
         return null;
     }

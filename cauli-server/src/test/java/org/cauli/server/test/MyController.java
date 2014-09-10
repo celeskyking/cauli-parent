@@ -6,20 +6,24 @@ import org.cauli.server.controller.Controller;
 /**
  * Created by tianqing.wang on 2014/9/2
  */
+@Path("/admin")
 public class MyController extends Controller{
 
 
     @Path("/hello/{user}")
     public void hello() throws Exception {
-        String user = pathParam("user");
-        data("name",user);
-        renderFreemarker("index.ftl");
+        System.out.println("user->"+pathParam("user"));
+        renderText(pathParam("user"));
     }
 
 
+    @Override
+    public void before() {
 
+    }
 
+    @Override
+    public void after() {
 
-
-
+    }
 }

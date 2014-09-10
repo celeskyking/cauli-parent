@@ -44,9 +44,11 @@ public abstract class CauliServer{
         }else if(configuration.getServerName()==null||configuration.getServerName().isEmpty()){
             configuration.setServerName(this.getClass().getSimpleName());
         }
-        this.server=WebServers.createWebServer(configuration.getPort())
-                .add(new StaticFileHandler(configuration.getStaticFile()))
-                .add(cauliHandler);
+        this.server=WebServers.createWebServer(configuration.getPort());
+        if(StringUtils.isNotEmpty(configuration.getStaticFile())){
+           server.add(new StaticFileHandler(configuration.getStaticFile()));
+        }
+        this.server.add(cauliHandler);
         if(isHttps()){
             server.setupSsl(new FileInputStream(new File(configuration.getKeyStore())),
                     configuration.getKeyStorePassword(),configuration.getKeyPassword()) ;
