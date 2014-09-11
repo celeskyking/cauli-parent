@@ -32,9 +32,13 @@ public class CurrentPage extends Page{
 
     }
 
-    public Object exec(String methodDesc,Object...objects) throws InvocationTargetException, IllegalAccessException {
+    public Object exec(String methodDesc,Object...objects) {
         Method method = this.dslMethods.get(methodDesc);
-        return method.invoke(this,objects);
+        try {
+            return method.invoke(this,objects);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

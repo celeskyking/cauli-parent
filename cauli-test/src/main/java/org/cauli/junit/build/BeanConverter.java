@@ -32,7 +32,7 @@ public class BeanConverter implements GeneratorConverter<Bean,Object>{
         for (ParameterValuePair pair:pairParameter.getPairs()) {
             if (StringUtils.substringBefore(pair.getParameterName(),".").equalsIgnoreCase(parameterName)) {
                 String beanValue = org.apache.commons.lang3.StringUtils.substringAfter(pair.getParameterName(), ".");
-                BeanUtils.setProperty(object, beanValue, VauleUtil.valueTransfer(pair.getParameterValue()));
+                BeanUtils.setProperty(object, beanValue, pair.getParameterValue());
             }
         }
         return object;

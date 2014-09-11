@@ -1,9 +1,11 @@
 package org.cauli.pairwise.core;
 
+import org.cauli.template.ValueTransfer;
+
 public class ParameterValuePair {
-        private final Long parameterId;
-        private final String parameterName;
-        private final String parameterValue;
+        private  Long parameterId;
+        private  String parameterName;
+        private  String parameterValue;
         private int priority;
 
     public int getPriority() {
@@ -24,7 +26,11 @@ public class ParameterValuePair {
                         String parameterValue) {
                 this.parameterId = parameterId;
                 this.parameterName = parameterName;
-                this.parameterValue = parameterValue;
+            try {
+                this.parameterValue = ValueTransfer.getValue(parameterValue);
+            } catch (Exception e) {
+                this.parameterValue=null;
+            }
         }
 
         public Long getParameterId() {

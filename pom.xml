@@ -39,7 +39,7 @@
         <module>cauli-ui</module>
         <module>cauli-test</module>
         <module>cauli-server</module>
-        <!--<module>cauliunit</module>-->
+        <module>cauli-easyserver</module>
         <!--<module>cauli-ActiveRecord</module>-->
         <!--<module>cauli-client</module>-->
         <!--<module>cauli-log</module>-->
