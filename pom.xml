@@ -52,36 +52,27 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <selenium.version>2.42.2</selenium.version>
+        <selenium.version>2.43.1</selenium.version>
         <jodd.version>3.5.2</jodd.version>
     </properties>
 
     <dependencyManagement>
+
         <dependencies>
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>1.4.7</version>
+            </dependency>
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
                 <version>1.2.17</version>
             </dependency>
             <dependency>
-                <groupId>org.javassist</groupId>
-                <artifactId>javassist</artifactId>
-                <version>3.18.1-GA</version>
-            </dependency>
-            <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>1.4.6</version>
-            </dependency>
-            <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
                 <version>3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jodd</groupId>
-                <artifactId>jodd-props</artifactId>
-                <version>${jodd.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.web</groupId>
@@ -95,11 +86,6 @@
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
-                <artifactId>jodd-mail</artifactId>
-                <version>${jodd.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jodd</groupId>
                 <artifactId>jodd-http</artifactId>
                 <version>${jodd.version}</version>
             </dependency>
@@ -107,11 +93,6 @@
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-bean</artifactId>
                 <version>${jodd.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.databene</groupId>
-                <artifactId>databene-commons</artifactId>
-                <version>0.5.16</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -128,10 +109,16 @@
                 <artifactId>operadriver</artifactId>
                 <version>1.5</version>
             </dependency>
+
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>15.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.databene</groupId>
+                <artifactId>databene-commons</artifactId>
+                <version>0.5.16</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -215,35 +202,6 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>2.3.20</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.corundumstudio.socketio</groupId>
-                <artifactId>netty-socketio</artifactId>
-                <version>1.6.5</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>1.9.1</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.dbunit</groupId>
-                <artifactId>dbunit</artifactId>
-                <version>2.4.9</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.3.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpcore</artifactId>
-                <version>4.3.2</version>
             </dependency>
 
             <dependency>
@@ -333,6 +291,28 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>
                 <executions>
@@ -350,10 +330,13 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>sonatype-snapshots</name>
+            <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 
 

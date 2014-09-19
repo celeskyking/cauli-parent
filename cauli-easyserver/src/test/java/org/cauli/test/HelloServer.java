@@ -7,7 +7,6 @@ import org.cauli.mock.annotation.Action;
 import org.cauli.mock.entity.ActionInfo;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.server.AbstractHttpServer;
-import org.cauli.server.annotation.Path;
 
 /**
  * Created by tianqing.wang on 2014/9/19
@@ -19,8 +18,7 @@ public class HelloServer extends AbstractHttpServer{
         serverInfo.setInitStatus(ServerInitStatus.START);
     }
 
-    @Path("/hello")
-    public AbstractHttpAction hello = new AbstractHttpAction() {
+    public AbstractHttpAction hello = new AbstractHttpAction("/") {
         @Override
         public void config(ActionInfo httpActionInfo) {
             httpActionInfo.setUseTemplate(false);

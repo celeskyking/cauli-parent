@@ -69,9 +69,6 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
         if(CommonUtil.checkContainsChinese(serverInfo.getServerName())){
             throw new ServerNameNotSupportChineseException("ServerName不支持非英文:"+serverInfo.getServerName());
         }
-
-
-
     }
 
     @Override
@@ -142,7 +139,6 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                 }else{
                     return null;
                 }
-
             }
         }else{
             String uri = StringUtils.substringBefore(request.uri(),"?");
@@ -282,7 +278,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                             action.getActionInfo().setActionName(field.getName());
                         }
                         actionMap.put(action.getActionName(),action);
-                        if(!StringUtil.isEmpty(action.getRequestUri())){
+                        if(StringUtil.isNotEmpty(action.getRequestUri())){
                             this.mockActionUriMapping.put(action.getRequestUri(),action);
                         }
                     }

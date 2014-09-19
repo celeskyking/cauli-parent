@@ -95,7 +95,6 @@ public class ClassFinder {
 			while(enties.hasMoreElements()){
 				JarEntry je = enties.nextElement();
 				String name =je.getName();
-//                System.out.println(name);
                 if(!"".equals(baseName)){
                     if(!name.startsWith(package2Path)||je.isDirectory()){
                         continue;
@@ -106,13 +105,10 @@ public class ClassFinder {
                         }
                     }
                     String classSimpleName = name.substring(name.lastIndexOf('/') + 1);
-                    //System.out.println(classSimpleName);
                     if(this.filterClassName(classSimpleName)){
-                        //System.out.println(name);
                         String className = name.replace("/", ".");
-                        //System.out.println(className);
                         className = className.substring(0, className.length()-6);
-                        //System.out.println(className);
+
                         try{
                             classes.add(Thread.currentThread().getContextClassLoader().loadClass(className));
                         }catch(ClassNotFoundException e){

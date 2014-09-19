@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.github.celeskyking</groupId>
             <artifactId>cauli-common</artifactId>
-            <version>${project.parent.version}}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -23,11 +23,11 @@
         </dependency>
         <dependency>
             <groupId>org.jodd</groupId>
-            <artifactId>jodd-bean</artifactId>
+            <artifactId>jodd-proxetta</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jodd</groupId>
-            <artifactId>jodd-proxetta</artifactId>
+            <artifactId>jodd-bean</artifactId>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -44,6 +44,10 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.databene</groupId>
+            <artifactId>databene-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -75,10 +79,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.databene</groupId>
-            <artifactId>databene-commons</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>commons-dbcp</groupId>
@@ -89,10 +90,6 @@
             <artifactId>commons-io</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
 
 
         <dependency>

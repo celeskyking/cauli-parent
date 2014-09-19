@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.celeskyking</groupId>
-            <artifactId>cauli-test</artifactId>
+            <artifactId>cauli-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

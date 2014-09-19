@@ -4,8 +4,10 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jodd.util.StringUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cauli.mock.ConfigType;
 import org.cauli.mock.annotation.Action;
+import org.cauli.mock.context.Context;
 import org.cauli.mock.entity.ActionInfo;
 import org.cauli.mock.entity.ParameterValuePairs;
 import org.cauli.mock.exception.ActionExecuteException;
@@ -34,6 +36,8 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
     private Logger logger = LoggerFactory.getLogger(AbstractHttpAction.class);
 
     private ActionInfo actionInfo=new ActionInfo();
+
+    private Context context;
 
     private HttpRequest request;
 
@@ -108,12 +112,10 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
         if(actionInfo.getTemplateSourceLoaderClass()!=null){
             this.sourceEngine=checkTemplateSourceEngineClass(actionInfo.getTemplateSourceLoaderClass());
         }
+        if(StringUtils.isEmpty(getRequestUri())){
+            this.setRequestUri("/"+getActionName());
+        }
 
-    }
-
-    public AbstractHttpAction(){
-        this("");
-        actionInfo.setActionName(getClass().getSimpleName());
     }
 
 
@@ -246,14 +248,13 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
         }
     }
 
-    public Document requestToXml(){
-        String text  = request.body();
-        if(XMLUtil.isXML(text)){
+    public Document requestToXml() {
+        String text = request.body();
+        if (XMLUtil.isXML(text)) {
             return XMLUtil.load(request.body());
-        }else{
+        } else {
             throw new RuntimeException("the body of request is not format for xml");
         }
-
     }
 
     public String xmlValue(String xpath){
