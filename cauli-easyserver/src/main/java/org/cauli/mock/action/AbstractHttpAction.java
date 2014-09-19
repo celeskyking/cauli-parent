@@ -1,6 +1,8 @@
 package org.cauli.mock.action;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import jodd.util.StringUtil;
 import org.apache.commons.io.IOUtils;
 import org.cauli.mock.ConfigType;
 import org.cauli.mock.annotation.Action;
@@ -12,8 +14,10 @@ import org.cauli.mock.server.MockServer;
 import org.cauli.mock.template.TemplateSourceEngine;
 import org.cauli.mock.util.CommonUtil;
 import org.cauli.mock.util.TemplateParseUtil;
+import org.cauli.mock.util.XMLUtil;
 import org.cauli.server.HttpRequest;
 import org.cauli.server.HttpResponse;
+import org.dom4j.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,12 +123,48 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
     }
 
 
+    public Map<String,String> requestMapWithSingleValue(){
+        Map<String,String> requestMap = Maps.newHashMap();
+        if(request.method().equalsIgnoreCase("GET")){
+            for(String key:request.queryParamKeys()){
+                requestMap.put(key,request.queryParam(key));
+            }
+        }else{
+            for(String key:request.postParamKeys()){
+                requestMap.put(key,request.postParam(key));
+            }
+        }
+        return requestMap;
+    }
+
+    public Map<String,String[]> requestMap(){
+        Map<String,String[]> requestMap = Maps.newHashMap();
+        if(request.method().equalsIgnoreCase("GET")){
+            for(String key:request.queryParamKeys()){
+                String[] strings = new String[request.queryParamKeys().size()];
+                requestMap.put(key,request.queryParams(key).toArray(strings));
+            }
+        }else{
+            for(String key:request.postParamKeys()){
+                String[] strings = new String[request.postParamKeys().size()];
+                requestMap.put(key,request.postParams(key).toArray(strings));
+            }
+        }
+        return requestMap;
+    }
+
+
+
+
 
     public void addObject(String name,Object object){
         this.parameterValuePairs.getValuePairs().addObject(name,object);
     }
 
     public String getTemplateValue(){
+        if(StringUtil.isEmpty(this.parameterValuePairs.getTemplateValue())){
+            return this.sourceEngine.getTemplate(actionInfo.getReturnStatus());
+        }
         return this.parameterValuePairs.getTemplateValue();
     }
 
@@ -200,6 +240,19 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
         }
     }
 
+    public Document requestToXml(){
+        String text  = request.body();
+        if(XMLUtil.isXML(text)){
+            return XMLUtil.load(request.body());
+        }else{
+            throw new RuntimeException("the body of request is not format for xml");
+        }
+
+    }
+
+    public String xmlValue(String xpath){
+        return XMLUtil.getStringValue(requestToXml(),xpath);
+    }
 
 
 
