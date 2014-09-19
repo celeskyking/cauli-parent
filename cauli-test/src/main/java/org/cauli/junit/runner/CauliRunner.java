@@ -1,13 +1,13 @@
 package org.cauli.junit.runner;
 
 import com.google.common.collect.Lists;
+import org.cauli.common.instrument.ClassPool;
+import org.cauli.common.instrument.ClassUtils;
 import org.cauli.db.DBCore;
 import org.cauli.db.DbManager;
 import org.cauli.db.annotation.DB;
 import org.cauli.db.annotation.MySQL;
 import org.cauli.exception.FrameworkBuildException;
-import org.cauli.instrument.ClassPool;
-import org.cauli.instrument.ClassUtils;
 import org.cauli.junit.*;
 import org.cauli.junit.anno.*;
 import org.cauli.junit.build.FrameworksBuilderFactory;
@@ -78,7 +78,7 @@ public class CauliRunner  extends ParentRunner<FrameworkMethodWithParameters>{
         List<TestRule> testRules = Lists.newArrayList();
         Set<Class<?>> classes = ClassPool.getClassPool();
         for(Class<?> clazz :classes){
-            if(!ClassUtils.isAssignableFromSubClass(TestRule.class,clazz)){
+            if(!ClassUtils.isAssignableFromSubClass(TestRule.class, clazz)){
                 continue;
             }
             if(clazz.isAnnotationPresent(CauliRule.class)||clazz.isAnnotationPresent(Listener.class)){

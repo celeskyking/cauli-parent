@@ -1,11 +1,10 @@
 package org.cauli.mock.util;
 
+import org.cauli.common.instrument.MethodUtils;
 import org.cauli.mock.core.convert.ConvertManager;
 import org.cauli.mock.entity.ParameterValuePairs;
-import org.cauli.instrument.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -51,7 +50,7 @@ public class ActionMethodUtil {
     private static Class<?> getMethodParseType(Method method ,int index){
         Class<?> clazz;
         if(isMethodParameterHasAnnatation(method,index)){
-            clazz= MethodUtils.getParameterOnlyAnnotationType(method,index);
+            clazz= MethodUtils.getParameterOnlyAnnotationType(method, index);
         }else{
             clazz= method.getParameterTypes()[index];
         }

@@ -1,18 +1,14 @@
 package org.cauli.junit.build;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.common.instrument.BeanUtils;
 import org.cauli.exception.BeanClassNotMatchException;
-import org.cauli.instrument.BeanUtils;
 import org.cauli.junit.GeneratorConverter;
 import org.cauli.junit.PairParameter;
-import org.cauli.junit.RowParameter;
 import org.cauli.junit.anno.Bean;
 import org.cauli.pairwise.core.ParameterValuePair;
-import org.cauli.template.ValueTransfer;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.Map;
 
 /**

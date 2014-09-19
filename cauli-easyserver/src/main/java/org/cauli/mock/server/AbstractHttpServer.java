@@ -4,6 +4,7 @@ package org.cauli.mock.server;
 import com.google.common.collect.Maps;
 import jodd.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.common.instrument.ClassUtils;
 import org.cauli.mock.MockHandler;
 import org.cauli.mock.ServerInitStatus;
 import org.cauli.mock.ServerProtocol;
@@ -18,7 +19,6 @@ import org.cauli.mock.entity.ParameterValuePairs;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.exception.ServerNameNotSupportChineseException;
 import org.cauli.mock.util.CommonUtil;
-import org.cauli.instrument.ClassUtils;
 import org.cauli.server.HttpRequest;
 import org.cauli.server.WebServer;
 import org.cauli.server.WebServers;
@@ -135,7 +135,9 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                 AbstractHttpAction action = (AbstractHttpAction) actionExcuter.invoke();
                 if(action!=null){
                     action.setParameterValuePairs(pairs);
-                    action.loadTemplate();
+                    if(action.getActionInfo().isUseTemplate()){
+                        action.loadTemplate();
+                    }
                     return action;
                 }else{
                     return null;
@@ -152,6 +154,15 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                 return null;
             }
         }
+    }
+
+    public Map<String,AbstractHttpAction> getHttpMockActionsPairs(){
+        return this.actionMap;
+    }
+
+
+    public java.util.Collection<AbstractHttpAction> getHttpMockActions(){
+        return this.actionMap.values();
     }
 
 
@@ -209,6 +220,34 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
         return serverInfo.getServerName();
     }
 
+    @Override
+    public ServerStatus getServerStatus() {
+        return serverInfo.getStatus();
+    }
+
+    @Override
+    public ServerProtocol getProtocol() {
+        return serverInfo.getProtocol();
+    }
+
+
+    @Override
+    public java.util.Collection<AbstractHttpAction> getActions() {
+        return getHttpMockActions();
+    }
+
+    @Override
+    public AbstractHttpAction getAction(String actionName) {
+        AbstractHttpAction action= this.actionMap.get(actionName);
+        return action;
+    }
+
+
+    @Override
+    public ServerInitStatus getInitStatus() {
+        return serverInfo.getInitStatus();
+    }
+
 
 
     //------------------------------------private help method-------------------------------------------
@@ -227,24 +266,18 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
             try{
                 for(Field field:fields){
                     field.setAccessible(true);
-                    if(!Modifier.isStatic(field.getModifiers())
-                            &&ClassUtils.isAssignableFromSubClass(AbstractHttpAction.class,field.getType())
-                            &&field.isAnnotationPresent(Path.class)){
+                    if(!Modifier.isStatic(field.getModifiers())&& ClassUtils.isAssignableFromSubClass(AbstractHttpAction.class, field.getType())){
                         AbstractHttpAction action = (AbstractHttpAction) field.get(this);
-                        String uri = field.getAnnotation(Path.class).value();
-                        logger.info("Server:{} 添加:Action: {}, uri:{}", serverInfo.getServerName(), action.getActionName(), uri);
-                        if(StringUtil.isEmpty(action.getActionName())){
-                            action.getActionInfo().setActionName(field.getName());
+                        if(field.isAnnotationPresent(Path.class)){
+                            Path path = field.getAnnotation(Path.class);
+                            if(StringUtils.isNotEmpty(path.value())){
+                                action.setRequestUri(path.value());
+                            }
                         }
-                        action.setRequestUri(uri);
                         action.setServer(this);
-                        action.loadTemplate();
-                        actionMap.put(action.getActionName(),action);
-                        this.mockActionUriMapping.put(field.getAnnotation(Path.class).value(), action);
-                    }else if(!Modifier.isStatic(field.getModifiers())&&ClassUtils.isAssignableFromSubClass(AbstractHttpAction.class,field.getType())){
-                        AbstractHttpAction action = (AbstractHttpAction) field.get(this);
-                        action.setServer(this);
-                        action.loadTemplate();
+                        if(action.getActionInfo().isUseTemplate()){
+                            action.loadTemplate();
+                        }
                         if(StringUtil.isEmpty(action.getActionName())){
                             action.getActionInfo().setActionName(field.getName());
                         }
@@ -272,43 +305,11 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
     }
 
 
-    public Map<String,AbstractHttpAction> getHttpMockActionsPairs(){
-        return this.actionMap;
-    }
 
 
-    public java.util.Collection<AbstractHttpAction> getHttpMockActions(){
-        return this.actionMap.values();
-    }
 
 
-    @Override
-    public ServerStatus getServerStatus() {
-        return serverInfo.getStatus();
-    }
 
-    @Override
-    public ServerProtocol getProtocol() {
-        return ServerProtocol.HTTP;
-    }
-
-
-    @Override
-    public java.util.Collection<AbstractHttpAction> getActions() {
-        return getHttpMockActions();
-    }
-
-    @Override
-    public AbstractHttpAction getAction(String actionName) {
-        AbstractHttpAction action= this.actionMap.get(actionName);
-        return action;
-    }
-
-
-    @Override
-    public ServerInitStatus getInitStatus() {
-        return serverInfo.getInitStatus();
-    }
 
 
 }

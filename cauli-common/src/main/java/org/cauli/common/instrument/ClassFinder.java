@@ -1,4 +1,4 @@
-package org.cauli.instrument;
+package org.cauli.common.instrument;
 
 import java.io.File;
 import java.io.FileFilter;

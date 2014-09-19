@@ -72,7 +72,7 @@ public class NettyWebServer implements WebServer {
     private int maxContentLength = 65536;
 
     public NettyWebServer(int port) {
-        this(Executors.newSingleThreadScheduledExecutor(new NamingThreadFactory("WEBBIT-HANDLER-THREAD")), port);
+        this(Executors.newSingleThreadScheduledExecutor(new NamingThreadFactory("CAULI-HANDLER-THREAD")), port);
     }
 
     private NettyWebServer(ExecutorService executorService, int port) {
@@ -212,9 +212,9 @@ public class NettyWebServer implements WebServer {
                 executorServices.add(staleCheckExecutor);
 
                 connectionTrackingHandler = new ConnectionTrackingHandler();
-                ExecutorService bossExecutor = Executors.newSingleThreadExecutor(new NamingThreadFactory("WEBBIT-BOSS-THREAD"));
+                ExecutorService bossExecutor = Executors.newSingleThreadExecutor(new NamingThreadFactory("CAULI-BOSS-THREAD"));
                 executorServices.add(bossExecutor);
-                ExecutorService workerExecutor = Executors.newSingleThreadExecutor(new NamingThreadFactory("WEBBIT-WORKER-THREAD"));
+                ExecutorService workerExecutor = Executors.newSingleThreadExecutor(new NamingThreadFactory("CAULI-WORKER-THREAD"));
                 executorServices.add(workerExecutor);
                 bootstrap.setFactory(new NioServerSocketChannelFactory(bossExecutor, workerExecutor, 1));
                 channel = bootstrap.bind(socketAddress);
@@ -264,7 +264,7 @@ public class NettyWebServer implements WebServer {
         });
         // don't use Executor here - it's just another resource we need to manage -
         // thread creation on shutdown should be fine
-        final Thread thread = new Thread(future, "WEBBIT-SHUTDOW-THREAD");
+        final Thread thread = new Thread(future, "CAULI-SHUTDOW-THREAD");
         thread.start();
         return future;
     }

@@ -1,7 +1,7 @@
-package org.cauli.instrument;
+package org.cauli.common.Algorithm;
 
 import com.google.common.base.Joiner;
-import org.cauli.algorithm.Node;
+import org.cauli.common.instrument.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class FieldNode implements Node<FieldNode> {
             strings[i-1]=fieldNode.getName();
             fieldNode=fieldNode.getParent();
         }
-        return Joiner.on(".").join(strings);
+        return Joiner.on("").join(strings);
     }
 
     public boolean isRoot(){

@@ -2,21 +2,16 @@ package org.cauli.junit.build;
 
 import com.google.common.collect.Lists;
 import org.cauli.exception.FrameworkBuildException;
-import org.cauli.instrument.ClassPool;
 import org.cauli.junit.AnnotationParameterProvider;
-import org.cauli.junit.CauliFilter;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.junit.Test;
-import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.TestClass;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by celeskyking on 2014/6/1

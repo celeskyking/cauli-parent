@@ -1,4 +1,4 @@
-package org.cauli.instrument;
+package org.cauli.common.instrument;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +53,7 @@ public class ClassPool {
     public static Set<Class<?>> getChildClasses(Class<?>parent){
         Set<Class<?>> classes = new HashSet<Class<?>>();
         for(Class<?> childclass:getClassPool()){
-            if(ClassUtils.isAssignableFromSubClass(parent,childclass)){
+            if(ClassUtils.isAssignableFromSubClass(parent, childclass)){
                 classes.add(childclass);
             }
         }

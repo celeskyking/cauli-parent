@@ -13,6 +13,7 @@ import org.cauli.mock.server.AbstractSocketServer;
 import org.cauli.mock.template.TemplateSourceEngine;
 import org.cauli.mock.util.CommonUtil;
 import org.cauli.mock.util.TemplateParseUtil;
+import org.cauli.mock.util.TemplateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,7 +123,7 @@ public abstract class AbstractSocketAction implements MockAction<String,Paramete
 
 
     private String templateValue() throws Exception {
-        String content= TemplateParseUtil.getInstance().toString(parameterValuePairs.getValuePairs().getValues(), getTemplateName(getReturnStatus()));
+        String content= TemplateParseUtil.getInstance().toString(parameterValuePairs.getValuePairs().getValues(),getTemplateValue(getReturnStatus()));
         if(!actionInfo.getTemplateEncoding().equalsIgnoreCase("utf-8")){
             content= IOUtils.toString(IOUtils.toInputStream(content,actionInfo.getTemplateEncoding()));
         }
@@ -212,9 +213,6 @@ public abstract class AbstractSocketAction implements MockAction<String,Paramete
 
     @Override
     public void addTemplate(String returnStatus, String content) {
-        if(StringUtils.isNotEmpty(content)){
-            TemplateParseUtil.getInstance().addTemplate(getServerName()+"-"+getActionName()+"_"+returnStatus,content);
-        }
         this.sourceEngine.createTemplate(returnStatus,content);
     }
 }

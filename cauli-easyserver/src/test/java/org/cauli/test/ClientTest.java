@@ -2,6 +2,7 @@ package org.cauli.test;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
+import org.cauli.mock.ServerManager;
 import org.junit.Test;
 
 /**
@@ -9,9 +10,7 @@ import org.junit.Test;
  */
 public class ClientTest {
 
-    //@Test
-    public void testPost(){
-        HttpResponse response = HttpRequest.post("http://localhost:9999").form("name","tianqing.wang").send();
-        System.out.println(response.bodyText());
+    public static void main(String[] args) throws Exception {
+        new ServerManager(false).init();
     }
 }

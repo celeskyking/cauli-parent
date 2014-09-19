@@ -66,6 +66,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-context:4.0.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.0.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty:3.9.2.Final" level="project" />
+    <orderEntry type="module" module-name="cauli-common" />
   </component>
 </module>
 

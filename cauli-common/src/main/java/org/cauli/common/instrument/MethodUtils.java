@@ -1,4 +1,4 @@
-package org.cauli.instrument;
+package org.cauli.common.instrument;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

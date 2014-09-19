@@ -9,7 +9,7 @@
 
     <groupId>com.github.celeskyking</groupId>
     <artifactId>cauli-ui</artifactId>
-    <version>${parent.version}</version>
+    <version>${project.parent.version}</version>
 
     <dependencies>
         <dependency>

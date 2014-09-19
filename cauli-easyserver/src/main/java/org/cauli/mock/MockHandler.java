@@ -63,9 +63,8 @@ public class MockHandler implements HttpHandler {
                 return;
             }
             parseMock(request,httpResponse,parameterValuePair);
-
         }catch (Exception e){
-            logger.error("请求处理中出现了错误:{}",e);
+            logger.error("请求处理中出现了错误",e);
             httpResponse.status(500).end();
         }
     }
@@ -74,6 +73,7 @@ public class MockHandler implements HttpHandler {
 
     private void dump(HttpRequest request){
         logger.info("请求的参数方法为:{}",request.method());
+        logger.info("请求的body:{}",request.body());
         if(request.method().equalsIgnoreCase("get")){
             for(String key:request.queryParamKeys()){
                 logger.info("key:{}, value:{}",key,request.queryParam(key));

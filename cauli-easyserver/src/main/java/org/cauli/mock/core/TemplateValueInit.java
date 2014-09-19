@@ -3,11 +3,11 @@ package org.cauli.mock.core;
 import com.google.common.collect.Maps;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
+import org.cauli.common.instrument.ResourceUtil;
 import org.cauli.mock.ValueType;
 import org.cauli.mock.annotation.Register;
 import org.cauli.mock.annotation.Value;
 import org.cauli.mock.util.CommonUtil;
-import org.cauli.instrument.ResourceUtil;
 
 import java.lang.reflect.Method;
 import java.util.List;

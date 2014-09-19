@@ -2,7 +2,7 @@ package org.cauli.ui.runner;
 
 import com.google.common.collect.Lists;
 import jodd.util.StringUtil;
-import org.cauli.instrument.ClassPool;
+import org.cauli.common.instrument.ClassPool;
 import org.cauli.junit.runner.CauliRunner;
 import org.cauli.junit.FrameworkMethodWithParameters;
 import org.cauli.ui.annotation.Action;

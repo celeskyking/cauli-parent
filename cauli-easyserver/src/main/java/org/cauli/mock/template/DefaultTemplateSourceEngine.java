@@ -3,8 +3,9 @@ package org.cauli.mock.template;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.common.instrument.ResourceUtil;
 import org.cauli.mock.action.MockAction;
-import org.cauli.instrument.ResourceUtil;
+import org.cauli.mock.util.TemplateParseUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +50,8 @@ public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
                         } catch (IOException e) {
                             throw new RuntimeException("读取"+ff.getName()+"的流失败");
                         }
-                        templateCache.put(StringUtils.substringBetween(ff.getName(), "_", "."), content);
+                        String returnStatus =   StringUtils.substringBetween(ff.getName(), "_", ".");
+                        templateCache.put(returnStatus, content);
                     }
 
                 }

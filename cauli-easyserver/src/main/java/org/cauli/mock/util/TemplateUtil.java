@@ -4,7 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
-import org.cauli.instrument.ResourceUtil;
+import org.cauli.common.instrument.ResourceUtil;
 
 import java.util.Map;
 import java.io.File;

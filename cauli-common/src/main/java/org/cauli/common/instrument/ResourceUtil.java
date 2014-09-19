@@ -1,8 +1,7 @@
-package org.cauli.instrument;
+package org.cauli.common.instrument;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
-import org.cauli.instrument.ClassPool;
 
 import java.io.File;
 import java.lang.Class;import java.lang.String;import java.lang.annotation.Annotation;

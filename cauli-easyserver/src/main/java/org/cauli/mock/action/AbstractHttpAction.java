@@ -111,6 +111,11 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
 
     }
 
+    public AbstractHttpAction(){
+        this("");
+        actionInfo.setActionName(getClass().getSimpleName());
+    }
+
 
     public abstract void config(ActionInfo httpActionInfo);
 
@@ -184,7 +189,8 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
     public String build() throws Exception {
         runParameterConfigs();
         if(actionInfo.isUseTemplate()){
-            String content= TemplateParseUtil.getInstance().toString(parameterValuePairs.getValuePairs().getValues(), getTemplateName(getReturnStatus()));
+            logger.info("请求的模板状态为:{}",getReturnStatus());
+            String content= TemplateParseUtil.getInstance().toString(parameterValuePairs.getValuePairs().getValues(),getTemplateValue(getReturnStatus()));
             if(!actionInfo.getTemplateEncoding().equalsIgnoreCase("utf-8")){
                 content= IOUtils.toString(IOUtils.toInputStream(content,actionInfo.getTemplateEncoding()));
             }
@@ -294,7 +300,9 @@ public abstract class AbstractHttpAction implements MockAction<String,ParameterV
 
     @Override
     public void addTemplate(String returnStatus, String content) {
-        TemplateParseUtil.getInstance().addTemplate(getTemplateName(returnStatus),content);
+        logger.info("增加状态:{}",returnStatus);
+        String templateName = getTemplateName(returnStatus);
+        logger.info("增加模板:{}",templateName);
         this.sourceEngine.createTemplate(returnStatus,content);
     }
 

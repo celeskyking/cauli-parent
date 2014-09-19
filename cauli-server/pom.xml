@@ -9,7 +9,7 @@
 
     <groupId>com.github.celeskyking</groupId>
     <artifactId>cauli-server</artifactId>
-    <version>${parent.version}</version>
+    <version>${project.parent.version}</version>
     <dependencies>
 
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.github.celeskyking</groupId>
             <artifactId>cauli-test</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>

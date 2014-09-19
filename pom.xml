@@ -40,6 +40,7 @@
         <module>cauli-test</module>
         <module>cauli-server</module>
         <module>cauli-easyserver</module>
+        <module>cauli-common</module>
         <!--<module>cauli-ActiveRecord</module>-->
         <!--<module>cauli-client</module>-->
         <!--<module>cauli-log</module>-->
@@ -333,6 +334,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>

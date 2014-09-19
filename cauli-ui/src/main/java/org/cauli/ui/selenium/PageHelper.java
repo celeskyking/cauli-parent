@@ -1,8 +1,8 @@
 package org.cauli.ui.selenium;
 
 import com.google.common.collect.Maps;
-import org.cauli.instrument.ClassPool;
-import org.cauli.instrument.ClassUtils;
+import org.cauli.common.instrument.ClassPool;
+import org.cauli.common.instrument.ClassUtils;
 import org.cauli.ui.annotation.Commit;
 import org.cauli.ui.selenium.page.Frame;
 import org.cauli.ui.selenium.page.SourcePage;
@@ -24,7 +24,7 @@ public class PageHelper {
     private PageHelper(){
         Set<Class<?>> classes = ClassPool.getClassPool();
         for(Class<?> clazz : classes){
-            if(ClassUtils.isAssignableFromSubClass(Frame.class,clazz)){
+            if(ClassUtils.isAssignableFromSubClass(Frame.class, clazz)){
                 frameMap.put(clazz.getAnnotation(Commit.class)==null?clazz.getSimpleName():clazz.getAnnotation(Commit.class).value(), (Class<? extends Frame>) clazz);
             }else if(ClassUtils.isAssignableFromSubClass(SubPage.class,clazz)){
                 subPageMap.put(clazz.getAnnotation(Commit.class)==null?clazz.getSimpleName():clazz.getAnnotation(Commit.class).value(), (Class<? extends SubPage>) clazz);

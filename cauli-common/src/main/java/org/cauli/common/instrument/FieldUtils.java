@@ -1,4 +1,4 @@
-package org.cauli.instrument;
+package org.cauli.common.instrument;
 
 
 import org.apache.commons.lang3.StringUtils;

@@ -16,6 +16,7 @@ public class TemplateParseUtil {
     private  static volatile  TemplateParseUtil templateParseUtil;
     private Configuration configuration;
     private StringTemplateLoader templateLoader;
+    private final static String DEFAULT_NAME = "_default_name";
 
     private TemplateParseUtil(){
         configuration = new Configuration();
@@ -35,22 +36,20 @@ public class TemplateParseUtil {
         return templateParseUtil;
     }
 
-    public Template getTemplate(String name) throws IOException {
-        return configuration.getTemplate(name);
+    public Template getTemplate() throws IOException {
+        return configuration.getTemplate(DEFAULT_NAME);
     }
 
-    public String toString(Map map,String name) throws IOException, TemplateException {
-        configuration.clearTemplateCache();
+    public String toString(Map map,String content) throws IOException, TemplateException {
+        this.templateLoader.putTemplate(DEFAULT_NAME,content);
         StringWriter writer = new StringWriter();
-        Template template = getTemplate(name);
+        Template template = getTemplate();
         template.process(map,writer);
         return writer.toString();
     }
 
 
-    public void addTemplate(String name,String templateValue){
-        this.templateLoader.putTemplate(name,templateValue);
-    }
+
 
 
 

@@ -1,4 +1,4 @@
-package org.cauli.algorithm;
+package org.cauli.common.Algorithm;
 
 
 import java.util.List;

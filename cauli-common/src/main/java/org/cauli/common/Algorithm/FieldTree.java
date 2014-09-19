@@ -1,10 +1,8 @@
-package org.cauli.instrument;
-
+package org.cauli.common.Algorithm;
 
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.cauli.algorithm.Tree;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
