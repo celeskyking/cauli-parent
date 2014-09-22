@@ -1,10 +1,12 @@
 package org.cauli.mock.context;
 
 import com.google.common.collect.Maps;
+import freemarker.template.TemplateMethodModelEx;
+
 import java.util.Map;
 
 /**
- * Created by tianqing.wang on 2014/9/19
+ * Created by tianqing.wang on 2014/7/9
  */
 public class Context {
 
@@ -18,6 +20,10 @@ public class Context {
 
     public void addContext(Map<String, Object> context) {
         this.contextMap.putAll(context);
+    }
+
+    public void addObject(String name,Object object){
+        addContext(name,object);
     }
 
     public Object getContext(String key) {
@@ -35,5 +41,14 @@ public class Context {
 
     public void setParent(Context parent) {
         this.parent = parent;
+    }
+
+    public Map<String, Object> getValues() {
+        return contextMap;
+    }
+
+
+    public void addTemplateMethodModelObjects(Map<String, TemplateMethodModelEx> map){
+        contextMap.putAll(map);
     }
 }

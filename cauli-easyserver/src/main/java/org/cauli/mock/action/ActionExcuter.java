@@ -1,7 +1,7 @@
 package org.cauli.mock.action;
 
 
-import org.cauli.mock.entity.ParameterValuePairs;
+import org.cauli.mock.entity.ParametersModel;
 import org.cauli.mock.exception.ActionExecuteException;
 import org.cauli.mock.util.ActionMethodUtil;
 import org.cauli.mock.util.CommonUtil;
@@ -19,7 +19,7 @@ public class ActionExcuter{
 
     private Object[] params;
 
-    public ActionExcuter(Method method,ParameterValuePairs pairs,Object object){
+    public ActionExcuter(Method method,ParametersModel pairs,Object object){
         this.method=method;
         this.method.setAccessible(true);
         this.parameterValuePairs=pairs;
@@ -42,15 +42,15 @@ public class ActionExcuter{
         this.params = params;
     }
 
-    private ParameterValuePairs parameterValuePairs;
+    private ParametersModel parameterValuePairs;
 
-    public ParameterValuePairs getParameterValuePairs() {
+    public ParametersModel getParameterValuePairs() {
         return parameterValuePairs;
     }
 
 
 
-    public void setParameterValuePairs(ParameterValuePairs parameterValuePairs) {
+    public void setParameterValuePairs(ParametersModel parameterValuePairs) {
         this.parameterValuePairs = parameterValuePairs;
     }
 

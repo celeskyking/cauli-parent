@@ -25,6 +25,21 @@ public class KeyValueStores {
         this.queue=new PriorityQueue<KeyValueStore>(30,comparator);
     }
 
+    public KeyValueStore getKeyStore(String key){
+        Iterator<KeyValueStore> iterator = queue.iterator();
+        while(iterator.hasNext()){
+            KeyValueStore keyValueStore = iterator.next();
+            if(keyValueStore.getKey().equals(key)){
+                return keyValueStore;
+            }
+        }
+        return null;
+    }
+
+    public Object getObject(String key){
+        return getKeyStore(key).getValue();
+    }
+
     public void add(KeyValueStore keyValueStore){
         this.queue.add(keyValueStore);
     }

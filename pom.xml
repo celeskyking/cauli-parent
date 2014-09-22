@@ -53,7 +53,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <selenium.version>2.43.1</selenium.version>
-        <jodd.version>3.5.2</jodd.version>
+        <jodd.version>3.6</jodd.version>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +63,11 @@
                 <groupId>com.thoughtworks.xstream</groupId>
                 <artifactId>xstream</artifactId>
                 <version>1.4.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jodd</groupId>
+                <artifactId>jodd-props</artifactId>
+                <version>${jodd.version}</version>
             </dependency>
             <dependency>
                 <groupId>log4j</groupId>

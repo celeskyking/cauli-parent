@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import org.cauli.mock.core.ValuePairs;
+import org.cauli.mock.context.Context;
 
 import java.io.StringWriter;
 import java.util.Map;
@@ -56,7 +56,7 @@ public class ValueTransfer {
     }
 
 
-    public static String getValue(String name,ValuePairs valuePairs) throws Exception {
+    public static String getValue(String name,Context context) throws Exception {
         if(checkNameFormat(name)){
             StringTemplateLoader loader = new StringTemplateLoader();
             loader.putTemplate(DEFAULT_TEMPLATE_NAME,name);
@@ -64,7 +64,7 @@ public class ValueTransfer {
             configuration.setDefaultEncoding("UTF-8");
             Template template = configuration.getTemplate(DEFAULT_TEMPLATE_NAME);
             StringWriter stringWriter = new StringWriter();
-            template.process(valuePairs.getValues(),stringWriter);
+            template.process(context.getValues(),stringWriter);
             return stringWriter.toString();
         }else{
             return transferValue(name);

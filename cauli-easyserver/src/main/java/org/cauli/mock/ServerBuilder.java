@@ -34,7 +34,7 @@ public class ServerBuilder {
             initServers();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("加载MockServer的时候出现了异常");
+            logger.error("加载MockServer的时候出现了异常",e);
         }
     }
 

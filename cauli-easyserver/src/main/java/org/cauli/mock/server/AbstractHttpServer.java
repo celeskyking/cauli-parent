@@ -15,7 +15,8 @@ import org.cauli.mock.action.DefaultHttpAction;
 import org.cauli.mock.action.MockAction;
 import org.cauli.mock.annotation.Route;
 import org.cauli.mock.annotation.ServerConfig;
-import org.cauli.mock.entity.ParameterValuePairs;
+import org.cauli.mock.constant.Constant;
+import org.cauli.mock.entity.ParametersModel;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.exception.ServerNameNotSupportChineseException;
 import org.cauli.mock.util.CommonUtil;
@@ -73,7 +74,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
 
     @Override
     public AbstractHttpAction createAction(String actionName,String path,String template) {
-        return createAction(actionName,path,"SUCCESS",template);
+        return createAction(actionName,path, Constant.DEFAULT_RETURN_STATUS,template);
     }
 
     @Override
@@ -123,7 +124,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
         }
     }
 
-    public MockAction getAction(HttpRequest request,ParameterValuePairs pairs) throws Exception {
+    public MockAction getAction(HttpRequest request,ParametersModel pairs) throws Exception {
         if(isSingleUrl()){
             if(!checkRouteExist()){
                 throw new Exception("如果配置HttpServer的RequestMapping,则必须配置转化路由方法,@Route标注的方法,返回值必须为MockAction类型或者子类");
@@ -131,7 +132,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                 ActionExcuter actionExcuter = new ActionExcuter(routeMethod,pairs,this);
                 AbstractHttpAction action = (AbstractHttpAction) actionExcuter.invoke();
                 if(action!=null){
-                    action.setParameterValuePairs(pairs);
+                    action.setParametersModel(pairs);
                     if(action.getActionInfo().isUseTemplate()){
                         action.loadTemplate();
                     }
@@ -144,7 +145,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
             String uri = StringUtils.substringBefore(request.uri(),"?");
             AbstractHttpAction action= this.mockActionUriMapping.get(uri);
             if(action!=null){
-                action.setParameterValuePairs(pairs);
+                action.setParametersModel(pairs);
                 return action;
             }else{
                 return null;

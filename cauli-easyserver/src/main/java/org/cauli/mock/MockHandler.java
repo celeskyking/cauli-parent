@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cauli.mock.action.AbstractHttpAction;
 import org.cauli.mock.core.convert.ConvertExecuter;
 import org.cauli.mock.core.convert.ConvertManager;
-import org.cauli.mock.entity.ParameterValuePairs;
+import org.cauli.mock.entity.ParametersModel;
 import org.cauli.mock.server.AbstractHttpServer;
 import org.cauli.mock.server.MockServer;
 import org.cauli.server.HttpControl;
@@ -37,24 +37,24 @@ public class MockHandler implements HttpHandler {
         logger.info("请求的uri:{},ServerName:{}",request.uri(),this.server.getServerName());
         ConvertManager.ConvertMap convertMap = new ConvertManager.ConvertMap();
         try{
-            final ParameterValuePairs parameterValuePair = new ParameterValuePairs(convertMap);
-            convertMap.register(ParameterValuePairs.class,new ConvertExecuter() {
+            final ParametersModel parametersModel = new ParametersModel(convertMap);
+            convertMap.register(ParametersModel.class,new ConvertExecuter() {
                 @Override
-                public Object execute(Object clazz, ParameterValuePairs parameterValuePairs) {
-                    return parameterValuePair;
+                public Object execute(Object clazz, ParametersModel parameterValuePairs) {
+                    return parametersModel;
                 }
             });
             convertMap.register(HttpRequest.class,new ConvertExecuter() {
                 @Override
-                public Object execute(Object clazz, ParameterValuePairs parameterValuePairs) {
-                    parameterValuePair.getValuePairs().addObject("request",request);
+                public Object execute(Object clazz, ParametersModel parameterValuePairs) {
+                    parametersModel.getContext().addObject("request",request);
                     return request;
                 }
             });
             convertMap.register(HttpResponse.class,new ConvertExecuter() {
                 @Override
-                public Object execute(Object clazz, ParameterValuePairs parameterValuePairs) {
-                    parameterValuePair.getValuePairs().addObject("response",httpResponse);
+                public Object execute(Object clazz, ParametersModel parameterValuePairs) {
+                    parametersModel.getContext().addObject("response",httpResponse);
                     return httpResponse;
                 }
             });
@@ -62,7 +62,7 @@ public class MockHandler implements HttpHandler {
                 httpResponse.status(404).end();
                 return;
             }
-            parseMock(request,httpResponse,parameterValuePair);
+            parseMock(request,httpResponse,parametersModel);
         }catch (Exception e){
             logger.error("请求处理中出现了错误",e);
             httpResponse.status(500).end();
@@ -85,10 +85,10 @@ public class MockHandler implements HttpHandler {
         }
     }
 
-    private void parseMock(HttpRequest request,HttpResponse httpResponse, final ParameterValuePairs parameterValuePair) throws Exception {
+    private void parseMock(HttpRequest request,HttpResponse httpResponse, final ParametersModel parametersModel) throws Exception {
         String uri = StringUtils.substringBefore(request.uri(),"?");
 
-        final AbstractHttpAction action = (AbstractHttpAction) server.getAction(request,parameterValuePair);
+        final AbstractHttpAction action = (AbstractHttpAction) server.getAction(request,parametersModel);
         if(action==null){
             logger.error("not found action,uri:{}",uri);
             httpResponse.status(404).end();
@@ -102,7 +102,7 @@ public class MockHandler implements HttpHandler {
         new Runnable() {
             @Override
             public void run() {
-                action.onMessage(parameterValuePair);
+                action.onMessage(parametersModel);
             }
         }.run();
         return;

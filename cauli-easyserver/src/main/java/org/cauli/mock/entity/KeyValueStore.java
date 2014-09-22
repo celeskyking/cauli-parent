@@ -28,4 +28,25 @@ public class KeyValueStore {
     public void setValue(Object value) {
         this.value = value;
     }
+
+    public String getString(){
+        return String.valueOf(value);
+    }
+
+    public Integer getInt(){
+        return Integer.parseInt(value.toString());
+    }
+
+    public Boolean getBoolean(){
+        return Boolean.valueOf(value.toString());
+    }
+
+    public Float getFloat(){
+        return Float.valueOf(value.toString());
+    }
+
+    public Long getLong(){
+        return Long.valueOf(value.toString());
+    }
+
 }

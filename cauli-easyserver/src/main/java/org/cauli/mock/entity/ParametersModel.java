@@ -1,24 +1,25 @@
 package org.cauli.mock.entity;
 
-import org.cauli.mock.core.ValuePairs;
-import org.cauli.mock.core.ValuePairsFactory;
+
+import org.cauli.mock.context.Context;
+import org.cauli.mock.context.ContextFactory;
 import org.cauli.mock.core.convert.ConvertExecuter;
 import org.cauli.mock.core.convert.ConvertManager;
 
 /**
  * Created by tianqing.wang on 2014/7/14
  */
-public class ParameterValuePairs {
+public class ParametersModel {
     private String templateValue;
-    private ValuePairs valuePairs= ValuePairsFactory.getValuePairs();
+    private Context context= ContextFactory.getContext();
     private ConvertManager.ConvertMap convertMap;
 
-    public ParameterValuePairs(ConvertManager.ConvertMap convertMap){
+    public ParametersModel(ConvertManager.ConvertMap convertMap){
         setConvertMap(convertMap);
-        convertMap.register(ValuePairs.class,new ConvertExecuter<Class<ValuePairs>,ValuePairs>() {
+        convertMap.register(Context.class,new ConvertExecuter<Class<Context>,Context>() {
             @Override
-            public ValuePairs execute(Class<ValuePairs> clazz, ParameterValuePairs parameterValuePairs) {
-                return parameterValuePairs.getValuePairs();
+            public Context execute(Class<Context> clazz, ParametersModel parameterValuePairs) {
+                return parameterValuePairs.getContext();
             }
         });
     }
@@ -40,8 +41,8 @@ public class ParameterValuePairs {
         this.templateValue = templateValue;
     }
 
-    public ValuePairs getValuePairs() {
-        return valuePairs;
+    public Context getContext() {
+        return context;
     }
 
 }

@@ -1,6 +1,7 @@
 package org.cauli.mock.entity;
 
 import org.cauli.mock.constant.Constant;
+import org.cauli.mock.strategy.IStrategy;
 import org.cauli.mock.template.TemplateSourceBuilder;
 import org.cauli.mock.template.TemplateSourceEngine;
 
@@ -18,6 +19,8 @@ public class ActionInfo implements Serializable{
     private long timeoutMS;
     private boolean isUseTemplate=Constant.IS_USE_TEMPLATE;
     private String requestUri;
+
+    private IStrategy strategy;
 
     private Class<? extends TemplateSourceEngine> templateSourceLoaderClass= TemplateSourceBuilder.getInstance().getTemplateSourceEngineClass();
 
@@ -76,5 +79,13 @@ public class ActionInfo implements Serializable{
 
     public void setRequestUri(String requestUri) {
         this.requestUri = requestUri;
+    }
+
+    public IStrategy getStrategy() {
+        return strategy;
+    }
+
+    public void setStrategy(IStrategy strategy) {
+        this.strategy = strategy;
     }
 }

@@ -1,4 +1,4 @@
-package org.cauli.mock.core;
+package org.cauli.mock.context;
 
 import com.google.common.collect.Maps;
 import freemarker.template.TemplateMethodModelEx;

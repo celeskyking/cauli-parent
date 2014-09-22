@@ -6,10 +6,9 @@ import org.cauli.mock.action.AbstractSocketAction;
 import org.cauli.mock.annotation.SocketRequest;
 import org.cauli.mock.core.convert.ConvertExecuter;
 import org.cauli.mock.core.convert.ConvertManager;
-import org.cauli.mock.entity.ParameterValuePairs;
+import org.cauli.mock.entity.ParametersModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.Socket;
@@ -55,20 +54,20 @@ public class SocketIOHandler implements Runnable{
             ConvertManager.ConvertMap convertMap = new ConvertManager.ConvertMap();
             convertMap.register(SocketRequest.class,new ConvertExecuter() {
                 @Override
-                public Object execute(Object clazz, ParameterValuePairs parameterValuePairs) {
+                public Object execute(Object clazz, ParametersModel parameterValuePairs) {
                     return request;
                 }
             });
-            final ParameterValuePairs parameterValuePairs = new ParameterValuePairs(convertMap);
+            final ParametersModel parametersModel = new ParametersModel(convertMap);
             final AbstractSocketAction action=server.route(request);
             action.setRequest(request);
-            action.setParameterValuePairs(parameterValuePairs);
+            action.setParametersModel(parametersModel);
             IOUtils.write(action.build(), socket.getOutputStream());
             socket.close();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    action.onMessage(parameterValuePairs);
+                    action.onMessage(parametersModel);
                 }
             }).start();
         } catch (Exception e) {
