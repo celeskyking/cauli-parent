@@ -35,6 +35,28 @@ public class Context {
         return value;
     }
 
+
+    public String getString(String key){
+        return String.valueOf(getContext(key));
+    }
+
+    public int getInt(String key){
+        return Integer.valueOf(getString(key));
+    }
+
+    public double getDouble(String key){
+        return Integer.valueOf(getString(key));
+    }
+
+
+    public float getFloat(String key){
+        return Float.valueOf(getString(key));
+    }
+
+    public long getLong(String key){
+        return Long.valueOf(getString(key));
+    }
+
     public Context getParent() {
         return parent;
     }
@@ -44,6 +66,16 @@ public class Context {
     }
 
     public Map<String, Object> getValues() {
+        Map<String,Object> values = Maps.newHashMap();
+        Context context=this;
+        while (context!=null){
+            values.putAll(context.getContextMap());
+            context=context.getParent();
+        }
+        return values;
+    }
+
+    public Map<String,Object> getContextMap(){
         return contextMap;
     }
 
@@ -51,4 +83,5 @@ public class Context {
     public void addTemplateMethodModelObjects(Map<String, TemplateMethodModelEx> map){
         contextMap.putAll(map);
     }
+
 }

@@ -10,7 +10,7 @@ import org.cauli.server.controller.Controller;
 public class MyController extends Controller{
 
 
-    @Path("/hello/{user}")
+    @Path("/HelloServer/{user}")
     public void hello() throws Exception {
         System.out.println("user->"+pathParam("user"));
         renderText(pathParam("user"));

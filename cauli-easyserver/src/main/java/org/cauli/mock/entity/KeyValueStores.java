@@ -13,12 +13,7 @@ public class KeyValueStores {
     private PriorityQueue<KeyValueStore> queue;
 
     public KeyValueStores(){
-        this.queue=new PriorityQueue<KeyValueStore>(30,new Comparator<KeyValueStore>() {
-            @Override
-            public int compare(KeyValueStore o1, KeyValueStore o2) {
-                return o1.getKey().compareTo(o2.getKey());
-            }
-        });
+        this.queue=new PriorityQueue<KeyValueStore>(30,new NormalSortComparator());
     }
 
     public KeyValueStores(Comparator<KeyValueStore> comparator){
@@ -70,5 +65,19 @@ public class KeyValueStores {
         return joiner.join(toMap());
 
     }
+
+    public Iterator<KeyValueStore> iterator(){
+        return this.queue.iterator();
+    }
+
+
+    public void add(KeyValueStores stores){
+        Iterator<KeyValueStore> iterator = stores.iterator();
+        while(iterator.hasNext()){
+            this.queue.add(iterator.next());
+        }
+    }
+
+
 
 }

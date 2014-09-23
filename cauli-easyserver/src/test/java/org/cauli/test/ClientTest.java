@@ -1,9 +1,6 @@
 package org.cauli.test;
 
-import jodd.http.HttpRequest;
-import jodd.http.HttpResponse;
 import org.cauli.mock.ServerManager;
-import org.junit.Test;
 
 /**
  * Created by tianqing.wang on 2014/8/25

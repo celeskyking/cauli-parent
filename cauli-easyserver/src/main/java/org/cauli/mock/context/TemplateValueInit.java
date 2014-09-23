@@ -8,6 +8,8 @@ import org.cauli.mock.ValueType;
 import org.cauli.mock.annotation.Register;
 import org.cauli.mock.annotation.Value;
 import org.cauli.mock.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -21,6 +23,8 @@ public class TemplateValueInit {
 
 
     private Map<String,TemplateMethodModelEx> map= Maps.newHashMap();
+
+    private Logger logger = LoggerFactory.getLogger(TemplateValueInit.class);
 
     private Map<String,Object> objectMap = Maps.newHashMap();
 
@@ -56,6 +60,7 @@ public class TemplateValueInit {
         for(final Method method:clazz.getDeclaredMethods()){
             if(method.isAnnotationPresent(Value.class)&&method.getAnnotation(Value.class).type()== ValueType.METHOD){
                 volidateMethodInfo(method);
+                logger.info("扫描到全局模板方法:{}",method.getAnnotation(Value.class).value());
                 map.put(method.getAnnotation(Value.class).value(), new TemplateMethodModelEx() {
                     @Override
                     public Object exec(List arguments) throws TemplateModelException {
@@ -72,6 +77,7 @@ public class TemplateValueInit {
                 });
             }else if(method.isAnnotationPresent(Value.class)&&method.getAnnotation(Value.class).type()== ValueType.OBJECT){
                 volidateObjectMethodInfo(method);
+                logger.info("扫描到全局模板变量:{}",method.getAnnotation(Value.class).value());
                 objectMap.put(method.getAnnotation(Value.class).value(),method.invoke(obj));
             }
         }

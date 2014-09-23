@@ -5,6 +5,7 @@ import jodd.props.PropsEntries;
 import jodd.props.PropsEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.cauli.common.instrument.ResourceUtil;
+import org.cauli.mock.context.Context;
 import org.cauli.mock.entity.KeyValueStore;
 import org.cauli.mock.entity.KeyValueStores;
 
@@ -18,7 +19,7 @@ import java.util.Iterator;
  */
 public class PropUtil {
 
-    public static KeyValueStores loadFile(File file,String section,Comparator comparator) throws IOException {
+    public static KeyValueStores loadFile(Context context,File file,String section,Comparator comparator) throws Exception {
         Props props = new Props();
         props.load(file);
         PropsEntries entries = props.entries();
@@ -33,23 +34,24 @@ public class PropUtil {
 
         while(iterator.hasNext()){
             PropsEntry entry = iterator.next();
-            stores.add(new KeyValueStore(StringUtils.substringAfter(entry.getKey(),"."),entry.getValue()));
+            String value = TemplateParseUtil.getInstance().toString(context.getValues(),entry.getValue());
+            stores.add(new KeyValueStore(StringUtils.substringAfter(entry.getKey(),"."),value));
         }
         return stores;
 
     }
 
-    public static KeyValueStores loadFile(File file,String section) throws IOException {
-        return loadFile(file,section,null);
+    public static KeyValueStores loadFile(Context context,File file,String section) throws Exception {
+        return loadFile(context,file,section,null);
     }
 
-    public static KeyValueStores loadFileByClasspath(String fileName,String section,Comparator comparator) throws IOException {
+    public static KeyValueStores loadFileByClasspath(Context context,String fileName,String section,Comparator comparator) throws Exception {
         File file = ResourceUtil.getFileFromClassPath(fileName);
-        return loadFile(file,section,comparator);
+        return loadFile(context,file,section,comparator);
     }
 
-    public static KeyValueStores loadFileByClasspath(String fileName,String section) throws IOException {
+    public static KeyValueStores loadFileByClasspath(Context context,String fileName,String section) throws Exception {
         File file = ResourceUtil.getFileFromClassPath(fileName);
-        return loadFile(file,section,null);
+        return loadFile(context,file,section,null);
     }
 }

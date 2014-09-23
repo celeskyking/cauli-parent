@@ -87,7 +87,6 @@ public class MockHandler implements HttpHandler {
 
     private void parseMock(HttpRequest request,HttpResponse httpResponse, final ParametersModel parametersModel) throws Exception {
         String uri = StringUtils.substringBefore(request.uri(),"?");
-
         final AbstractHttpAction action = (AbstractHttpAction) server.getAction(request,parametersModel);
         if(action==null){
             logger.error("not found action,uri:{}",uri);
@@ -99,12 +98,15 @@ public class MockHandler implements HttpHandler {
         String responseContent =  action.build();
         logger.info("响应内容为:{}",responseContent);
         httpResponse.content(responseContent).end();
-        new Runnable() {
-            @Override
-            public void run() {
-                action.onMessage(parametersModel);
-            }
-        }.run();
+        if(action.getActionInfo().isUseMessage()){
+            new Runnable() {
+                @Override
+                public void run() {
+                    action.onMessage(parametersModel);
+                }
+            }.run();
+        }
+
         return;
     }
 

@@ -13,7 +13,7 @@ public class ServerTest {
         WebServers.createWebServer(9999).add(new HttpHandler() {
             @Override
             public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
-                response.content("hello,world").end();
+                response.content("HelloServer,world").end();
             }
         }).start().get();
     }

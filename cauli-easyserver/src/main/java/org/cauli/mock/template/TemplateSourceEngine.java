@@ -22,7 +22,9 @@ public interface TemplateSourceEngine {
 
     public void deleteTemplate(String status);
 
-    public Map<String,String> getAllTemplates();
+    public Map<String,String> getActionTemplates();
+
+    public Map<String,String> getCallbackTemplates();
 
 
 

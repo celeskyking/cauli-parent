@@ -43,17 +43,24 @@ public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
         for(File f:file.listFiles()){
             if(f.isDirectory()&&f.getName().equals(action.getServer().getServerName())){
                 for(File ff:f.listFiles()){
-                    if(ff.getName().startsWith(action.getActionName())){
-                        String content = null;
-                        try {
-                            content = IOUtils.toString(new FileInputStream(ff));
-                        } catch (IOException e) {
-                            throw new RuntimeException("读取"+ff.getName()+"的流失败");
+                    String name = ff.getName();
+                    if(name.equals(action.getActionName())&&ff.isDirectory()){
+                        for(File fff:ff.listFiles()){
+                            String content;
+                            try{
+                                content = IOUtils.toString(new FileInputStream(fff));
+                            }catch (Exception e){
+                                throw new RuntimeException("读取"+ff.getName()+"的流失败",e);
+                            }
+                            if(!fff.getName().contains("_callback")){
+                                String returnStatus = StringUtils.substringBefore(fff.getName(),".");
+                                templateCache.put(returnStatus,content);
+                            }else{
+                                String returnStatus = StringUtils.substringBefore(fff.getName(), ".");
+                                templateCache.put(returnStatus,content);
+                            }
                         }
-                        String returnStatus =   StringUtils.substringBetween(ff.getName(), "_", ".");
-                        templateCache.put(returnStatus, content);
                     }
-
                 }
             }
         }
@@ -83,7 +90,20 @@ public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
     }
 
     @Override
-    public Map<String,String> getAllTemplates() {
+    public Map<String,String> getActionTemplates() {
         return templateCache;
+    }
+
+    @Override
+    public Map<String, String> getCallbackTemplates() {
+        Map<String,String> callbackCache = Maps.newHashMap();
+        for(Map.Entry<String,String> entry:templateCache.entrySet()){
+            if(entry.getKey().contains("_callback")){
+                String status = StringUtils.substringBefore(entry.getKey(), "_");
+                System.out.println("key:"+status+",value:"+entry.getValue());
+                callbackCache.put(status,entry.getValue());
+            }
+        }
+        return callbackCache;
     }
 }

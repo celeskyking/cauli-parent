@@ -1,26 +1,21 @@
 package org.cauli.mock.action;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.io.IOUtils;
-import org.cauli.mock.context.Context;
 import org.cauli.mock.entity.ActionInfo;
-import org.cauli.mock.strategy.IStrategy;
-import org.cauli.mock.util.TemplateParseUtil;
+import org.cauli.mock.sender.HttpSender;
 import org.cauli.mock.util.XMLUtil;
+import org.cauli.server.HttpMethod;
 import org.cauli.server.HttpRequest;
 import org.cauli.server.HttpResponse;
 import org.dom4j.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
  * Created by tianqing.wang on 2014/8/14
  */
-public abstract class AbstractHttpAction extends AbstractAction<HttpRequest>{
-
-    private Logger logger = LoggerFactory.getLogger(AbstractHttpAction.class);
+public abstract class AbstractHttpAction extends AbstractAction<HttpRequest,String>{
 
     private HttpResponse response;
 
@@ -29,7 +24,7 @@ public abstract class AbstractHttpAction extends AbstractAction<HttpRequest>{
     }
 
 
-    public abstract void config(ActionInfo httpActionInfo);
+    public abstract void config(ActionInfo actionInfo);
 
 
     public Map<String,String> requestMapWithSingleValue(){
@@ -63,28 +58,20 @@ public abstract class AbstractHttpAction extends AbstractAction<HttpRequest>{
     }
 
 
-
-
-
-
-    @Override
-    public String build() throws Exception {
-        runParameterConfigs();
-        if(getActionInfo().isUseTemplate()){
-            logger.info("请求的模板状态为:{}",getReturnStatus());
-            String content= TemplateParseUtil.getInstance().toString(getParametersModel().getContext().getValues(),getTemplateValue(getReturnStatus()));
-            if(!getActionInfo().getTemplateEncoding().equalsIgnoreCase("utf-8")){
-                content= IOUtils.toString(IOUtils.toInputStream(content,getActionInfo().getTemplateEncoding()));
-            }
-            logger.info("获取的Template的值:{}", content);
-            setTemplateValue(content);
+    public HttpSender sender(){
+        HttpMethod method = getActionInfo().getCallbackInfo().http.getMethod();
+        String url = getActionInfo().getCallbackInfo().http.getUrl();
+        Charset queryEncoding = getActionInfo().getCallbackInfo().http.getQueryEncoding();
+        Charset formEncoding = getActionInfo().getCallbackInfo().http.getFormEncoding();
+        HttpSender sender = new HttpSender().method(method).url(url);
+        if(queryEncoding!=null){
+            sender.queryEncoding(queryEncoding.displayName());
         }
-        runTemplateConfig();
-        logger.info("响应设置timeout时间:{}", getActionInfo().getTimeoutMS());
-        Thread.sleep(getActionInfo().getTimeoutMS()==0?0:getActionInfo().getTimeoutMS());
-        return getParametersModel().getTemplateValue();
+        if(formEncoding!=null){
+            sender.formEncoding(formEncoding.displayName());
+        }
+        return sender;
     }
-
 
 
     public Document requestToXml() {
@@ -108,12 +95,5 @@ public abstract class AbstractHttpAction extends AbstractAction<HttpRequest>{
     public void setResponse(HttpResponse response) {
         this.response = response;
     }
-
-    @Override
-    public String process(HttpRequest request, Context context) {
-        return null;
-    }
-
-
 
 }

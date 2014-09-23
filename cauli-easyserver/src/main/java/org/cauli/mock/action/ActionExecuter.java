@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * @auther sky
  */
-public class ActionExcuter{
+public class ActionExecuter{
 
     private Object object;
 
@@ -19,7 +19,7 @@ public class ActionExcuter{
 
     private Object[] params;
 
-    public ActionExcuter(Method method,ParametersModel pairs,Object object){
+    public ActionExecuter(Method method,ParametersModel pairs,Object object){
         this.method=method;
         this.method.setAccessible(true);
         this.parameterValuePairs=pairs;

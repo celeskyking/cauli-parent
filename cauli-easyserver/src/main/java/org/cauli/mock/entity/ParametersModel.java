@@ -11,7 +11,7 @@ import org.cauli.mock.core.convert.ConvertManager;
  */
 public class ParametersModel {
     private String templateValue;
-    private Context context= ContextFactory.getContext();
+    private Context context= new Context();
     private ConvertManager.ConvertMap convertMap;
 
     public ParametersModel(ConvertManager.ConvertMap convertMap){

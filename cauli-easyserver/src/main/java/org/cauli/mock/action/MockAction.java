@@ -25,11 +25,13 @@ public interface MockAction<T,K> {
 
     public String getTemplateValue(String status);
 
+    public String getCallbackTemplateValue(String status);
+
     public void addTemplate(String returnStatus,String content);
 
     public Map<String,String> getTemplateStatuses();
 
-    public void loadTemplate();
+    public void load();
 
 
 

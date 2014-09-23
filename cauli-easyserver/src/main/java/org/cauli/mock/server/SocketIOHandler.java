@@ -64,12 +64,15 @@ public class SocketIOHandler implements Runnable{
             action.setParametersModel(parametersModel);
             IOUtils.write(action.build(), socket.getOutputStream());
             socket.close();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    action.onMessage(parametersModel);
-                }
-            }).start();
+            if(action.getActionInfo().isUseMessage()){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        action.onMessage(parametersModel);
+                    }
+                }).start();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

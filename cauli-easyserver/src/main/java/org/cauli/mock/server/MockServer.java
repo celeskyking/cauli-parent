@@ -5,6 +5,9 @@ import org.cauli.mock.ServerInitStatus;
 import org.cauli.mock.ServerProtocol;
 import org.cauli.mock.ServerStatus;
 import org.cauli.mock.action.MockAction;
+import org.cauli.mock.context.Context;
+import org.cauli.mock.entity.KeyValueStore;
+import org.cauli.mock.entity.KeyValueStores;
 import org.cauli.mock.entity.ServerInfo;
 
 /**
@@ -40,5 +43,11 @@ public interface MockServer<T extends MockAction> extends IServer{
     public T createAction(String actionName,String path,String returnStatus,String templateValue);
 
     public ServerInfo getServerInfo();
+
+    public void addContext(KeyValueStore store);
+
+    public void addContext(KeyValueStores stores);
+
+    public Context getContext();
 
 }

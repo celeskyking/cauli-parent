@@ -202,7 +202,7 @@ public class NettyWebServer implements WebServer {
                 });
 
                 staleConnectionTrackingHandler = new StaleConnectionTrackingHandler(staleConnectionTimeout, executor);
-                ScheduledExecutorService staleCheckExecutor = Executors.newSingleThreadScheduledExecutor(new NamingThreadFactory("WEBBIT-STALE-CONNECTION-CHECK-THREAD"));
+                ScheduledExecutorService staleCheckExecutor = Executors.newSingleThreadScheduledExecutor(new NamingThreadFactory("CAULI-STALE-CONNECTION-CHECK-THREAD"));
                 staleCheckExecutor.scheduleWithFixedDelay(new Runnable() {
                     @Override
                     public void run() {
@@ -223,7 +223,7 @@ public class NettyWebServer implements WebServer {
         });
         // don't use Executor here - it's just another resource we need to manage -
         // thread creation on startup should be fine
-        final Thread thread = new Thread(future, "WEBBIT-STARTUP-THREAD");
+        final Thread thread = new Thread(future, "CAULI-STARTUP-THREAD");
         thread.start();
         return future;
     }

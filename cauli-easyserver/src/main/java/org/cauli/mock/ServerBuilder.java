@@ -5,6 +5,8 @@ import com.google.common.collect.Sets;
 import jodd.bean.BeanCopy;
 import org.cauli.common.instrument.ClassPool;
 import org.cauli.common.instrument.ClassUtils;
+import org.cauli.mock.context.Context;
+import org.cauli.mock.context.ContextFactory;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.server.AbstractHttpServer;
 import org.cauli.mock.server.MockServer;
@@ -22,6 +24,7 @@ public class ServerBuilder {
 
     private Logger logger = LoggerFactory.getLogger(ServerBuilder.class);
 
+    private Context context = ContextFactory.getContext();
 
     private volatile static ServerBuilder serverBuilder;
 
@@ -58,6 +61,7 @@ public class ServerBuilder {
                         logger.info("解析MockServer:{}",clazz.getName());
                         if(!clazz.isInterface()&& !Modifier.isAbstract(clazz.getModifiers())&&!clazz.getName().contains("$")){
                             MockServer server = (MockServer)clazz.newInstance();
+                            server.getContext().setParent(context);
                             isUsingPorts.add(server.getPort());
                             server.loadActions();
                             servers.put(server.getServerName(),server);

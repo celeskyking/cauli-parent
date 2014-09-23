@@ -1,0 +1,3 @@
+[SUCCESS]
+name=${hello()}
+age=13

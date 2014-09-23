@@ -159,12 +159,15 @@ public class SocketNIOServer implements ISocketServer{
                 String response = action.build();
                 socketChannel.write(ByteBuffer.wrap(response.getBytes(Charset.forName(getResponseEncoding()))));
                 byteBuffer.clear();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        action.onMessage(parametersModel);
-                    }
-                }).start();
+                if(action.getActionInfo().isUseMessage()){
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            action.onMessage(parametersModel);
+                        }
+                    }).start();
+                }
+
             }
         }
     }

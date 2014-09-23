@@ -6,7 +6,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cauli.mock.ConfigType;
 import org.cauli.mock.annotation.Action;
+import org.cauli.mock.annotation.CallBack;
+import org.cauli.mock.context.Context;
+import org.cauli.mock.data.DataProviderBuilder;
+import org.cauli.mock.data.IDataProvider;
 import org.cauli.mock.entity.ActionInfo;
+import org.cauli.mock.entity.KeyValueStores;
+import org.cauli.mock.entity.NormalSortComparator;
 import org.cauli.mock.entity.ParametersModel;
 import org.cauli.mock.exception.ActionExecuteException;
 import org.cauli.mock.exception.ServerNameNotSupportChineseException;
@@ -17,25 +23,28 @@ import org.cauli.mock.util.CommonUtil;
 import org.cauli.mock.util.TemplateParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * @auther sky
  */
-public abstract class AbstractAction<T> implements MockAction<String,ParametersModel>,IStrategy<T>{
-
+public abstract class AbstractAction<T,V> implements MockAction<String,ParametersModel>,IStrategy<T>{
 
     private TemplateSourceEngine sourceEngine;
 
     private T request;
 
-
     public T request() {
         return request;
     }
+
+    private IDataProvider provider= DataProviderBuilder.getInstance().getDataProvider();
 
     public void setRequest(T request) {
         this.request = request;
@@ -46,9 +55,9 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
 
     private ParametersModel parametersModel;
 
+    private Method callback;
+
     private MockServer server;
-
-
 
     private Logger logger = LoggerFactory.getLogger(AbstractAction.class);
 
@@ -72,9 +81,46 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
     }
 
 
-    public void addObject(String name,Object object){
+    public void addContext(String name,Object object){
         this.parametersModel.getContext().addObject(name,object);
     }
+
+    public KeyValueStores loadData(String section,Comparator comparator){
+        return provider.loadDatas(parametersModel.getContext(),getDefaultDataProviderFile(),section,comparator);
+    }
+
+    public KeyValueStores loadData(String section){
+        return provider.loadDatas(parametersModel.getContext(),getDefaultDataProviderFile(),section,new NormalSortComparator());
+    }
+
+    public KeyValueStores loadData(String fileName,String section){
+        return provider.loadDatas(parametersModel.getContext(),fileName,section,new NormalSortComparator());
+    }
+
+    public KeyValueStores loadData(File file,String section){
+        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,new NormalSortComparator());
+    }
+
+    public KeyValueStores loadData(File file,String section,Comparator comparator){
+        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,comparator);
+    }
+
+
+    public String getCallbackReturnStatus(){
+        return actionInfo.getCallbackInfo().getReturnStatus();
+    }
+
+    public String getCallbackTemplateValue(){
+        return this.sourceEngine.getCallbackTemplates().get(getCallbackReturnStatus());
+    }
+
+
+    public String getCallbackTemplateValue(String status){
+        return this.sourceEngine.getCallbackTemplates().get(status);
+    }
+
+
+
 
 
     @Override
@@ -85,9 +131,7 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
     @Override
     public String build() throws Exception {
         runParameterConfigs();
-        if(getActionInfo().getStrategy()!=null){
-            actionInfo.setReturnStatus(process(request,getParametersModel().getContext()));
-        }
+        actionInfo.setReturnStatus(process(request,parametersModel.getContext()));
         if(getActionInfo().isUseTemplate()){
             logger.info("请求的模板状态为:{}",getReturnStatus());
             String content= TemplateParseUtil.getInstance().toString(getParametersModel().getContext().getValues(),getTemplateValue(getReturnStatus()));
@@ -105,7 +149,7 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
 
     @Override
     public MockServer getServer() {
-        return null;
+        return server;
     }
 
     @Override
@@ -163,11 +207,11 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
 
     @Override
     public Map<String, String> getTemplateStatuses() {
-        return this.sourceEngine.getAllTemplates();
+        return this.sourceEngine.getActionTemplates();
     }
 
     @Override
-    public void loadTemplate() {
+    public void load() {
         this.sourceEngine.init();
     }
 
@@ -191,7 +235,7 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
 
     private void invokeConfigMethod(Method method) throws ActionExecuteException {
         if(method!=null){
-            ActionExcuter actionExcuter = new ActionExcuter(method,parametersModel,this);
+            ActionExecuter actionExcuter = new ActionExecuter(method,parametersModel,this);
             actionExcuter.invoke();
         }
 
@@ -215,9 +259,25 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
                 }else if(action.value()==ConfigType.TEMPLATE){
                     this.templateConfigMethods.add(method);
                 }
+            }else if(method.isAnnotationPresent(CallBack.class)){
+                this.callback=method;
             }
         }
     }
+
+    public V callback() throws ActionExecuteException {
+        ActionExecuter executer = new ActionExecuter(callback,parametersModel,this);
+        return (V) executer.invoke();
+    }
+
+    public void delay(int seconds){
+        try {
+            Thread.sleep(seconds*1000);
+        } catch (InterruptedException e) {
+            logger.warn("delay 被打断...");
+        }
+    }
+
 
 
     public String getTemplateValue(){
@@ -231,8 +291,15 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
         this.parametersModel.setTemplateValue(content);
     }
 
+    public String callbackContent() {
+        try{
+            return TemplateParseUtil.getInstance().toString(parametersModel.getContext().getValues(),getCallbackTemplateValue());
+        }catch (Exception e){
+            logger.error("获取callback的模板内容出错",e);
+            return null;
+        }
 
-
+    }
     private TemplateSourceEngine checkTemplateSourceEngineClass(Class<? extends TemplateSourceEngine> clazz){
         try {
             Constructor constructor=clazz.getConstructor(MockAction.class);
@@ -243,4 +310,43 @@ public abstract class AbstractAction<T> implements MockAction<String,ParametersM
             throw new RuntimeException("构造模板运行期的时候出现了系统异常",e);
         }
     }
+
+    protected String getDefaultDataProviderFile(){
+        return "data"+ "/"+getServerName()+"/"+actionInfo.getActionName()+".props";
+    }
+
+
+
+    @Override
+    public String process(T request, Context context) {
+        return actionInfo.getReturnStatus();
+    }
+
+
+    public Context getContext(){
+        return this.parametersModel.getContext();
+    }
+
+    public String getContextText(String key){
+        return getContext().getString(key);
+    }
+
+
+    public TemplateSourceEngine getSourceEngine() {
+        return sourceEngine;
+    }
+
+    public void setSourceEngine(TemplateSourceEngine sourceEngine) {
+        this.sourceEngine = sourceEngine;
+    }
+
+    public IDataProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(IDataProvider provider) {
+        this.provider = provider;
+    }
+
+
 }

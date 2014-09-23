@@ -10,12 +10,15 @@ import org.cauli.mock.ServerInitStatus;
 import org.cauli.mock.ServerProtocol;
 import org.cauli.mock.ServerStatus;
 import org.cauli.mock.action.AbstractHttpAction;
-import org.cauli.mock.action.ActionExcuter;
+import org.cauli.mock.action.ActionExecuter;
 import org.cauli.mock.action.DefaultHttpAction;
 import org.cauli.mock.action.MockAction;
 import org.cauli.mock.annotation.Route;
 import org.cauli.mock.annotation.ServerConfig;
 import org.cauli.mock.constant.Constant;
+import org.cauli.mock.context.Context;
+import org.cauli.mock.entity.KeyValueStore;
+import org.cauli.mock.entity.KeyValueStores;
 import org.cauli.mock.entity.ParametersModel;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.exception.ServerNameNotSupportChineseException;
@@ -48,6 +51,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
     private Method routeMethod;
     public ServerInfo serverInfo=new ServerInfo();
     private String requestUri;
+    private Context context = new Context();
 
 
     public AbstractHttpServer() {
@@ -111,11 +115,6 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
         this.requestUri = requestUri;
     }
 
-
-
-
-
-
     public boolean isSingleUrl(){
         if(StringUtil.isEmpty(getRequestUri())){
             return false;
@@ -125,16 +124,17 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
     }
 
     public MockAction getAction(HttpRequest request,ParametersModel pairs) throws Exception {
+        pairs.getContext().setParent(this.context);
         if(isSingleUrl()){
             if(!checkRouteExist()){
                 throw new Exception("如果配置HttpServer的RequestMapping,则必须配置转化路由方法,@Route标注的方法,返回值必须为MockAction类型或者子类");
             }else{
-                ActionExcuter actionExcuter = new ActionExcuter(routeMethod,pairs,this);
+                ActionExecuter actionExcuter = new ActionExecuter(routeMethod,pairs,this);
                 AbstractHttpAction action = (AbstractHttpAction) actionExcuter.invoke();
                 if(action!=null){
                     action.setParametersModel(pairs);
                     if(action.getActionInfo().isUseTemplate()){
-                        action.loadTemplate();
+                        action.load();
                     }
                     return action;
                 }else{
@@ -217,6 +217,8 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
         return serverInfo.getServerName();
     }
 
+
+
     @Override
     public ServerStatus getServerStatus() {
         return serverInfo.getStatus();
@@ -273,7 +275,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                         }
                         action.setServer(this);
                         if(action.getActionInfo().isUseTemplate()){
-                            action.loadTemplate();
+                            action.load();
                         }
                         if(StringUtil.isEmpty(action.getActionName())){
                             action.getActionInfo().setActionName(field.getName());
@@ -302,11 +304,17 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
     }
 
 
+    public Context getContext() {
+        return context;
+    }
 
+    @Override
+    public void addContext(KeyValueStore store) {
+        this.context.addContext(store.getKey(),store.getValue());
+    }
 
-
-
-
-
-
+    @Override
+    public void addContext(KeyValueStores stores) {
+        this.context.addContext(stores.toMap());
+    }
 }

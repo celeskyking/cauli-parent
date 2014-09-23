@@ -10,7 +10,7 @@ public class DataProviderBuilder {
     private IDataProvider provider;
 
     private DataProviderBuilder(){
-
+        this.provider=new DefaultDataProvider();
     }
 
 

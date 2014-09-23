@@ -2,6 +2,10 @@ package org.cauli.mock;
 
 import com.google.common.collect.Maps;
 import org.cauli.mock.admin.AdminServer;
+import org.cauli.mock.context.Context;
+import org.cauli.mock.context.ContextFactory;
+import org.cauli.mock.data.DataProviderBuilder;
+import org.cauli.mock.data.IDataProvider;
 import org.cauli.mock.server.MockServer;
 import org.cauli.mock.template.TemplateSourceBuilder;
 import org.cauli.mock.template.TemplateSourceEngine;
@@ -70,6 +74,10 @@ public class ServerManager {
 
     public void setAdminPort(int port){
         this.adminPort=port;
+    }
+
+    public void setDataProvider(IDataProvider provider){
+        DataProviderBuilder.getInstance().configDataProvider(provider);
     }
 
 

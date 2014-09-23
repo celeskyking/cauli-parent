@@ -25,6 +25,7 @@ public class TemplateParseUtil {
         this.templateLoader = new StringTemplateLoader();
         configuration.setTemplateLoader(templateLoader);
         configuration.setDefaultEncoding("UTF-8");
+        configuration.setTemplateUpdateDelay(0);
     }
 
     public static TemplateParseUtil getInstance() {

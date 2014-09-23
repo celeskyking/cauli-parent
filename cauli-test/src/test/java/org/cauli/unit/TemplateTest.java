@@ -18,13 +18,13 @@ public class TemplateTest {
     @Test
     public void testTemplate() throws IOException, TemplateException {
         Map<String,Object> map= Maps.newHashMap();
-        String text = "${hello(\"yes\")}";
-        map.put("age.name","hello");
+        String text = "${HelloServer(\"yes\")}";
+        map.put("age.name","HelloServer");
         map.put("sex.name","world");
-        map.put("hello",new TemplateMethodModelEx() {
+        map.put("HelloServer",new TemplateMethodModelEx() {
             @Override
             public Object exec(List arguments) throws TemplateModelException {
-                return "hello, "+arguments.get(0);
+                return "HelloServer, "+arguments.get(0);
             }
         });
         map.put("obj",new TemplateTest());

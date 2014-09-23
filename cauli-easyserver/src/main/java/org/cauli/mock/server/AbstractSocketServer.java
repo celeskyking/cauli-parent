@@ -10,6 +10,9 @@ import org.cauli.mock.action.AbstractSocketAction;
 import org.cauli.mock.action.DefaultSocketAction;
 import org.cauli.mock.annotation.ServerConfig;
 import org.cauli.mock.constant.Constant;
+import org.cauli.mock.context.Context;
+import org.cauli.mock.entity.KeyValueStore;
+import org.cauli.mock.entity.KeyValueStores;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.exception.ServerNameNotSupportChineseException;
 import org.cauli.mock.util.CommonUtil;
@@ -34,6 +37,8 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
     private ISocketServer socketServer;
 
     private Map<String,AbstractSocketAction> actionMap = Maps.newHashMap();
+
+    private Context context=new Context();
 
 
 
@@ -125,6 +130,11 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
     }
 
     @Override
+    public Context getContext() {
+        return context;
+    }
+
+    @Override
     public ServerProtocol getProtocol() {
         return ServerProtocol.SOCKET;
     }
@@ -144,12 +154,6 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
         return serverInfo.getInitStatus();
     }
 
-
-
-
-
-
-
     public void parseActions() {
         Field[] fields = getClass().getDeclaredFields();
         try{
@@ -161,7 +165,7 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
                     logger.info("Server:{} 添加:Action: {}", serverInfo.getServerName(), action.getActionName());
                     if(StringUtil.isEmpty(action.getActionName())){
                         action.getActionInfo().setActionName(field.getName());
-                        action.loadTemplate();
+                        action.load();
                     }
                     action.setServer(this);
                     actionMap.put(action.getActionName(),action);
@@ -184,14 +188,15 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
         return null;
     }
 
+    @Override
+    public void addContext(KeyValueStore store) {
+        context.addContext(store.getKey(),store.getValue());
+    }
 
-
-
-
-
-
-
-
+    @Override
+    public void addContext(KeyValueStores stores) {
+        context.addContext(stores.toMap());
+    }
 
 
 }

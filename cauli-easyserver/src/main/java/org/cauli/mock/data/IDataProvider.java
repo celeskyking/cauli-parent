@@ -1,6 +1,9 @@
 package org.cauli.mock.data;
 
+import org.cauli.mock.context.Context;
 import org.cauli.mock.entity.KeyValueStores;
+
+import java.util.Comparator;
 
 /**
  * @auther sky
@@ -8,5 +11,5 @@ import org.cauli.mock.entity.KeyValueStores;
 public interface IDataProvider {
 
 
-    public KeyValueStores loadDatas(String section);
+    public KeyValueStores loadDatas(Context context,String file,String section,Comparator comparator);
 }

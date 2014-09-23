@@ -19,8 +19,9 @@ public class ActionInfo implements Serializable{
     private long timeoutMS;
     private boolean isUseTemplate=Constant.IS_USE_TEMPLATE;
     private String requestUri;
+    private boolean isUseMessage=false;
 
-    private IStrategy strategy;
+    private CallbackInfo callbackInfo=new CallbackInfo();
 
     private Class<? extends TemplateSourceEngine> templateSourceLoaderClass= TemplateSourceBuilder.getInstance().getTemplateSourceEngineClass();
 
@@ -81,11 +82,19 @@ public class ActionInfo implements Serializable{
         this.requestUri = requestUri;
     }
 
-    public IStrategy getStrategy() {
-        return strategy;
+    public CallbackInfo getCallbackInfo() {
+        return callbackInfo;
     }
 
-    public void setStrategy(IStrategy strategy) {
-        this.strategy = strategy;
+    public boolean isUseMessage() {
+        return isUseMessage;
+    }
+
+    public void setUseMessage(boolean isUseMessage) {
+        this.isUseMessage = isUseMessage;
+    }
+
+    public void setCallbackInfo(CallbackInfo callbackInfo) {
+        this.callbackInfo = callbackInfo;
     }
 }
