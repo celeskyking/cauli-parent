@@ -7,7 +7,6 @@ package org.cauli.junit;
  */
 public interface RunnerInterceptor {
 
-
     public void beforeRunnerStart(TestPlan testPlan);
 
 

@@ -80,8 +80,6 @@ public class InterceptorStatement extends Statement {
                         statement.evaluate();
                     }
                         testMethod.invokeExplosively(target);
-
-
                 }
 
                 for(Interceptor interceptor:interceptors){

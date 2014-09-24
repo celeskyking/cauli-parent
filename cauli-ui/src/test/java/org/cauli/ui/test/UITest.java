@@ -1,5 +1,7 @@
 package org.cauli.ui.test;
 
+import org.cauli.junit.anno.Named;
+import org.cauli.junit.anno.Param;
 import org.cauli.ui.runner.CauliUIRunner;
 import org.cauli.ui.selenium.browser.Engine;
 import org.junit.Test;
@@ -15,10 +17,11 @@ public class UITest {
 
 
     @Test
-    public void testUI(){
-        require(Engine.FIREFOX);
+    @Param(value = "data/test.txt")
+    public void testUI(@Named String text){
+        require(Engine.CHROME);
         go("http://www.baidu.com");
-        page(BaiduPage.class).exec("百度搜索","北京");
+        page(BaiduPage.class).exec("百度搜索", text);
         quit();
     }
 }

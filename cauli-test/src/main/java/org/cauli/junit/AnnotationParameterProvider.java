@@ -105,6 +105,9 @@ public class AnnotationParameterProvider implements ParameterProvider{
         Map<String,Class<?>> paramTypes= parseMethodParamTypes(ownmethod);
         for(int i=0;i<classes.length;i++){
             Class<? extends Annotation> annotationType = MethodUtils.getParameterOnlyAnnotationType(frameworkMethodWithParameters.getMethod(), i);
+            if(annotationType==null){
+                throw new ConverterError("方法:["+ownmethod.getName()+"]的方法查不到被标注注解的参数");
+            }
             try {
                 GeneratorConverter converter = GeneratorManager.getGeneratorConverter(annotationType);
                 objects[i] =converter.convert(paramParamName(ownmethod,i),classes[i],parameter,paramTypes);

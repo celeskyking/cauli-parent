@@ -1,12 +1,17 @@
 package org.cauli.ui.runner;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import jodd.util.StringUtil;
+import jodd.bean.BeanCopy;
 import org.cauli.common.instrument.ClassPool;
-import org.cauli.junit.runner.CauliRunner;
+import org.cauli.common.instrument.ResourceUtil;
 import org.cauli.junit.FrameworkMethodWithParameters;
+import org.cauli.junit.TestPlan;
+import org.cauli.junit.runner.CauliRunner;
+import org.cauli.ui.CauliUIConfig;
 import org.cauli.ui.annotation.Action;
 import org.cauli.ui.annotation.Require;
+import org.cauli.ui.config.IConfig;
 import org.cauli.ui.selenium.browser.Engine;
 import org.cauli.ui.selenium.listener.ActionListenerProxy;
 import org.junit.runner.notification.RunNotifier;
@@ -16,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by celeskyking on 14-3-1
@@ -26,19 +32,7 @@ public class CauliUIRunner extends CauliRunner{
         super(klass);
     }
 
-//    @Override
-//    protected void initFilter() {
-//        try{
-//            getFilter().setFilterContent(CauliConfigUtil.getInstance().get("filter"));
-//        }catch (Exception e){
-//            logger.error("没有查找系统的配置文件：config.properties",e);
-//        }
-//        super.initFilter();
-//    }
-
-
-
-
+    CauliUIConfig uiConfig = new CauliUIConfig();
 
     @Override
     public void run(final RunNotifier notifier) {
@@ -62,19 +56,16 @@ public class CauliUIRunner extends CauliRunner{
     private List<FrameworkMethodWithParameters> createUIMethod(List<FrameworkMethodWithParameters> frameworkMethods){
         List<FrameworkMethodWithParameters> methods = Lists.newArrayList();
         for(FrameworkMethodWithParameters frameworkMethod:frameworkMethods){
-            if(frameworkMethod instanceof FrameworkMethodWithParameters){
-                Engine[] engines=getConfigEngines(frameworkMethod);
-                if(engines==null){
-                    methods.add(frameworkMethod);
-                }else{
-                    for(Engine engine:engines){
-                        UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),
-                                (frameworkMethod).getParameters(),
-                                (frameworkMethod).getInfo(),engine);
-                        methods.add(method);
-                    }
+            Engine[] engines=getConfigEngines(frameworkMethod);
+            if(engines==null){
+                methods.add(frameworkMethod);
+            }else{
+                for(Engine engine:engines){
+                    UIFrameworkMethod method = new UIFrameworkMethod(frameworkMethod.getMethod(),
+                            (frameworkMethod).getParameters(),
+                            (frameworkMethod).getInfo(),engine);
+                    methods.add(method);
                 }
-
             }
         }
         return methods;
@@ -84,22 +75,8 @@ public class CauliUIRunner extends CauliRunner{
     private Engine[] getConfigEngines(FrameworkMethod method){
         if(isHaveRequireAnnotation(method)){
             return getRequireBrowsers(method);
-        }else if(StringUtil.isNotEmpty(CauliConfigUtil.getInstance().get("browsers"))){
-            String browsers = CauliConfigUtil.getInstance().get("browsers");
-            if(browsers!=null&&!"".equals(browsers)){
-                String[] strings = StringUtil.split(browsers, "|");
-                Engine[] engines= new Engine[strings.length];
-                int i=0;
-                for(String browser:strings){
-                    engines[i]=Engine.valueOf(browser.toUpperCase());
-                    i++;
-                }
-                return engines;
-            }else{
-                return new Engine[]{Engine.PHANTOMJS};
-            }
-        }else {
-            return null;
+        }else{
+            return uiConfig.getEngines();
         }
     }
 
@@ -124,4 +101,29 @@ public class CauliUIRunner extends CauliRunner{
         }
     }
 
+    @Override
+    protected TestPlan init() {
+        TestPlan testPlan= super.init();
+        BeanCopy.beans(testPlan,uiConfig);
+        Set<Class<?>> classes = ResourceUtil.getClassByAssignable(IConfig.class);
+        if(classes!=null&&classes.size()>1){
+            Class<IConfig> clazz = (Class<IConfig>) classes.iterator().next();
+            try {
+                IConfig config = clazz.newInstance();
+                config.config(uiConfig);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            BeanCopy.beans(uiConfig,testPlan);
+        }
+        return testPlan;
+    }
+
+
+    public static void main(String[] args) {
+        TestPlan testPlan = new TestPlan();
+        CauliUIConfig cauliUIConfig = new CauliUIConfig();
+        BeanCopy.beans(testPlan,cauliUIConfig);
+        System.out.println(JSON.toJSONString(cauliUIConfig,true));
+    }
 }

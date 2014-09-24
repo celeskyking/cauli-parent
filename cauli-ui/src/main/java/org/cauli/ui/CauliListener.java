@@ -1,4 +1,4 @@
-package org.cauli;
+package org.cauli.ui;
 
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;

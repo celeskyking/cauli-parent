@@ -1,6 +1,6 @@
-package org.cauli.config;
+package org.cauli.ui.config;
 
-import org.cauli.CauliUIConfig;
+import org.cauli.ui.CauliUIConfig;
 
 /**
  * Created by tianqing.wang on 2014/9/11

@@ -33,5 +33,16 @@ public class ResourceUtil {
         return ClassPool.getClassPool(baseName);
     }
 
+    public static Set<Class<?>> getClassByAssignable(Class<?> clazz){
+        Set<Class<?>> classes = ClassPool.getClassPool();
+        Set<Class<?>> newClasses = Sets.newHashSet();
+        for(Class<?> cls:classes){
+            if(ClassUtils.isAssignableFromSubClass(clazz,cls)&&cls!=clazz) {
+                newClasses.add(cls);
+            }
+        }
+        return newClasses;
+    }
+
 
 }

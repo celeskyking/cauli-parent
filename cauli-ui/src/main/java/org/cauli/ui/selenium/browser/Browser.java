@@ -345,6 +345,7 @@ public class Browser implements IBrowser {
             T page =  (T) constructor.newInstance(this);
             return waitFor(page);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("切换页面失败..",e);
         }
 
