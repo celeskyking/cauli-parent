@@ -3,13 +3,13 @@
     <parent>
         <artifactId>cauli-parent</artifactId>
         <groupId>com.github.celeskyking</groupId>
-        <version>1.2.2-SNAPSHOT</version>
+        <version>1.2.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.celeskyking</groupId>
     <artifactId>cauli-server</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>${project.parent.version}</version>
     <dependencies>
 
 
