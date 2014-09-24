@@ -4,14 +4,12 @@ import org.cauli.server.HttpRequest;
 import org.cauli.server.HttpResponse;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Created by tianqing.wang on 2014/9/1
  */
-public abstract class Render implements Serializable {
+public abstract class Render{
 
-    private static final long serialVersionUID = 4055676662365675029L;
     protected String view;
     protected transient HttpRequest request;
     protected transient HttpResponse response;

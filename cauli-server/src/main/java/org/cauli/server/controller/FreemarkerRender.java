@@ -22,7 +22,6 @@ import java.util.Properties;
 public class FreeMarkerRender extends Render{
 
     private Logger logger = LoggerFactory.getLogger(FreeMarkerRender.class);
-    private static final long serialVersionUID = -7649769283048920381L;
     private transient static final Configuration config = new Configuration();
 
     private static volatile FreeMarkerRender render;
