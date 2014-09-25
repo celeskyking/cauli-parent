@@ -3,6 +3,8 @@
 /cauli-http/target
 /cauli-ui/target
 /cauli-test/target
+/cauli-easyserver/target
+/cauli-server/target
 *.iml
 .project
 .classpath
