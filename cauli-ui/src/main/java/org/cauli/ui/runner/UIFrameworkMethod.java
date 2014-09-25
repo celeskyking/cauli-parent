@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 public class UIFrameworkMethod extends FrameworkMethodWithParameters{
 
     private Engine engine;
-    protected FrameworkMethodWithParameters method;
 
 
     public UIFrameworkMethod(Method method,Engine engine){

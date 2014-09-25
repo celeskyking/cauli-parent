@@ -189,14 +189,13 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
     }
 
     @Override
-    public void addContext(KeyValueStore store) {
-        context.addContext(store.getKey(),store.getValue());
+    public void addContext(String key, Object value) {
+        context.addContext(key,value);
     }
+
 
     @Override
-    public void addContext(KeyValueStores stores) {
-        context.addContext(stores.toMap());
+    public void addContext(KeyValueStore store) {
+        this.context.addContext(store.getKey(),store.getValue());
     }
-
-
 }

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class InterceptorStatement extends Statement {
 	private Logger logger = LoggerFactory.getLogger(InterceptorStatement.class);
-	protected final FrameworkMethodWithParameters testMethod;
+	protected FrameworkMethodWithParameters testMethod;
     protected Object target;
     private int level;
     private List<InterceptorStatement> dependencyStatement= Lists.newArrayList();
@@ -56,8 +56,12 @@ public class InterceptorStatement extends Statement {
 	}
 
 
-    public FrameworkMethod getTestMethod() {
+    public FrameworkMethodWithParameters getTestMethod() {
         return testMethod;
+    }
+
+    public void setTestMethod(FrameworkMethodWithParameters frameworkMethodWithParameters){
+        this.testMethod=frameworkMethodWithParameters;
     }
 
     public Object getTarget() {

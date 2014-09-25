@@ -6,6 +6,7 @@ import org.cauli.mock.context.Context;
 import org.cauli.mock.context.ContextFactory;
 import org.cauli.mock.data.DataProviderBuilder;
 import org.cauli.mock.data.IDataProvider;
+import org.cauli.mock.entity.KeyValueStore;
 import org.cauli.mock.server.MockServer;
 import org.cauli.mock.template.TemplateSourceBuilder;
 import org.cauli.mock.template.TemplateSourceEngine;
@@ -78,6 +79,14 @@ public class ServerManager {
 
     public void setDataProvider(IDataProvider provider){
         DataProviderBuilder.getInstance().configDataProvider(provider);
+    }
+
+    public void addContext(String name,Object object){
+        ServerBuilder.getInstance().addContext(name,object);
+    }
+
+    public void addContext(KeyValueStore store){
+        ServerBuilder.getInstance().addContext(store.getKey(),store.getValue());
     }
 
 

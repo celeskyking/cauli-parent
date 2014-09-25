@@ -10,10 +10,7 @@ import org.cauli.mock.annotation.CallBack;
 import org.cauli.mock.context.Context;
 import org.cauli.mock.data.DataProviderBuilder;
 import org.cauli.mock.data.IDataProvider;
-import org.cauli.mock.entity.ActionInfo;
-import org.cauli.mock.entity.KeyValueStores;
-import org.cauli.mock.entity.NormalSortComparator;
-import org.cauli.mock.entity.ParametersModel;
+import org.cauli.mock.entity.*;
 import org.cauli.mock.exception.ActionExecuteException;
 import org.cauli.mock.exception.ServerNameNotSupportChineseException;
 import org.cauli.mock.server.MockServer;
@@ -118,10 +115,6 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     public String getCallbackTemplateValue(String status){
         return this.sourceEngine.getCallbackTemplates().get(status);
     }
-
-
-
-
 
     @Override
     public void onMessage(ParametersModel pairs) {
@@ -348,5 +341,8 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
         this.provider = provider;
     }
 
-
+    @Override
+    public void addContext(KeyValueStore store) {
+        this.parametersModel.getContext().addContext(store.getKey(),store.getValue());
+    }
 }

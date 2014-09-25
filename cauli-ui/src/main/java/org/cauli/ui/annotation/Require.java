@@ -11,6 +11,5 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Inherited
 public @interface Require {
-    String url() default "";
     Engine[] value();
 }

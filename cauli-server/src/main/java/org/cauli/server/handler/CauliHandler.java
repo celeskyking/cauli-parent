@@ -26,10 +26,6 @@ public class CauliHandler implements HttpHandler{
     public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control) throws Exception {
         String uri = URI.create(request.uri()).getPath();
         logger.debug("请求的URI:{}",uri);
-        if(uri.contains("/favicon.ico")){
-            response.status(404).end();
-            return;
-        }
         if(before!=null){
             this.before.handleHttpRequest(request,response,control);
         }
@@ -45,6 +41,7 @@ public class CauliHandler implements HttpHandler{
             controller.parseAction();
             Action action = controller.getMatchAction(uri);
             if(action==null){
+                logger.info("未发现可映射的uri：{}",uri);
                 response.status(404).end();
                 return;
             }else{
@@ -55,6 +52,7 @@ public class CauliHandler implements HttpHandler{
                 action.invoke();
                 controller.after();
             }else{
+                logger.info("未找到对应匹配HTTP请求方法{}的Action",request.method());
                 response.status(404).end();
                 return;
             }

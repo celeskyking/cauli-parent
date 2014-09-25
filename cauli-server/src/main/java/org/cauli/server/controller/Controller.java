@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Created by tianqing.wang on 2014/9/1
  */
-public abstract class Controller {
+public  class Controller {
 
 
     private Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -40,9 +40,9 @@ public abstract class Controller {
     private HttpResponse response;
 
 
-    public abstract void before();
+    public  void before(){};
 
-    public abstract void after();
+    public  void after(){};
 
     public HttpRequest request(){
         return request;

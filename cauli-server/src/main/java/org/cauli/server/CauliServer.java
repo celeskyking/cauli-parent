@@ -1,6 +1,7 @@
 package org.cauli.server;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.common.instrument.ResourceUtil;
 import org.cauli.server.controller.FreemarkerRender;
 import org.cauli.server.handler.CauliHandler;
 import org.cauli.server.handler.StaticFileHandler;
@@ -46,7 +47,11 @@ public abstract class CauliServer{
         }
         this.server=WebServers.createWebServer(configuration.getPort());
         if(StringUtils.isNotEmpty(configuration.getStaticFile())){
-           server.add(new StaticFileHandler(configuration.getStaticFile()));
+            server.add(new StaticFileHandler(configuration.getStaticFile()));
+        }else{
+            if(ResourceUtil.getFileFromClassPath("public")!=null){
+                server.add(new StaticFileHandler(ResourceUtil.getFileFromClassPath("public")));
+            }
         }
         this.server.add(cauliHandler);
         if(isHttps()){
@@ -70,6 +75,15 @@ public abstract class CauliServer{
         }
 
     }
+
+    public void before(HttpHandler httpHandler){
+        this.cauliHandler.before(httpHandler);
+    }
+
+    public void after(HttpHandler httpHandler){
+        this.cauliHandler.after(httpHandler);
+    }
+
 
 
     public void stop() throws Exception {

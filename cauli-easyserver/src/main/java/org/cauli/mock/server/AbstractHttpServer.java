@@ -309,12 +309,12 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
     }
 
     @Override
-    public void addContext(KeyValueStore store) {
-        this.context.addContext(store.getKey(),store.getValue());
+    public void addContext(String key,Object value) {
+        this.context.addContext(key,value);
     }
 
     @Override
-    public void addContext(KeyValueStores stores) {
-        this.context.addContext(stores.toMap());
+    public void addContext(KeyValueStore store) {
+        this.context.addContext(store.getKey(),store.getValue());
     }
 }

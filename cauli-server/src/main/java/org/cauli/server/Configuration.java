@@ -1,7 +1,5 @@
 package org.cauli.server;
 
-import com.google.common.io.Resources;
-
 /**
  * Created by tianqing.wang on 2014/9/2
  */
@@ -12,7 +10,7 @@ public class Configuration {
     private String keyStore;
     private String keyStorePassword;
     private String keyPassword;
-    private String staticFile= Resources.getResource("public").getFile();
+    private String staticFile;
     private String viewPath;
 
     public String getServerName() {

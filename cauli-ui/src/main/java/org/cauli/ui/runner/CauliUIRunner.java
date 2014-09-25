@@ -16,6 +16,7 @@ import org.cauli.ui.selenium.listener.ActionListenerProxy;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,12 @@ public class CauliUIRunner extends CauliRunner{
 
     }
 
+    @Override
+    protected Statement methodInvoker(FrameworkMethodWithParameters method, Object test) {
+        CauliUIStatment statment = new CauliUIStatment((UIFrameworkMethod) method,test);
+        statment.setRetryTimes(getTestPlan().getRetryTimes());
+        return statment;
+    }
 
     private List<FrameworkMethodWithParameters> createUIMethod(List<FrameworkMethodWithParameters> frameworkMethods){
         List<FrameworkMethodWithParameters> methods = Lists.newArrayList();

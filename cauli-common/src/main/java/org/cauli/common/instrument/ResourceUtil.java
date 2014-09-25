@@ -14,7 +14,12 @@ public class ResourceUtil {
 
 
     public static File getFileFromClassPath(String fileName){
-        return new File(Resources.getResource(fileName).getFile());
+        try{
+            return new File(Resources.getResource(fileName).getFile());
+        }catch (Exception e){
+            return null;
+        }
+
     }
 
     public static Set<Class<?>> getClassContainsAnnotation(Class<? extends Annotation> annotation){

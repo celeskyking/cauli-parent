@@ -44,10 +44,10 @@ public interface MockServer<T extends MockAction> extends IServer{
 
     public ServerInfo getServerInfo();
 
-    public void addContext(KeyValueStore store);
-
-    public void addContext(KeyValueStores stores);
-
     public Context getContext();
+
+    public void addContext(String name,Object object);
+
+    public void addContext(KeyValueStore store);
 
 }

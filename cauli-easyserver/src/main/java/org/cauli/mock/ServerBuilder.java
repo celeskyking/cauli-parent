@@ -7,6 +7,7 @@ import org.cauli.common.instrument.ClassPool;
 import org.cauli.common.instrument.ClassUtils;
 import org.cauli.mock.context.Context;
 import org.cauli.mock.context.ContextFactory;
+import org.cauli.mock.entity.KeyValueStore;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.server.AbstractHttpServer;
 import org.cauli.mock.server.MockServer;
@@ -129,6 +130,12 @@ public class ServerBuilder {
         this.isUsingPorts.add(port);
     }
 
+    public void addContext(String name,Object object){
+        this.context.addContext(name,object);
+    }
 
+    public void addContext(KeyValueStore keyValueStore){
+        this.context.addContext(keyValueStore.getKey(),keyValueStore.getValue());
+    }
 
 }

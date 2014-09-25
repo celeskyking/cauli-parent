@@ -2,6 +2,7 @@ package org.cauli.mock.entity;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import jodd.util.Base64;
 import org.cauli.mock.ValueHandler;
 import org.cauli.mock.annotation.Value;
 
@@ -68,9 +69,9 @@ public class KeyValueStores {
 
     public Map<String,Object> toMap(){
         LinkedHashMap<String,Object> map = Maps.newLinkedHashMap();
-        Iterator<KeyValueStore> iterator = queue.iterator();
-        while(iterator.hasNext()) {
-            KeyValueStore keyValueStore = iterator.next();
+        Queue<KeyValueStore> queue1 = queue;
+        while(!queue1.isEmpty()){
+            KeyValueStore keyValueStore = queue1.poll();
             map.put(keyValueStore.getKey(),keyValueStore.getValue());
         }
         return map;
@@ -105,6 +106,8 @@ public class KeyValueStores {
             this.queue.add(new KeyValueStore(store.getKey(),handler.transfer(store.getValue())));
         }
     }
+
+
 
 
 
