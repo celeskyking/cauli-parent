@@ -1,6 +1,5 @@
 package org.cauli.ui.runner;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import jodd.bean.BeanCopy;
 import org.cauli.common.instrument.ClassPool;
