@@ -15,16 +15,16 @@
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="module" module-name="cauli-test" />
     <orderEntry type="module" module-name="cauli-common" />
+    <orderEntry type="library" name="Maven: org.jodd:jodd-bean:3.6" level="project" />
+    <orderEntry type="library" name="Maven: org.jodd:jodd-core:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: org.jodd:jodd-proxetta:3.6" level="project" />
     <orderEntry type="library" name="Maven: org.jodd:jodd-log:3.6" level="project" />
-    <orderEntry type="library" name="Maven: org.jodd:jodd-core:3.6" level="project" />
-    <orderEntry type="library" name="Maven: org.jodd:jodd-bean:3.6" level="project" />
     <orderEntry type="library" name="Maven: org.freemarker:freemarker:2.3.20" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="library" name="Maven: org.skyscreamer:jsonassert:1.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20090211" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
     <orderEntry type="library" name="Maven: org.databene:databene-commons:0.5.16" level="project" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.0.0.GA" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />

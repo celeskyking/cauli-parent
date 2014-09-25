@@ -119,11 +119,4 @@ public class CauliUIRunner extends CauliRunner{
         return testPlan;
     }
 
-
-    public static void main(String[] args) {
-        TestPlan testPlan = new TestPlan();
-        CauliUIConfig cauliUIConfig = new CauliUIConfig();
-        BeanCopy.beans(testPlan,cauliUIConfig);
-        System.out.println(JSON.toJSONString(cauliUIConfig,true));
-    }
 }
