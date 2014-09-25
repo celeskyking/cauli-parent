@@ -2,6 +2,8 @@ package org.cauli.mock.entity;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import org.cauli.mock.ValueHandler;
+import org.cauli.mock.annotation.Value;
 
 import java.util.*;
 
@@ -12,12 +14,36 @@ public class KeyValueStores {
 
     private PriorityQueue<KeyValueStore> queue;
 
+    private ValueHandler handler;
+
     public KeyValueStores(){
         this.queue=new PriorityQueue<KeyValueStore>(30,new NormalSortComparator());
+        this.handler=new ValueHandler() {
+            @Override
+            public Object transfer(Object value) {
+                return value;
+            }
+        };
+    }
+
+    public KeyValueStores(Comparator<KeyValueStore> comparator,ValueHandler valueHandler){
+        this(comparator);
+        this.handler=valueHandler;
+    }
+
+    public KeyValueStores(ValueHandler valueHandler){
+        this();
+        this.handler=valueHandler;
     }
 
     public KeyValueStores(Comparator<KeyValueStore> comparator){
         this.queue=new PriorityQueue<KeyValueStore>(30,comparator);
+        this.handler=new ValueHandler() {
+            @Override
+            public Object transfer(Object value) {
+                return value;
+            }
+        };
     }
 
     public KeyValueStore getKeyStore(String key){
@@ -36,7 +62,8 @@ public class KeyValueStores {
     }
 
     public void add(KeyValueStore keyValueStore){
-        this.queue.add(keyValueStore);
+        KeyValueStore store = new KeyValueStore(keyValueStore.getKey(),handler.transfer(keyValueStore.getValue()));
+        this.queue.add(store);
     }
 
     public Map<String,Object> toMap(){
@@ -74,7 +101,8 @@ public class KeyValueStores {
     public void add(KeyValueStores stores){
         Iterator<KeyValueStore> iterator = stores.iterator();
         while(iterator.hasNext()){
-            this.queue.add(iterator.next());
+            KeyValueStore store = iterator.next();
+            this.queue.add(new KeyValueStore(store.getKey(),handler.transfer(store.getValue())));
         }
     }
 
