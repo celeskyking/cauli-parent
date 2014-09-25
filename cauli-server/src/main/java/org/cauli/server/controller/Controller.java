@@ -174,7 +174,7 @@ public abstract class Controller {
 
     public void renderFreemarker(String view)throws Exception{
         try {
-            FreeMarkerRender render = FreeMarkerRender.getInstance();
+            FreemarkerRender render = FreemarkerRender.getInstance();
             render.setContext(request,response);
             render.setView(view);
             render.render();

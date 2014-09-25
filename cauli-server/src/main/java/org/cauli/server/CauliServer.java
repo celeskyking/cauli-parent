@@ -1,7 +1,7 @@
 package org.cauli.server;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cauli.server.controller.FreeMarkerRender;
+import org.cauli.server.controller.FreemarkerRender;
 import org.cauli.server.handler.CauliHandler;
 import org.cauli.server.handler.StaticFileHandler;
 import org.cauli.server.router.Router;
@@ -63,7 +63,7 @@ public abstract class CauliServer{
         this.cauliHandler.configRoute(router);
         if(StringUtils.isNotEmpty(configuration.getViewPath())){
             try {
-                FreeMarkerRender.getInstance().configViewPath(configuration.getViewPath());
+                FreemarkerRender.getInstance().configViewPath(configuration.getViewPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

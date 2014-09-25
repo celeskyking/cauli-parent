@@ -2,11 +2,8 @@ package org.cauli.server.controller;
 
 import com.google.common.io.Resources;
 import freemarker.template.*;
-import jodd.io.FileUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.FileSystemUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,22 +16,22 @@ import java.util.Properties;
 /**
  * Created by tianqing.wang on 2014/9/1
  */
-public class FreeMarkerRender extends Render{
+public class FreemarkerRender extends Render{
 
-    private Logger logger = LoggerFactory.getLogger(FreeMarkerRender.class);
+    private Logger logger = LoggerFactory.getLogger(FreemarkerRender.class);
     private transient static final Configuration config = new Configuration();
 
-    private static volatile FreeMarkerRender render;
+    private static volatile FreemarkerRender render;
 
-    private FreeMarkerRender() throws IOException {
+    private FreemarkerRender() throws IOException {
         init();
     }
 
-    public static FreeMarkerRender getInstance() throws IOException {
+    public static FreemarkerRender getInstance() throws IOException {
         if(render==null){
-            synchronized (FreeMarkerRender.class){
+            synchronized (FreemarkerRender.class){
                 if(render==null){
-                    render=new FreeMarkerRender();
+                    render=new FreemarkerRender();
                 }
             }
         }
@@ -73,7 +70,7 @@ public class FreeMarkerRender extends Render{
      */
     public static void setProperty(String propertyName, String propertyValue) {
         try {
-            FreeMarkerRender.getConfiguration().setSetting(propertyName, propertyValue);
+            FreemarkerRender.getConfiguration().setSetting(propertyName, propertyValue);
         } catch (TemplateException e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +78,7 @@ public class FreeMarkerRender extends Render{
 
     public static void setProperties(Properties properties) {
         try {
-            FreeMarkerRender.getConfiguration().setSettings(properties);
+            FreemarkerRender.getConfiguration().setSettings(properties);
         } catch (TemplateException e) {
             throw new RuntimeException(e);
         }
