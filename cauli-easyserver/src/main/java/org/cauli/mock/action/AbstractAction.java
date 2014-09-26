@@ -5,6 +5,7 @@ import jodd.util.StringUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cauli.mock.ConfigType;
+import org.cauli.mock.ValueHandler;
 import org.cauli.mock.annotation.Action;
 import org.cauli.mock.annotation.CallBack;
 import org.cauli.mock.context.Context;
@@ -83,23 +84,64 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     }
 
     public KeyValueStores loadData(String section,Comparator comparator){
-        return provider.loadDatas(parametersModel.getContext(),getDefaultDataProviderFile(),section,comparator);
+        return provider.loadDatas(parametersModel.getContext(),getDefaultDataProviderFile(),section,comparator,new ValueHandler() {
+            @Override
+            public Object transfer(Object value) {
+                return value;
+            }
+        });
     }
 
     public KeyValueStores loadData(String section){
-        return provider.loadDatas(parametersModel.getContext(),getDefaultDataProviderFile(),section,new NormalSortComparator());
+        return provider.loadDatas(parametersModel.getContext(),getDefaultDataProviderFile(),section,new NormalSortComparator(),new ValueHandler() {
+            @Override
+            public Object transfer(Object value) {
+                return value;
+            }
+        });
     }
 
     public KeyValueStores loadData(String fileName,String section){
-        return provider.loadDatas(parametersModel.getContext(),fileName,section,new NormalSortComparator());
+        return provider.loadDatas(parametersModel.getContext(),fileName,section,new NormalSortComparator(),new ValueHandler() {
+            @Override
+            public Object transfer(Object value) {
+                return value;
+            }
+        });
     }
 
     public KeyValueStores loadData(File file,String section){
-        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,new NormalSortComparator());
+        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,new NormalSortComparator(),new ValueHandler() {
+            @Override
+            public Object transfer(Object value) {
+                return value;
+            }
+        });
     }
 
     public KeyValueStores loadData(File file,String section,Comparator comparator){
-        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,comparator);
+        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,comparator,new ValueHandler() {
+            @Override
+            public Object transfer(Object value) {
+                return value;
+            }
+        });
+    }
+
+    public KeyValueStores loadData(String section,ValueHandler valueHandler){
+        return provider.loadDatas(parametersModel.getContext(),getDefaultDataProviderFile(),section,new NormalSortComparator(),valueHandler);
+    }
+
+    public KeyValueStores loadData(String fileName,String section,ValueHandler valueHandler){
+        return provider.loadDatas(parametersModel.getContext(),fileName,section,new NormalSortComparator(),valueHandler);
+    }
+
+    public KeyValueStores loadData(File file,String section,ValueHandler valueHandler){
+        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,new NormalSortComparator(),valueHandler);
+    }
+
+    public KeyValueStores loadData(File file,String section,Comparator comparator,ValueHandler valueHandler){
+        return provider.loadDatas(parametersModel.getContext(),file.getAbsolutePath(),section,comparator,valueHandler);
     }
 
 

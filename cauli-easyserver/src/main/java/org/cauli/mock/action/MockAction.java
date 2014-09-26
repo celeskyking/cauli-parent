@@ -40,10 +40,9 @@ public interface MockAction<T,K> {
 
     public Map<String,String> getTemplateStatuses();
 
-    //这个方法是初始化的时候加载方法。
+    /***这个方法是初始化的时候加载方法。*/
     public void load();
 
-    //
     public void addContext(String name,Object object);
 
     public void addContext(KeyValueStore store);

@@ -1,5 +1,6 @@
 package org.cauli.mock.data;
 
+import org.cauli.mock.ValueHandler;
 import org.cauli.mock.context.Context;
 import org.cauli.mock.entity.KeyValueStores;
 import org.cauli.mock.util.PropUtil;
@@ -19,7 +20,7 @@ public class DefaultDataProvider implements IDataProvider{
 
 
     @Override
-    public KeyValueStores loadDatas(Context context,String file,String section,Comparator comparator) {
+    public KeyValueStores loadDatas(Context context,String file,String section,Comparator comparator,ValueHandler valueHandler) {
         try {
             return PropUtil.loadFileByClasspath(context,file, section, comparator);
         } catch (Exception e) {
