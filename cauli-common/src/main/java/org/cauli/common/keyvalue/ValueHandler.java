@@ -1,4 +1,4 @@
-package org.cauli.mock;
+package org.cauli.common.keyvalue;
 
 /**
  * Created by tianqing.wang on 2014/9/25

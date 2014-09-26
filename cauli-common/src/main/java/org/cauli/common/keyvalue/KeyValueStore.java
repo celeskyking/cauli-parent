@@ -1,4 +1,4 @@
-package org.cauli.mock.entity;
+package org.cauli.common.keyvalue;
 
 /**
  * Created by tianqing.wang on 2014/9/17

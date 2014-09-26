@@ -1,8 +1,8 @@
 package org.cauli.mock.data;
 
-import org.cauli.mock.ValueHandler;
+import org.cauli.common.keyvalue.ValueHandler;
 import org.cauli.mock.context.Context;
-import org.cauli.mock.entity.KeyValueStores;
+import org.cauli.common.keyvalue.KeyValueStores;
 
 import java.util.Comparator;
 

@@ -1,4 +1,6 @@
-package org.cauli.mock.entity;
+package org.cauli.common.keyvalue;
+
+import org.cauli.common.keyvalue.KeyValueStore;
 
 /**
  * Created by tianqing.wang on 2014/9/22

@@ -7,7 +7,7 @@ import org.cauli.common.instrument.ClassPool;
 import org.cauli.common.instrument.ClassUtils;
 import org.cauli.mock.context.Context;
 import org.cauli.mock.context.ContextFactory;
-import org.cauli.mock.entity.KeyValueStore;
+import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.mock.entity.ServerInfo;
 import org.cauli.mock.server.AbstractHttpServer;
 import org.cauli.mock.server.MockServer;

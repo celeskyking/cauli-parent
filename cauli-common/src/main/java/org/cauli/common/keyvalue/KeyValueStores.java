@@ -1,10 +1,7 @@
-package org.cauli.mock.entity;
+package org.cauli.common.keyvalue;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import jodd.util.Base64;
-import org.cauli.mock.ValueHandler;
-import org.cauli.mock.annotation.Value;
 
 import java.util.*;
 

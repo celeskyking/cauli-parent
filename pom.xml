@@ -91,6 +91,11 @@
                 <version>${jodd.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>4.0.6.RELEASE</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-http</artifactId>
                 <version>${jodd.version}</version>

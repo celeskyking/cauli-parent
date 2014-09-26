@@ -1,7 +1,7 @@
 package org.cauli.mock.action;
 
 import org.cauli.mock.entity.ActionInfo;
-import org.cauli.mock.entity.KeyValueStore;
+import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.mock.server.MockServer;
 
 import java.util.Map;

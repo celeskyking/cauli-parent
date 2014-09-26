@@ -2,11 +2,9 @@ package org.cauli.mock;
 
 import com.google.common.collect.Maps;
 import org.cauli.mock.admin.AdminServer;
-import org.cauli.mock.context.Context;
-import org.cauli.mock.context.ContextFactory;
 import org.cauli.mock.data.DataProviderBuilder;
 import org.cauli.mock.data.IDataProvider;
-import org.cauli.mock.entity.KeyValueStore;
+import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.mock.server.MockServer;
 import org.cauli.mock.template.TemplateSourceBuilder;
 import org.cauli.mock.template.TemplateSourceEngine;

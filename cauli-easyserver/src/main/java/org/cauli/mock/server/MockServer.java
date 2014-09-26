@@ -6,8 +6,7 @@ import org.cauli.mock.ServerProtocol;
 import org.cauli.mock.ServerStatus;
 import org.cauli.mock.action.MockAction;
 import org.cauli.mock.context.Context;
-import org.cauli.mock.entity.KeyValueStore;
-import org.cauli.mock.entity.KeyValueStores;
+import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.mock.entity.ServerInfo;
 
 /**

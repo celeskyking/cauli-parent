@@ -1,13 +1,12 @@
 package org.cauli.mock.data;
 
-import org.cauli.mock.ValueHandler;
+import org.cauli.common.keyvalue.ValueHandler;
 import org.cauli.mock.context.Context;
-import org.cauli.mock.entity.KeyValueStores;
+import org.cauli.common.keyvalue.KeyValueStores;
 import org.cauli.mock.util.PropUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Comparator;
 
 /**
