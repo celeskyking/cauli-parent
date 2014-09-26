@@ -20,11 +20,11 @@ public class DefaultDataProvider implements IDataProvider{
 
 
     @Override
-    public KeyValueStores loadDatas(Context context,String file,String section,Comparator comparator,ValueHandler valueHandler) {
+    public KeyValueStores loadDatas(Context context,String source,String section,Comparator comparator,ValueHandler valueHandler) {
         try {
-            return PropUtil.loadFileByClasspath(context,file, section, comparator);
+            return PropUtil.loadFileByClasspath(context,source, section, comparator,valueHandler);
         } catch (Exception e) {
-            logger.error("加载{}失败",file,e);
+            logger.error("加载{}失败",source,e);
             return null;
         }
     }
