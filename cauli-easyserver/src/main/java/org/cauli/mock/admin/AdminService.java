@@ -3,6 +3,8 @@ package org.cauli.mock.admin;
 import org.cauli.mock.ServerInitStatus;
 import org.cauli.mock.ServerStyle;
 
+import java.util.Map;
+
 /**
  * @auther sky
  */
@@ -29,4 +31,27 @@ public interface AdminService {
 
     public String createTemplate(String ServerName,String actionName,String returnStatus,String templateValue);
 
+    public String startServer(String serverName);
+
+    public String stopServer(String serverName);
+
+    public String restartServer(String serverName);
+
+    public String updateActionRetureStatus(String serverName,String actionName,String returnStatus);
+
+    public String updateActionTemplateValue(String serverName,String actionName,String returnStatus,String templateValue);
+
+    public String updateActionTimeOutMS(String serverName,String actionName,long timeoutMS);
+
+    public String updateActionIsUseTemplate(String serverName,String actionName,boolean isUseTemplate);
+
+    public String updateActionIsUseMessage(String serverName,String actionName,boolean isUseMessage);
+
+    public String updateActionTemplateEncoding(String serverName,String actionName,String templateEncoding);
+
+    public String doCallback(String serverName,String actionName);
+
+    public String updateActionCallBackUrl(String serverName,String action,String callbackUrl);
+
+    public String updateActionCallBackReturnStatus(String serverName,String action,String callbackReturnStatus);
 }

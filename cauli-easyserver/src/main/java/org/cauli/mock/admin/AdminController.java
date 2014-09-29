@@ -2,8 +2,10 @@ package org.cauli.mock.admin;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import jodd.util.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.mock.ServerBuilder;
 import org.cauli.mock.ServerInitStatus;
 import org.cauli.mock.ServerStyle;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
  * @auther sky
@@ -51,18 +54,18 @@ public class AdminController extends Controller {
     public void getServerInfo(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1, "请求的JSON串格式错误");
+        Map<String,Object> params = Maps.newHashMap();
+        String serverName =  getServerName(jsonObject);
+        if(checkJSON(jsonObject)){
+            params.put("serverName",serverName);
+        }else {
             return;
         }
-        String serverName =  jsonObject.getString("serverName");
-        if(StringUtils.isEmpty(serverName)){
-            logger.error("获取ServerName失败,请求的JSON串未获取到serverName值");
-            sendResponse(2, "获取ServerName失败,请求的JSON串未获取到serverName值");
+        if(checkJSONParams(params)){
+            renderJson(service.getServerInfo(serverName));
+        }else{
             return;
         }
-        renderJson(service.getServerInfo(serverName));
     }
 
 
@@ -70,16 +73,17 @@ public class AdminController extends Controller {
     public void getActionInfo(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1,"请求的JSON串格式错误");
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
             return;
         }
-        String actionName =  jsonObject.getString("actionName");
-        String serverName =  jsonObject.getString("serverName");
-        if(StringUtils.isEmpty(actionName)|| StringUtils.isEmpty(serverName)){
-            logger.error("获取数据失败,请求的JSON串未获取到serverName值或者actionName值");
-            sendResponse(2, "获取数据失败,请求的JSON串未获取到serverName值或者actionName值");
+        Map<String,Object> params = Maps.newHashMap();
+        String actionName = getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
             return;
         }
         renderJson(service.getActionInfo(serverName,actionName));
@@ -96,15 +100,15 @@ public class AdminController extends Controller {
     public void getActionsOfServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1,"请求的JSON串格式错误");
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
             return;
         }
-        String serverName =  jsonObject.getString("serverName");
-        if(StringUtils.isEmpty(serverName)){
-            logger.error("获取ServerName失败,请求的JSON串未获取到serverName值");
-            sendResponse(2, "获取ServerName失败,请求的JSON串未获取到serverName值");
+        Map<String,Object> params = Maps.newHashMap();
+        String serverName =  getServerName(jsonObject);
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
             return;
         }
         renderJson(service.getActionsOfServer(serverName));
@@ -114,17 +118,20 @@ public class AdminController extends Controller {
     public void getTemplateValue(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1,"请求的JSON串格式错误");
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
             return;
         }
-        String serverName = jsonObject.getString("serverName");
-        String actionName = jsonObject.getString("actionName");
-        String returnStatus = jsonObject.getString("returnStatus");
-        if(StringUtils.isEmpty(serverName)||StringUtils.isEmpty(actionName)||StringUtils.isEmpty(returnStatus)){
-            logger.error("获取数据失败,未获取到serverName,actionName或者returnStatus");
-            sendResponse(2, "获取数据失败,未获取到serverName,actionName或者returnStatus");
+        String serverName = getServerName(jsonObject);
+        String actionName = getActionName(jsonObject);
+        String returnStatus = getReturnStatus(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("serverName",serverName);
+        params.put("actionName",actionName);
+        params.put("returnStatus",returnStatus);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
         }
         renderText(service.getTemplateValue(serverName, actionName, returnStatus));
     }
@@ -133,16 +140,17 @@ public class AdminController extends Controller {
     public void getActionRetureStatus(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1,"请求的JSON串格式错误");
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
             return;
         }
-        String actionName = jsonObject.getString("actionName");
-        String serverName = jsonObject.getString("serverName");
-        if(StringUtils.isEmpty(actionName)|| StringUtils.isEmpty(serverName)){
-            logger.error("获取数据失败,请求的JSON串未获取到serverName值或者actionName值");
-            sendResponse(2, "获取数据失败,请求的JSON串未获取到serverName值或者actionName值");
+        String actionName = getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
             return;
         }
         renderJson(service.getActionRetureStatus(serverName,actionName));
@@ -152,23 +160,22 @@ public class AdminController extends Controller {
     public void createServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1,"请求的JSON串格式错误");
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
             return;
         }
-        ServerStyle style = ServerStyle.valueOf( jsonObject.getString("serverStyle"));
-        String serverName = jsonObject.getString("serverName");
-        int port =  jsonObject.getInteger("port");
-        ServerInitStatus initStatus= ServerInitStatus.valueOf(jsonObject.getString("initStatus"));
-        if(StringUtils.isEmpty(serverName)){
-            logger.error("获取数据失败,请求的JSON串未获取到serverName值或者port值或者serverName或者initStatus");
-            sendResponse(2, "获取数据失败,请求的JSON串未获取到serverName值或者port值或者serverName或者initStatus");
+        ServerStyle style = getServerStyle(jsonObject);
+        String serverName = getServerName(jsonObject);
+        int port =  getPort(jsonObject);
+        ServerInitStatus initStatus= getInitStatus(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("serverName",serverName);
+        params.put("serverStyle",style);
+        params.put("initStatus",initStatus);
+        params.put("port",port);
+        boolean check = checkJSONParams(params);
+        if(!check){
             return;
-        }
-        if(ServerBuilder.getInstance().checkPortisUsed(port)){
-            logger.error("端口被占用,Server创建失败,Port:"+port+", ServerName:"+serverName);
-            sendResponse(5, "服务器端口被占用，不能够创建Server");
         }
         renderJson(service.createServer(style,serverName,port,initStatus));
     }
@@ -177,20 +184,23 @@ public class AdminController extends Controller {
     public void createActionOfServer() throws Exception {
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1,"请求的JSON串格式错误");
+        boolean bool=checkJSON(jsonObject);
+        if(!bool){
             return;
         }
-        String actionName = jsonObject.getString("actionName");
-        String serverName = jsonObject.getString("serverName");
-        String path = jsonObject.getString("path");
-        String returnStatus = jsonObject.getString("returnStatus");
-        String template = Base64.decodeToString(jsonObject.getString("templateValue"));
-        if(StringUtils.isEmpty(serverName)||StringUtils.isEmpty(actionName)||StringUtils.isEmpty(path)||
-                StringUtils.isEmpty(template)){
-            logger.error("获取数据失败,请求的JSON串未获取到serverName值或者actionName值或者path值或者templateValue值");
-            sendResponse(2, "获取数据失败,请求的JSON串未获取到serverName值或者actionName值或者path值或者templateValue值");
+        String actionName = getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        String path = getPath(jsonObject);
+        String returnStatus = getReturnStatus(jsonObject);
+        String template = Base64.decodeToString(getTemplateValue(jsonObject));
+        Map<String,Object>params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        params.put("path",path);
+        params.put("returnStatus",returnStatus);
+        params.put("templateValue",template);
+        boolean check = checkJSONParams(params);
+        if(!check){
             return;
         }
         if(StringUtils.isEmpty(returnStatus)){
@@ -205,30 +215,298 @@ public class AdminController extends Controller {
     public void createTemplate(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
-        if(jsonObject==null){
-            logger.error("请求的JSON串格式错误");
-            sendResponse(1,"请求的JSON串格式错误");
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
             return;
         }
-        String actionName = jsonObject.getString("actionName");
-        String serverName = jsonObject.getString("serverName");
-        String returnStatus = jsonObject.getString("returnStatus");
-        String templateValue = jsonObject.getString("templateValue");
-        if(StringUtils.isEmpty(serverName)||StringUtils.isEmpty(actionName)||StringUtils.isEmpty(returnStatus)||StringUtils.isEmpty(templateValue)){
-            logger.error("获取数据失败,请求的JSON串未获取到serverName值或者actionName值或者returnStatus值");
-            sendResponse(2, "获取数据失败,请求的JSON串未获取到serverName值或者actionName值或者returnStatus值");
+        String actionName = getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        String returnStatus = getReturnStatus(jsonObject);
+        String templateValue = getTemplateValue(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        params.put("returnStatus",returnStatus);
+        params.put("templateValue",Base64.decodeToString(templateValue));
+        boolean check = checkJSONParams(params);
+        if(!check){
             return;
         }
         renderJson(service.createTemplate(serverName,actionName,returnStatus,templateValue));
     }
 
-    @Override
-    public void before() {
-        charset(Charset.forName("UTF-8"));
+
+    @Path("/start/server")
+    public void startServer(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String serverName =getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.startServer(serverName));
     }
 
-    @Override
-    public void after() {
+    @Path("/stop/server")
+    public void stopServer(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String serverName =getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.stopServer(serverName));
+    }
+
+    @Path("/restart/server")
+    public void restartServer(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool=checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String serverName =getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.restartServer(serverName));
+    }
+
+    @Path("/action/update/{param}")
+    public void updateAction(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool =checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String serverName =getServerName(jsonObject);
+        String actionName = getActionName(jsonObject);
+        String configParam = pathParam("param");
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("serverName",serverName);
+        params.put("actionName",actionName);
+        if("returnStatus".equalsIgnoreCase(configParam)){
+            String returnStatus = getReturnStatus(jsonObject);
+            logger.info("更新Server:{},action:{}的returnStatus为:{}",serverName,actionName,returnStatus);
+            params.put("returnStatus",returnStatus);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionRetureStatus(serverName,actionName,returnStatus));
+        }else if("templateValue".equalsIgnoreCase(configParam)){
+            String returnStatus = getReturnStatus(jsonObject);
+            String templateValue = Base64.decodeToString(getTemplateValue(jsonObject));
+            logger.info("更新Server:{},action:{}的templateValue为:{}",serverName,actionName,templateValue);
+            params.put("returnStatus",returnStatus);
+            params.put("templateValue",templateValue);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionTemplateValue(serverName,actionName,returnStatus,templateValue));
+        }else if("templateEncoding".equalsIgnoreCase(configParam)){
+            String templateEncoding = getTemplateEncoding(jsonObject) ;
+            logger.info("更新Server:{},action:{}的templateEncoding为:{}",serverName,actionName,templateEncoding);
+            params.put("templateEncoding",templateEncoding);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionTemplateEncoding(serverName,actionName,templateEncoding));
+        }else if("delay".equalsIgnoreCase(configParam)){
+            long delay = getTimeoutMS(jsonObject) ;
+            logger.info("更新Server:{},action:{}的dalay为:{}",serverName,actionName,delay);
+            params.put("templateValue",delay);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionTimeOutMS(serverName,actionName,delay));
+        }else if("isUseTemplate".equalsIgnoreCase(configParam)){
+            boolean isUseTemplate = getIsUseTemplate(jsonObject);
+            logger.info("更新Server:{},action:{}的isUseTemplate为:{}",serverName,actionName,isUseTemplate);
+            params.put("isUseTemplate",isUseTemplate);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionIsUseTemplate(serverName,actionName,isUseTemplate));
+        }else if("isUseMessage".equalsIgnoreCase(configParam)){
+            boolean isUseMessage = getIsUseMessage(jsonObject);
+            logger.info("更新Server:{},action:{}的isUseMessage为:{}",serverName,actionName,isUseMessage);
+            params.put("isUseMessage",isUseMessage);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionIsUseMessage(serverName,actionName,isUseMessage));
+        }else if("callbackURL".equalsIgnoreCase(configParam)){
+            String url = getCallbackUrl(jsonObject);
+            logger.info("更新Server:{},action:{}的callbackURL为:{}",serverName,actionName,url);
+            params.put("callbackURL",url);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionCallBackUrl(serverName,actionName,url));
+        }else if("callbackReturnStatus".equalsIgnoreCase(configParam)){
+            String status = getCallbackReturnStatus(jsonObject);
+            logger.info("更新Server:{},action:{}的callbackReturnStatus为:{}",serverName,actionName,status);
+            params.put("callbackReturnStatus",status);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionCallBackReturnStatus(serverName,actionName,status));
+        }else{
+            logger.error("未查询到该属性值:{}",configParam);
+            DefaultResponse response = new DefaultResponse();
+            response.setErrorInfo("不能够查找到该属性"+configParam);
+            response.setErrorCode(9);
+            renderJson(response);
+        }
 
     }
+
+    @Path("/action/callback")
+    public void docallback(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String actionName =getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.doCallback(serverName,actionName));
+    }
+
+    //--------------private methods---------------
+
+    private String getServerName(JSONObject jsonObject){
+        return jsonObject.getString("serverName");
+    }
+
+    private String getActionName(JSONObject jsonObject){
+        return jsonObject.getString("actionName");
+    }
+
+    private String getReturnStatus(JSONObject jsonObject){
+        return jsonObject.getString("returnStatus");
+    }
+
+    private String getTemplateValue(JSONObject jsonObject){
+        return jsonObject.getString("templateValue");
+    }
+
+    private ServerStyle getServerStyle(JSONObject jsonObject){
+        try{
+            return ServerStyle.valueOf(jsonObject.getString("serverStyle"));
+        } catch (Exception e){
+            return null;
+        }
+
+    }
+
+    private int getPort(JSONObject jsonObject){
+        return jsonObject.getInteger("port");
+    }
+
+    private ServerInitStatus getInitStatus(JSONObject jsonObject){
+        try{
+            return ServerInitStatus.valueOf(jsonObject.getString("initStatus").toUpperCase());
+        }catch (Exception e){
+            return null;
+        }
+
+    }
+
+    private String getPath(JSONObject object){
+        return object.getString("path");
+    }
+
+    private String getTemplateEncoding(JSONObject object){
+        return object.getString("templateEncoding");
+    }
+
+    private long getTimeoutMS(JSONObject jsonObject){
+        return jsonObject.getLong("delay");
+    }
+
+
+    private boolean getIsUseTemplate(JSONObject jsonObject){
+        return jsonObject.getBoolean("isUseTemplate");
+    }
+
+    private boolean getIsUseMessage(JSONObject jsonObject){
+        return jsonObject.getBoolean("isUseMessage");
+    }
+
+    private String getCallbackUrl(JSONObject jsonObject){
+        return jsonObject.getString("callbackURL");
+    }
+
+    private String getCallbackReturnStatus(JSONObject jsonObject){
+        return jsonObject.getString("callbackReturnStatus");
+    }
+
+
+    private boolean checkJSONParams(Map<String,Object> params){
+        for(Map.Entry<String,Object> entry :params.entrySet()){
+            if(entry.getValue() instanceof String){
+                if(StringUtils.isEmpty((String) entry.getValue())){
+                    logger.error("获取数据失败,请求的JSON串未获取到{}的值",entry.getKey());
+                    sendResponse(2, "获取数据失败,请求的JSON串未获取到"+entry.getKey()+"的值,有可能值错误.");
+                    return false;
+                }
+            }else{
+                if(entry.getValue()==null){
+                    logger.error("获取数据失败,请求的JSON串未获取到{}的值",entry.getKey());
+                    sendResponse(2, "获取数据失败,请求的JSON串未获取到"+entry.getKey()+"的值,有可能值错误.");
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
+
+    private boolean checkJSON(JSONObject jsonObject){
+        if(jsonObject==null){
+            logger.error("请求的JSON串格式错误");
+            sendResponse(1, "请求的JSON串格式错误");
+            return false;
+        }
+        return true;
+    }
+
+
+
 }

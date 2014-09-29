@@ -1,9 +1,11 @@
 package org.cauli.mock.entity;
 
+import java.io.Serializable;
+
 /**
  * @auther sky
  */
-public class DefaultResponse {
+public class DefaultResponse implements Serializable{
 
     String errorInfo;
     int errorCode;

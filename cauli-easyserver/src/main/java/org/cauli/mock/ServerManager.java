@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by tianqing.wang on 2014/7/7
  */
-public class ServerManager {
+public class ServerManager implements IServerManager{
 
 
     private boolean useAdmin;

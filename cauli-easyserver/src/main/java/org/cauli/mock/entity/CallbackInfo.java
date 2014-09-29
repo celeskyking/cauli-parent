@@ -3,12 +3,13 @@ package org.cauli.mock.entity;
 import org.cauli.mock.constant.Constant;
 import org.cauli.server.HttpMethod;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 
 /**
  * Created by tianqing.wang on 2014/9/22
  */
-public class CallbackInfo {
+public class CallbackInfo implements Serializable{
 
     public  class HttpInfo{
         private Charset queryEncoding;

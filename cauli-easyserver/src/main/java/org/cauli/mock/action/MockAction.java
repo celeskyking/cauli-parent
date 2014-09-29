@@ -2,6 +2,8 @@ package org.cauli.mock.action;
 
 import org.cauli.mock.entity.ActionInfo;
 import org.cauli.common.keyvalue.KeyValueStore;
+import org.cauli.mock.entity.ParametersModel;
+import org.cauli.mock.exception.ActionExecuteException;
 import org.cauli.mock.server.MockServer;
 
 import java.util.Map;
@@ -9,10 +11,10 @@ import java.util.Map;
 /**
  * Created by tianqing.wang on 2014/7/4
  */
-public interface MockAction<T,K> {
+public interface MockAction<T,V,K> {
 
 
-    public void  onMessage(K pairs);
+    public void  onMessage(V pairs);
 
     /**
      * 这个方法是构建响应的方法
@@ -46,6 +48,10 @@ public interface MockAction<T,K> {
     public void addContext(String name,Object object);
 
     public void addContext(KeyValueStore store);
+
+    public void updateTemplateValue(String returnStatus,String value);
+
+    public K callback() throws ActionExecuteException;
 
 
 

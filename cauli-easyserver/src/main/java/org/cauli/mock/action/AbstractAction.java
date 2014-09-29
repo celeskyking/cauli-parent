@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * @auther sky
  */
-public abstract class AbstractAction<T,V> implements MockAction<String,ParametersModel>,IStrategy<T>{
+public abstract class AbstractAction<T,V> implements MockAction<String,ParametersModel,V>,IStrategy<T>{
 
     private TemplateSourceEngine sourceEngine;
 
@@ -390,4 +390,11 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     public void addContext(KeyValueStore store) {
         this.parametersModel.getContext().addContext(store.getKey(),store.getValue());
     }
+
+    @Override
+    public void updateTemplateValue(String returnStatus,String value) {
+        this.sourceEngine.updateTemplate(returnStatus,value);
+    }
+
+
 }
