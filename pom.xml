@@ -11,7 +11,7 @@
     <groupId>com.github.celeskyking</groupId>
     <artifactId>cauli-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.2</version>
+    <version>1.2.3-SNAPSHOT</version>
 
     <description>it`s the tools of uitest or mock server</description>
     <url>http://maven.apache.org</url>
@@ -26,7 +26,7 @@
         <url>git@github.com:celeskyking/cauli-parent.git</url>
         <connection>scm:git:git@github.com:celeskyking/cauli-parent.git</connection>
         <developerConnection>scm:git:git@github.com:celeskyking/cauli-parent.git</developerConnection>
-      <tag>cauli-parent-1.2.2</tag>
+      <tag>cauli-parent-1.2.0</tag>
   </scm>
     <developers>
         <developer>
