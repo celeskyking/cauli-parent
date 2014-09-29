@@ -11,6 +11,7 @@ import org.cauli.mock.ServerInitStatus;
 import org.cauli.mock.ServerStyle;
 import org.cauli.mock.admin.impl.AdminServiceImpl;
 import org.cauli.mock.entity.DefaultResponse;
+import org.cauli.server.HttpMethod;
 import org.cauli.server.annotation.Path;
 import org.cauli.server.controller.Controller;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class AdminController extends Controller {
         renderText(JSON.toJSONString(response));
     }
 
-    @Path("/server/info")
+    @Path(value = "/server/info",methods = HttpMethod.POST)
     public void getServerInfo(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -69,7 +70,7 @@ public class AdminController extends Controller {
     }
 
 
-    @Path("/action/info")
+    @Path(value = "/action/info",methods = HttpMethod.POST)
     public void getActionInfo(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -90,13 +91,13 @@ public class AdminController extends Controller {
 
     }
 
-    @Path("/servers")
+    @Path(value = "/servers",methods = HttpMethod.POST)
     public void getServers(){
         renderJson(service.getServers());
 
     }
 
-    @Path("/server/actions")
+    @Path(value = "/server/actions",methods = HttpMethod.POST)
     public void getActionsOfServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -114,7 +115,7 @@ public class AdminController extends Controller {
         renderJson(service.getActionsOfServer(serverName));
     }
 
-    @Path("/action/template")
+    @Path(value = "/action/template",methods = HttpMethod.POST)
     public void getTemplateValue(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -136,7 +137,7 @@ public class AdminController extends Controller {
         renderText(service.getTemplateValue(serverName, actionName, returnStatus));
     }
 
-    @Path("/action/statuses")
+    @Path(value = "/action/statuses",methods = HttpMethod.POST)
     public void getActionRetureStatus(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -156,7 +157,7 @@ public class AdminController extends Controller {
         renderJson(service.getActionRetureStatus(serverName,actionName));
     }
 
-    @Path("/server/create")
+    @Path(value = "/server/create",methods = HttpMethod.POST)
     public void createServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -180,7 +181,7 @@ public class AdminController extends Controller {
         renderJson(service.createServer(style,serverName,port,initStatus));
     }
 
-    @Path("/action/create")
+    @Path(value = "/action/create",methods = HttpMethod.POST)
     public void createActionOfServer() throws Exception {
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -211,7 +212,7 @@ public class AdminController extends Controller {
 
     }
 
-    @Path("/action/template/create")
+    @Path(value = "/action/template/create",methods = HttpMethod.POST)
     public void createTemplate(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -236,7 +237,7 @@ public class AdminController extends Controller {
     }
 
 
-    @Path("/start/server")
+    @Path(value = "/start/server",methods = HttpMethod.POST)
     public void startServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -254,7 +255,7 @@ public class AdminController extends Controller {
         renderJson(service.startServer(serverName));
     }
 
-    @Path("/stop/server")
+    @Path(value = "/stop/server",methods = HttpMethod.POST)
     public void stopServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -272,7 +273,7 @@ public class AdminController extends Controller {
         renderJson(service.stopServer(serverName));
     }
 
-    @Path("/restart/server")
+    @Path(value = "/restart/server",methods = HttpMethod.POST)
     public void restartServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -290,7 +291,7 @@ public class AdminController extends Controller {
         renderJson(service.restartServer(serverName));
     }
 
-    @Path("/action/update/{param}")
+    @Path(value = "/action/update/{param}",methods = HttpMethod.POST)
     public void updateAction(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -388,7 +389,7 @@ public class AdminController extends Controller {
 
     }
 
-    @Path("/action/callback")
+    @Path(value = "/action/callback",methods = HttpMethod.POST)
     public void docallback(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
