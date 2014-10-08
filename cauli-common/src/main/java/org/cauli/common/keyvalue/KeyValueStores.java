@@ -1,5 +1,6 @@
 package org.cauli.common.keyvalue;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
@@ -104,8 +105,9 @@ public class KeyValueStores {
         }
     }
 
-
-
+    public String toJSON(){
+        return JSON.toJSONString(toMap());
+    }
 
 
 }

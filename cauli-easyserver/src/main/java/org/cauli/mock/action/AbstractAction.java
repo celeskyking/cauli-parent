@@ -70,9 +70,9 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
         actionInfo.setActionName(name);
         parseMethods();
         config(actionInfo);
-        if(CommonUtil.checkContainsChinese(actionInfo.getActionName())){
-            throw new ServerNameNotSupportChineseException("ActionName不支持非英文:"+actionInfo.getActionName());
-        }
+//        if(CommonUtil.checkContainsChinese(actionInfo.getActionName())){
+//            throw new ServerNameNotSupportChineseException("ActionName不支持非英文:"+actionInfo.getActionName());
+//        }
         if(actionInfo.getTemplateSourceLoaderClass()!=null){
             this.sourceEngine=checkTemplateSourceEngineClass(actionInfo.getTemplateSourceLoaderClass());
         }

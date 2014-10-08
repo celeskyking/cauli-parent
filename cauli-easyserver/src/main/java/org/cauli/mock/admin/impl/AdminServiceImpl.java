@@ -1,10 +1,14 @@
 package org.cauli.mock.admin.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import jodd.typeconverter.TypeConverter;
 import jodd.typeconverter.TypeConverterManager;
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.common.keyvalue.KeyValueStore;
+import org.cauli.common.keyvalue.KeyValueStores;
 import org.cauli.mock.ServerBuilder;
 import org.cauli.mock.ServerInitStatus;
 import org.cauli.mock.ServerProtocol;
@@ -20,7 +24,9 @@ import org.cauli.mock.server.MockServer;
 import org.cauli.mock.server.ServerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.security.validator.KeyStores;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,10 +41,12 @@ public class AdminServiceImpl implements AdminService {
     public String getServerInfo(String serverName) {
         logger.info("server的信息:serverName:{}",serverName);
         ServerInfo info= ServerBuilder.getInstance().getServer(serverName).getServerInfo();
+        KeyValueStores stores = getServerKeyValueStore(info);
         String result;
         if(info!=null){
-            result= JSON.toJSONString(info);
+            result= stores.toJSON();
             logger.info("获取的server[{}]信息:{}",serverName,result);
+            return result;
         }
         return errorMsg();
     }
@@ -54,7 +62,8 @@ public class AdminServiceImpl implements AdminService {
         if(action==null){
             return actionNotFountErrorMsg(serverName,actionName);
         }
-        String result=JSON.toJSONString(action.getActionInfo());
+        KeyValueStores stores = getActionKeyValueStore(server,action);
+        String result=stores.toJSON();
         logger.info("获取的server:{},action:{}的信息:{}",serverName,actionName,result);
         return result;
     }
@@ -63,8 +72,12 @@ public class AdminServiceImpl implements AdminService {
     public String getServers() {
         logger.info("获取所有Server信息...");
         Set<ServerInfo> infos =ServerBuilder.getInstance().getServerInfos();
-        logger.info("所有Sever信息:" + JSON.toJSONString(infos));
-        return JSON.toJSONString(infos);
+        List<Map<String,Object>> list = Lists.newArrayList();
+        for(ServerInfo info:infos){
+            list.add(getServerKeyValueStore(info).toMap());
+        }
+        logger.info("所有Server信息:" + JSON.toJSONString(list));
+        return JSON.toJSONString(list);
     }
 
     @Override
@@ -74,12 +87,12 @@ public class AdminServiceImpl implements AdminService {
         if(server==null){
             return serverNotFountErrorMsg(serverName);
         }
-        Set<ActionInfo> infoSet = Sets.newHashSet();
+        List<Map<String,Object>> infos = Lists.newArrayList();
         for(MockAction action:server.getActions()){
-            infoSet.add(action.getActionInfo());
+            infos.add(getActionKeyValueStore(server,action).toMap());
         }
-        logger.info("Server[{}]:Actions:[{}]",serverName,infoSet);
-        return JSON.toJSONString(infoSet);
+        logger.info("Server[{}]:Actions:[{}]",serverName,infos);
+        return JSON.toJSONString(infos);
     }
 
     @Override
@@ -395,6 +408,41 @@ public class AdminServiceImpl implements AdminService {
         response.setErrorCode(8);
         response.setResult(null);
         return JSON.toJSONString(response);
+    }
+
+    private KeyValueStores getServerKeyValueStore(ServerInfo info){
+        KeyValueStores stores = new KeyValueStores();
+        stores.add(new KeyValueStore("serverName",info.getServerName()));
+        stores.add(new KeyValueStore("port",info.getPort()));
+        if(info.getProtocol()==ServerProtocol.SOCKET){
+            stores.add(new KeyValueStore("isAync",info.isAsyn()));
+            stores.add(new KeyValueStore("requestEncoding",info.getRequestEncoding()));
+            stores.add(new KeyValueStore("responseEncoding",info.getResponseEncoding()));
+        }
+        stores.add(new KeyValueStore("protocol",info.getProtocol()));
+        stores.add(new KeyValueStore("status",info.getStatus()));
+        stores.add(new KeyValueStore("initStatus",info.getInitStatus()));
+
+        return stores;
+    }
+
+
+    private KeyValueStores getActionKeyValueStore(MockServer server,MockAction action){
+        KeyValueStores stores = new KeyValueStores();
+        stores.add(new KeyValueStore("actionName",action.getActionInfo().getActionName()));
+        stores.add(new KeyValueStore("templateEncoding",action.getActionInfo().getTemplateEncoding()));
+        stores.add(new KeyValueStore("returnStatus",action.getActionInfo().getReturnStatus()));
+        if(server.getProtocol()==ServerProtocol.HTTP){
+            stores.add(new KeyValueStore("requestUri",action.getActionInfo().getRequestUri()));
+            stores.add(new KeyValueStore("callbackURL",action.getActionInfo().getCallbackInfo().http.getUrl()));
+        }else if(server.getProtocol()==ServerProtocol.SOCKET){
+            stores.add(new KeyValueStore("callbackHost",action.getActionInfo().getCallbackInfo().socket.getHost()));
+            stores.add(new KeyValueStore("callbackPort",action.getActionInfo().getCallbackInfo().socket.getPort()));
+        }
+        stores.add(new KeyValueStore("isUseMessage",action.getActionInfo().isUseMessage()));
+        stores.add(new KeyValueStore("isUseTemplate",action.getActionInfo().isUseTemplate()));
+        stores.add(new KeyValueStore("callbackReturnStatus",action.getActionInfo().getCallbackInfo().getReturnStatus()));
+        return stores;
     }
 
 

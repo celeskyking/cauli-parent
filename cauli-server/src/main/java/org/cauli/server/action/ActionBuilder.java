@@ -35,7 +35,7 @@ public class ActionBuilder {
             if(rootPath.equals("/")){
                 return "/"+action.getMethod().getName();
             }else{
-                return rootPath+action.getMethod().getName();
+                return rootPath+"/"+action.getMethod().getName();
             }
         }
     }

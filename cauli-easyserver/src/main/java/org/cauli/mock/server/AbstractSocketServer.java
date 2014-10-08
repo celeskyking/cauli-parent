@@ -73,9 +73,9 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
         if(StringUtil.isEmpty(serverInfo.getServerName())){
             serverInfo.setServerName(getClass().getSimpleName());
         }
-        if(CommonUtil.checkContainsChinese(serverInfo.getServerName())){
-            throw new ServerNameNotSupportChineseException("ServerName不支持非英文:"+serverInfo.getServerName());
-        }
+//        if(CommonUtil.checkContainsChinese(serverInfo.getServerName())){
+//            throw new ServerNameNotSupportChineseException("ServerName不支持非英文:"+serverInfo.getServerName());
+//        }
     }
 
     public ServerInfo getServerInfo() {

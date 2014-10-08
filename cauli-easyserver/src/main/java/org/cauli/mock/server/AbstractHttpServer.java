@@ -70,9 +70,9 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
         if(StringUtil.isEmpty(serverInfo.getServerName())){
             serverInfo.setServerName(getClass().getSimpleName());
         }
-        if(CommonUtil.checkContainsChinese(serverInfo.getServerName())){
-            throw new ServerNameNotSupportChineseException("ServerName不支持非英文:"+serverInfo.getServerName());
-        }
+//        if(CommonUtil.checkContainsChinese(serverInfo.getServerName())){
+//            throw new ServerNameNotSupportChineseException("ServerName不支持非英文:"+serverInfo.getServerName());
+//        }
     }
 
     @Override
