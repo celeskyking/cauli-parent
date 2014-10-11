@@ -399,14 +399,16 @@ public class AdminController extends Controller {
         }
         String actionName =getActionName(jsonObject);
         String serverName = getServerName(jsonObject);
+        String callbackName = getCallbackName(jsonObject);
         Map<String,Object> params = Maps.newHashMap();
         params.put("actionName",actionName);
         params.put("serverName",serverName);
+        params.put("callbackName",callbackName);
         boolean check = checkJSONParams(params);
         if(!check){
             return;
         }
-        renderJson(service.doCallback(serverName,actionName));
+        renderJson(service.doCallback(serverName,actionName,callbackName));
     }
 
     //--------------private methods---------------
@@ -472,6 +474,10 @@ public class AdminController extends Controller {
 
     private String getCallbackUrl(JSONObject jsonObject){
         return jsonObject.getString("callbackURL");
+    }
+
+    private String getCallbackName(JSONObject jsonObject){
+        return jsonObject.getString("callbackName");
     }
 
     private String getCallbackReturnStatus(JSONObject jsonObject){

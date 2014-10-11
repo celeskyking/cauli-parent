@@ -1,10 +1,12 @@
 package org.cauli.mock.action;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jodd.util.StringUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cauli.common.instrument.ClassUtils;
 import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.common.keyvalue.KeyValueStores;
 import org.cauli.common.keyvalue.NormalSortComparator;
@@ -57,7 +59,7 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
 
     private ParametersModel parametersModel;
 
-    private Queue<CallbackMethod> callbacks=new PriorityQueue<>(10,new CallbackPriorityComparator());
+    private Map<String,Method> callbacks= Maps.newHashMap();
 
     private MockServer server;
 
@@ -298,25 +300,25 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
                 }else if(action.value()==ConfigType.TEMPLATE){
                     this.templateConfigMethods.add(method);
                 }
-            }else if(method.isAnnotationPresent(CallBack.class)){
+            }else if(method.isAnnotationPresent(CallBack.class)&&method.getReturnType()==List.class){
                 CallBack back = method.getAnnotation(CallBack.class);
-                int index = back.index();
-                CallbackMethod callbackMethod = new CallbackMethod();
-                callbackMethod.setIndex(index);
-                callbackMethod.setMethod(method);
-                callbacks.add(callbackMethod);
+                String name =back.value();
+                callbacks.put(name,method);
             }
         }
     }
 
-    public List<V> callback() throws ActionExecuteException {
+    public List<V> callback(String name) throws ActionExecuteException {
         List<V> result = Lists.newArrayList();
-        while(!callbacks.isEmpty()){
-            ActionExecuter executer = new ActionExecuter(callbacks.poll().getMethod(),parametersModel,this);
-            result.add((V) executer.invoke());
+        Method method = callbacks.get(name);
+        if(method==null){
+            throw new RuntimeException("找不到该名字["+name+"]的Callback方法");
         }
+        ActionExecuter executer = new ActionExecuter(callbacks.get(name),parametersModel,this);
+        result.addAll((List<V>) executer.invoke());
         return result;
     }
+
 
     public void delay(int seconds){
         try {

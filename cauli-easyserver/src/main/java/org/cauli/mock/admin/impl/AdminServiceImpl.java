@@ -288,7 +288,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public String doCallback(String serverName, String actionName) {
+    public String doCallback(String serverName, String actionName,String callbackName) {
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
             return serverNotFountErrorMsg(serverName);
@@ -299,7 +299,7 @@ public class AdminServiceImpl implements AdminService {
         }
         Object result;
         try {
-            result=action.callback();
+            result=action.callback(callbackName);
         } catch (ActionExecuteException e) {
             return errorCallbackResult();
         }

@@ -10,5 +10,5 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Inherited
 public @interface CallBack {
-    int index();
+    String value();
 }

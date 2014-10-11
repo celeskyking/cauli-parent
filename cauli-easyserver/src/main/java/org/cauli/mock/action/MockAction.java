@@ -52,7 +52,7 @@ public interface MockAction<T,V,K> {
 
     public void updateTemplateValue(String returnStatus,String value);
 
-    public List<K> callback() throws ActionExecuteException;
+    public List<K> callback(String name) throws ActionExecuteException;
 
 
 

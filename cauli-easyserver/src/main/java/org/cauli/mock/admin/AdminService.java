@@ -49,7 +49,7 @@ public interface AdminService {
 
     public String updateActionTemplateEncoding(String serverName,String actionName,String templateEncoding);
 
-    public String doCallback(String serverName,String actionName);
+    public String doCallback(String serverName,String actionName,String callbackName);
 
     public String updateActionCallBackUrl(String serverName,String action,String callbackUrl);
 
