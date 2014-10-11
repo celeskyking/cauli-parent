@@ -55,6 +55,7 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     }
 
     private Set<Method> parameterConfigMethods= Sets.newHashSet();
+
     private Set<Method> templateConfigMethods=Sets.newHashSet();
 
     private ParametersModel parametersModel;
@@ -300,7 +301,10 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
                 }else if(action.value()==ConfigType.TEMPLATE){
                     this.templateConfigMethods.add(method);
                 }
-            }else if(method.isAnnotationPresent(CallBack.class)&&method.getReturnType()==List.class){
+            }else if(method.isAnnotationPresent(CallBack.class)){
+                if(method.getReturnType()!=List.class){
+                    throw new RuntimeException("CallBack注解的方法返回值只能够是List类型(Http和Socket返回List<String>类型)");
+                }
                 CallBack back = method.getAnnotation(CallBack.class);
                 String name =back.value();
                 callbacks.put(name,method);
