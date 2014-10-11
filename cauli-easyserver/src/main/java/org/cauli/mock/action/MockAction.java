@@ -6,6 +6,7 @@ import org.cauli.mock.entity.ParametersModel;
 import org.cauli.mock.exception.ActionExecuteException;
 import org.cauli.mock.server.MockServer;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,7 +52,7 @@ public interface MockAction<T,V,K> {
 
     public void updateTemplateValue(String returnStatus,String value);
 
-    public K callback() throws ActionExecuteException;
+    public List<K> callback() throws ActionExecuteException;
 
 
 

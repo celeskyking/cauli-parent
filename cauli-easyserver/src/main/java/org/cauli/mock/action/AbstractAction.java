@@ -1,5 +1,6 @@
 package org.cauli.mock.action;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import jodd.util.StringUtil;
 import org.apache.commons.io.IOUtils;
@@ -7,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.common.keyvalue.KeyValueStores;
 import org.cauli.common.keyvalue.NormalSortComparator;
+import org.cauli.mock.CallbackMethod;
+import org.cauli.mock.CallbackPriorityComparator;
 import org.cauli.mock.ConfigType;
 import org.cauli.common.keyvalue.ValueHandler;
 import org.cauli.mock.annotation.Action;
@@ -28,9 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @auther sky
@@ -56,7 +57,7 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
 
     private ParametersModel parametersModel;
 
-    private Method callback;
+    private Queue<CallbackMethod> callbacks=new PriorityQueue<>(10,new CallbackPriorityComparator());
 
     private MockServer server;
 
@@ -298,14 +299,23 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
                     this.templateConfigMethods.add(method);
                 }
             }else if(method.isAnnotationPresent(CallBack.class)){
-                this.callback=method;
+                CallBack back = method.getAnnotation(CallBack.class);
+                int index = back.index();
+                CallbackMethod callbackMethod = new CallbackMethod();
+                callbackMethod.setIndex(index);
+                callbackMethod.setMethod(method);
+                callbacks.add(callbackMethod);
             }
         }
     }
 
-    public V callback() throws ActionExecuteException {
-        ActionExecuter executer = new ActionExecuter(callback,parametersModel,this);
-        return (V) executer.invoke();
+    public List<V> callback() throws ActionExecuteException {
+        List<V> result = Lists.newArrayList();
+        while(!callbacks.isEmpty()){
+            ActionExecuter executer = new ActionExecuter(callbacks.poll().getMethod(),parametersModel,this);
+            result.add((V) executer.invoke());
+        }
+        return result;
     }
 
     public void delay(int seconds){
@@ -395,6 +405,8 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     public void updateTemplateValue(String returnStatus,String value) {
         this.sourceEngine.updateTemplate(returnStatus,value);
     }
+
+
 
 
 }

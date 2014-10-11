@@ -54,7 +54,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <selenium.version>2.43.1</selenium.version>
-        <jodd.version>3.6</jodd.version>
+        <jodd.version>3.6.1</jodd.version>
     </properties>
 
     <dependencyManagement>

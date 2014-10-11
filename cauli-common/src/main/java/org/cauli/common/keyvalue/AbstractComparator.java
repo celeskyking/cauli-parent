@@ -1,7 +1,5 @@
 package org.cauli.common.keyvalue;
 
-import org.cauli.common.keyvalue.KeyValueStore;
-
 import java.util.Comparator;
 
 /**
