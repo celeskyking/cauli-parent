@@ -441,6 +441,7 @@ public class AdminServiceImpl implements AdminService {
         }
         stores.add(new KeyValueStore("isUseMessage",action.getActionInfo().isUseMessage()));
         stores.add(new KeyValueStore("isUseTemplate",action.getActionInfo().isUseTemplate()));
+        stores.add(new KeyValueStore("isUseCallbackTemplate",action.getActionInfo().isUseCallbackTemplate()));
         stores.add(new KeyValueStore("callbackReturnStatus",action.getActionInfo().getCallbackInfo().getReturnStatus()));
         return stores;
     }

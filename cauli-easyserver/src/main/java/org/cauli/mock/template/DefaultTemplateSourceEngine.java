@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.cauli.common.instrument.ResourceUtil;
 import org.cauli.mock.action.MockAction;
 import org.cauli.mock.util.TemplateParseUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +19,8 @@ import java.util.Set;
  * @auther sky
  */
 public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
+
+    private Logger logger = LoggerFactory.getLogger(DefaultTemplateSourceEngine.class);
 
     private MockAction action;
 
@@ -100,7 +104,7 @@ public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
         for(Map.Entry<String,String> entry:templateCache.entrySet()){
             if(entry.getKey().contains("_callback")){
                 String status = StringUtils.substringBefore(entry.getKey(), "_");
-                System.out.println("key:"+status+",value:"+entry.getValue());
+                logger.info("获取Action[{}]的Callback的模板,状态为:{},内容为:{}",action.getActionName(),status,entry.getValue());
                 callbackCache.put(status,entry.getValue());
             }
         }

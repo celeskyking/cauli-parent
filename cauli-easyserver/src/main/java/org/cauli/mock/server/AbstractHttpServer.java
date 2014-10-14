@@ -132,9 +132,6 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                 AbstractHttpAction action = (AbstractHttpAction) actionExcuter.invoke();
                 if(action!=null){
                     action.setParametersModel(pairs);
-                    if(action.getActionInfo().isUseTemplate()){
-                        action.load();
-                    }
                     return action;
                 }else{
                     return null;
@@ -145,6 +142,9 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
             AbstractHttpAction action= this.mockActionUriMapping.get(uri);
             if(action!=null){
                 action.setParametersModel(pairs);
+                if(action.getActionInfo().isUseTemplate()||action.getActionInfo().isUseCallbackTemplate()){
+                    action.load();
+                }
                 return action;
             }else{
                 return null;
@@ -170,7 +170,6 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
     @Override
     public void start() throws Exception {
         if(getServerStatus()!=ServerStatus.START){
-
             if(getPort()==-1){
                 throw new RuntimeException(this.serverInfo.getServerName()+"端口号未设置");
             }
@@ -184,7 +183,6 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
             logger.info("启动HttpServer[{}],端口为:{}",serverInfo.getServerName(),serverInfo.getPort());
             this.serverInfo.setStatus(ServerStatus.START);
         }
-
     }
 
     @Override
@@ -195,7 +193,6 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
             this.serverInfo.setStatus(ServerStatus.STOP);
             logger.info("关闭Server:{}",getServerName());
         }
-
     }
 
     @Override
@@ -273,7 +270,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                             }
                         }
                         action.setServer(this);
-                        if(action.getActionInfo().isUseTemplate()){
+                        if(action.getActionInfo().isUseTemplate()||action.getActionInfo().isUseCallbackTemplate()){
                             action.load();
                         }
                         if(StringUtil.isEmpty(action.getActionName())){

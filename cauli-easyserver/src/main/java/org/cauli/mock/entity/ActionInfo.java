@@ -18,6 +18,7 @@ public class ActionInfo implements Serializable{
     private String returnStatus=Constant.DEFAULT_RETURN_STATUS;
     private long timeoutMS;
     private boolean isUseTemplate=Constant.IS_USE_TEMPLATE;
+    private boolean isUseCallbackTemplate = Constant.IS_USE_CALLBACK_TEMPLATE;
     private String requestUri;
     private boolean isUseMessage=false;
 
@@ -96,5 +97,13 @@ public class ActionInfo implements Serializable{
 
     public void setCallbackInfo(CallbackInfo callbackInfo) {
         this.callbackInfo = callbackInfo;
+    }
+
+    public boolean isUseCallbackTemplate() {
+        return isUseCallbackTemplate;
+    }
+
+    public void setUseCallbackTemplate(boolean isUseCallbackTemplate) {
+        this.isUseCallbackTemplate = isUseCallbackTemplate;
     }
 }

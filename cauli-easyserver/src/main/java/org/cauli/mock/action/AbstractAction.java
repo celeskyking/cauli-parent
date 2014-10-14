@@ -175,16 +175,16 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
         runParameterConfigs();
         actionInfo.setReturnStatus(process(request,parametersModel.getContext()));
         if(getActionInfo().isUseTemplate()){
-            logger.info("请求的模板状态为:{}",getReturnStatus());
+            logger.info("[{}:{}]请求的模板状态为:{}",getServerName(),getActionName(),getReturnStatus());
             String content= TemplateParseUtil.getInstance().toString(getParametersModel().getContext().getValues(),getTemplateValue(getReturnStatus()));
             if(!getActionInfo().getTemplateEncoding().equalsIgnoreCase("utf-8")){
                 content= IOUtils.toString(IOUtils.toInputStream(content, getActionInfo().getTemplateEncoding()));
             }
-            logger.info("获取的Template的值:{}", content);
+            logger.info("[{}:{}]获取的Template的值:{}",getServerName(),getActionName(), content);
             setTemplateValue(content);
         }
         runTemplateConfig();
-        logger.info("响应设置timeout时间:{}", getActionInfo().getTimeoutMS());
+        logger.info("[{}:{}]响应设置timeout时间:{}",getServerName(),getActionName(), getActionInfo().getTimeoutMS());
         Thread.sleep(getActionInfo().getTimeoutMS()==0?0:getActionInfo().getTimeoutMS());
         return getParametersModel().getTemplateValue();
     }
@@ -241,9 +241,9 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
 
     @Override
     public void addTemplate(String returnStatus, String content) {
-        logger.info("增加状态:{}",returnStatus);
+        logger.info("[{}:{}]增加状态:{}",getServerName(),getActionName(),returnStatus);
         String templateName = getTemplateName(returnStatus);
-        logger.info("增加模板:{}",templateName);
+        logger.info("[{}:{}]增加模板:{}",getServerName(),getActionName(),templateName);
         this.sourceEngine.createTemplate(returnStatus,content);
     }
 
@@ -303,7 +303,7 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
                 }
             }else if(method.isAnnotationPresent(CallBack.class)){
                 if(method.getReturnType()!=List.class){
-                    throw new RuntimeException("CallBack注解的方法返回值只能够是List类型(Http和Socket返回List<String>类型)");
+                    throw new RuntimeException(getServerName()+":"+getActionName()+":CallBack注解的方法返回值只能够是List类型(Http和Socket返回List<String>类型)");
                 }
                 CallBack back = method.getAnnotation(CallBack.class);
                 String name =back.value();
@@ -316,10 +316,12 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
         List<V> result = Lists.newArrayList();
         Method method = callbacks.get(name);
         if(method==null){
-            throw new RuntimeException("找不到该名字["+name+"]的Callback方法");
+            throw new RuntimeException("["+getServerName()+":"+getActionName()+"]"+"找不到该名字["+name+"]的Callback方法");
         }
         ActionExecuter executer = new ActionExecuter(callbacks.get(name),parametersModel,this);
-        result.addAll((List<V>) executer.invoke());
+        List<V> callbackResult = (List<V>) executer.invoke();
+        logger.info("[{}:{}]得到的callback的内容:{}",getServerName(),getActionName(),callbackResult);
+        result.addAll(callbackResult);
         return result;
     }
 
@@ -328,7 +330,7 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
         try {
             Thread.sleep(seconds*1000);
         } catch (InterruptedException e) {
-            logger.warn("delay 被打断...");
+            logger.warn("[{}:{}]delay 被打断...",getServerName(),getActionName());
         }
     }
 
@@ -349,7 +351,7 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
         try{
             return TemplateParseUtil.getInstance().toString(parametersModel.getContext().getValues(),getCallbackTemplateValue());
         }catch (Exception e){
-            logger.error("获取callback的模板内容出错",e);
+            logger.error("[{}:"+getActionName()+"]"+"获取callback的模板内容出错",getServerName(),e);
             return null;
         }
 
@@ -359,9 +361,9 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
             Constructor constructor=clazz.getConstructor(MockAction.class);
             return (TemplateSourceEngine) constructor.newInstance(this);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException("加载模板运行器的时候出现了错误,构造方法只能够有一个参数MockAction.class,class:"+clazz.getName(),e);
+            throw new RuntimeException(getServerName()+":"+getActionName()+"加载模板运行器的时候出现了错误,构造方法只能够有一个参数MockAction.class,class:"+clazz.getName(),e);
         } catch (Exception e) {
-            throw new RuntimeException("构造模板运行期的时候出现了系统异常",e);
+            throw new RuntimeException(getServerName()+":"+getActionName()+"构造模板运行期的时候出现了系统异常",e);
         }
     }
 

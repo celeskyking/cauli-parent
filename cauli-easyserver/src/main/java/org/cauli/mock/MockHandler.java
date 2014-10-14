@@ -76,11 +76,11 @@ public class MockHandler implements HttpHandler {
         logger.info("请求的body:{}",request.body());
         if(request.method().equalsIgnoreCase("get")){
             for(String key:request.queryParamKeys()){
-                logger.info("key:{}, value:{}",key,request.queryParam(key));
+                logger.info("get方法请求参数:key:{}, value:{}",key,request.queryParam(key));
             }
         }else{
             for(String key:request.postParamKeys()){
-                logger.info("key:{}, value:{}",key,request.postParam(key));
+                logger.info("post方法请求参数:key:{}, value:{}",key,request.postParam(key));
             }
         }
     }
@@ -96,7 +96,7 @@ public class MockHandler implements HttpHandler {
         action.setRequest(request);
         action.setResponse(httpResponse);
         String responseContent =  action.build();
-        logger.info("响应内容为:{}",responseContent);
+        logger.info("[{}:{}]响应内容为:{}",action.getServerName(),action.getActionName(),responseContent);
         httpResponse.content(responseContent).end();
         if(action.getActionInfo().isUseMessage()){
             new Runnable() {
