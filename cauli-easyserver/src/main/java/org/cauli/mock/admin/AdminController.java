@@ -31,6 +31,7 @@ public class AdminController extends Controller {
     AdminService service = new AdminServiceImpl();
 
     private JSONObject saveJSONObject(String body){
+        logger.info("请求的json:{}",body);
         try{
             JSONObject jsonObject = JSON.parseObject(body);
             if(jsonObject==null){

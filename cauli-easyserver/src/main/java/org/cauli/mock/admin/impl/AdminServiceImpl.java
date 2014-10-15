@@ -174,13 +174,16 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String startServer(String serverName) {
+
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
             return serverNotFountErrorMsg(serverName);
         }
         try {
             server.start();
+            logger.info("启动Server:{}成功",serverName);
         } catch (Exception e) {
+            logger.error("启动Server:{}失败",serverName);
             return serverStartErrorMsg();
         }
         return successMsg();
@@ -190,9 +193,11 @@ public class AdminServiceImpl implements AdminService {
     public String stopServer(String serverName) {
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("停止Server:{}失败,Server不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         server.stop();
+        logger.info("停止Server:{}成功",serverName);
         return successMsg();
     }
 
@@ -205,115 +210,148 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String updateActionRetureStatus(String serverName, String actionName, String returnStatus) {
+        logger.info("更新Action的returnStatus----Server:{},action:{},returnStatus:{}",serverName,actionName,returnStatus);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新returnStatus失败,server:{}不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新returnStatus失败,action:{}不存在",actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().setReturnStatus(returnStatus);
+        logger.info("更新returnStatus成功,ServerName:{},actionName:{},returnStatus:{}",serverName,actionName,returnStatus);
         return successMsg();
     }
 
     @Override
     public String updateActionTemplateValue(String serverName, String actionName, String returnStatus, String templateValue) {
+        logger.info("更新Action的TemplateValue----Server:{},action:{},returnStatus:{},returnStatus:{}",serverName,actionName,returnStatus,templateValue);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新templateValue失败,server:{}不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新templateValue失败,server:{}不存在",actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.updateTemplateValue(returnStatus,templateValue);
+        logger.info("更新template成功,ServerName:{},actionName:{},returnStatus:{}",serverName,actionName,returnStatus);
         return successMsg();
     }
 
     @Override
     public String updateActionTimeOutMS(String serverName, String actionName, long timeoutMS) {
+        logger.info("更新TimeOutMS属性,server:{},action:{}",serverName,actionName);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新TimeOutMS失败,server:{}不存在。",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新TimeOutMS失败,action:{}不存在",actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().setTimeoutMS(timeoutMS);
+        logger.info("更新TimeOutMS成功,server:{},action:{}",serverName,actionName);
         return successMsg();
     }
 
     @Override
     public String updateActionIsUseTemplate(String serverName, String actionName, boolean isUseTemplate) {
+        logger.info("更新isUseTemplate,server:{},action:{},isUseTemplate:{}",serverName,actionName,isUseTemplate);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新isUseTemplate失败,server:{}不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新isUseTemplate失败,action:{}不存在",actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().setUseTemplate(isUseTemplate);
+        logger.info("更新isUseTemplate成功,server:{},action:{}",serverName,actionName);
         return successMsg();
     }
 
     @Override
     public String updateActionIsUseMessage(String serverName, String actionName, boolean isUseMessage) {
+        logger.info("更新isUseMessage,server:{},action:{},isUseTemplate:{}",serverName,actionName,isUseMessage);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新isUseMessage败,server:{}不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新isUseMessage失败,action:{}不存在",actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().setUseMessage(isUseMessage);
+        logger.info("更新isUseMessage成功,server:{},action:{}",serverName,actionName);
         return successMsg();
     }
 
     @Override
     public String updateActionTemplateEncoding(String serverName, String actionName, String templateEncoding) {
+        logger.info("更新ActionTemplateEncodign,server:{},action:{},templateEncoding:{}",serverName,actionName,templateEncoding);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新ActionTemplateEncoding失败,server:{}不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新ActionTemplateEncoding失败,action:{}不存在",actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().setTemplateEncoding(templateEncoding);
+        logger.info("更新ActionTemplateEncoding成功,server:{},action:{}",serverName,actionName);
         return successMsg();
     }
 
     @Override
     public String doCallback(String serverName, String actionName,String callbackName) {
+        logger.info("调用异步通知,server:{},action:{}",serverName,actionName);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("调用异步通知失败,server:{}不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("调用异步通知失败,action:{}不存在",serverName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         Object result;
         try {
             result=action.callback(callbackName);
         } catch (ActionExecuteException e) {
+            logger.error("callback方法调用错误。server:"+serverName+",action:"+actionName,e);
             return errorCallbackResult();
         }
+        logger.info("调用callback成功,server:{},action:{}",serverName,actionName);
         return successCallbackResult(result);
     }
 
     @Override
     public String updateActionCallBackUrl(String serverName, String actionName, String callbackUrl) {
+        logger.info("更新callbackUrl,server:{},action:{},callbackUrl:{}",serverName,actionName,callbackUrl);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新callbackUrl失败,server不存在。",serverName);
             return serverNotFountErrorMsg(serverName);
         }
+
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新callbackUrl失败,action不存在",actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         if(server.getServerInfo().getProtocol()==ServerProtocol.HTTP){
@@ -324,17 +362,21 @@ public class AdminServiceImpl implements AdminService {
             action.getActionInfo().getCallbackInfo().socket.setHost(host);
             action.getActionInfo().getCallbackInfo().socket.setPort(port);
         }
+        logger.info("更新callbackUrl成功,server:{},action:{}",serverName,actionName);
         return successMsg();
     }
 
     @Override
     public String updateActionCallBackReturnStatus(String serverName, String actionName, String callbackReturnStatus) {
+        logger.info("更新callbackReturnStatus,server:{},action:{}");
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
+            logger.error("更新callbackReturnStatus失败,server:{}不存在",serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
+            logger.error("更新callbackReturnStatus失败,action:{}不存在",serverName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().getCallbackInfo().setReturnStatus(callbackReturnStatus);
