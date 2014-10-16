@@ -89,6 +89,15 @@ public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
     }
 
     @Override
+    public void updateCallbackTemplate(String status, String templateValue) {
+        String key = status +"_callback";
+        if (templateCache.containsKey(key)){
+            templateCache.remove(key);
+        }
+        templateCache.put(key,templateValue);
+    }
+
+    @Override
     public void deleteTemplate(String status) {
         templateCache.remove(status);
     }

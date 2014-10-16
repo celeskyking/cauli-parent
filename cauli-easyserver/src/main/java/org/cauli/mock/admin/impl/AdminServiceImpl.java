@@ -183,7 +183,7 @@ public class AdminServiceImpl implements AdminService {
             server.start();
             logger.info("启动Server:{}成功",serverName);
         } catch (Exception e) {
-            logger.error("启动Server:{}失败",serverName);
+            logger.error("启动Server:{}失败", serverName);
             return serverStartErrorMsg();
         }
         return successMsg();
@@ -193,7 +193,7 @@ public class AdminServiceImpl implements AdminService {
     public String stopServer(String serverName) {
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
-            logger.error("停止Server:{}失败,Server不存在",serverName);
+            logger.error("停止Server:{}失败,Server不存在", serverName);
             return serverNotFountErrorMsg(serverName);
         }
         server.stop();
@@ -249,12 +249,12 @@ public class AdminServiceImpl implements AdminService {
         logger.info("更新TimeOutMS属性,server:{},action:{}",serverName,actionName);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
-            logger.error("更新TimeOutMS失败,server:{}不存在。",serverName);
+            logger.error("更新TimeOutMS失败,server:{}不存在。", serverName);
             return serverNotFountErrorMsg(serverName);
         }
         MockAction action = server.getAction(actionName);
         if(action==null){
-            logger.error("更新TimeOutMS失败,action:{}不存在",actionName);
+            logger.error("更新TimeOutMS失败,action:{}不存在", actionName);
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().setTimeoutMS(timeoutMS);
@@ -345,7 +345,7 @@ public class AdminServiceImpl implements AdminService {
         logger.info("更新callbackUrl,server:{},action:{},callbackUrl:{}",serverName,actionName,callbackUrl);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
-            logger.error("更新callbackUrl失败,server不存在。",serverName);
+            logger.error("更新callbackUrl失败,server不存在。", serverName);
             return serverNotFountErrorMsg(serverName);
         }
 
@@ -368,7 +368,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String updateActionCallBackReturnStatus(String serverName, String actionName, String callbackReturnStatus) {
-        logger.info("更新callbackReturnStatus,server:{},action:{}");
+        logger.info("更新callbackReturnStatus,server:{},action:{} 的值为:{}",serverName,actionName,callbackReturnStatus);
         MockServer server = ServerBuilder.getInstance().getServer(serverName);
         if(server==null){
             logger.error("更新callbackReturnStatus失败,server:{}不存在",serverName);
@@ -380,6 +380,23 @@ public class AdminServiceImpl implements AdminService {
             return actionNotFountErrorMsg(serverName,actionName);
         }
         action.getActionInfo().getCallbackInfo().setReturnStatus(callbackReturnStatus);
+        return successMsg();
+    }
+
+    @Override
+    public String updateActionCallBackTemplate(String serverName, String actionName,String returnStatus, String callbackTemplate) {
+        logger.info("更新callbackTemplate,server:{},action:{},returnStatus:{}",serverName,actionName,returnStatus);
+        MockServer server = ServerBuilder.getInstance().getServer(serverName);
+        if(server==null){
+            logger.error("更新callbackTemplate失败,server:{}不存在",serverName);
+            return serverNotFountErrorMsg(serverName);
+        }
+        MockAction action = server.getAction(actionName);
+        if(action==null){
+            logger.error("更新callbackTemplate失败,action:{}不存在",serverName);
+            return actionNotFountErrorMsg(serverName,actionName);
+        }
+        action.updateCallbackTemplateValue(returnStatus,callbackTemplate);
         return successMsg();
     }
 

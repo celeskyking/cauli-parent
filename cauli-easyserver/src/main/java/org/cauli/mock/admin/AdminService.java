@@ -54,4 +54,6 @@ public interface AdminService {
     public String updateActionCallBackUrl(String serverName,String action,String callbackUrl);
 
     public String updateActionCallBackReturnStatus(String serverName,String action,String callbackReturnStatus);
+
+    public String updateActionCallBackTemplate(String serverName,String action,String returnStatus ,String callbackTemplate);
 }

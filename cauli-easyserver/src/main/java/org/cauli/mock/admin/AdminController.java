@@ -380,6 +380,17 @@ public class AdminController extends Controller {
                 return;
             }
             renderJson(service.updateActionCallBackReturnStatus(serverName,actionName,status));
+        }else if("callbackTemplate".equalsIgnoreCase(configParam)){
+            String callbackTemplate = getCallbackReturnStatus(jsonObject);
+            String callbackReturnStatus = getCallbackReturnStatus(jsonObject);
+            logger.info("更新Server:{},action:{}的callbackTemplate为:{}",serverName,actionName,callbackTemplate);
+            params.put("callbackTemplate",callbackTemplate);
+            params.put("callbackReturnStatus",callbackReturnStatus);
+            boolean check =checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionCallBackTemplate(serverName,actionName,callbackReturnStatus,callbackTemplate));
         }else{
             logger.error("未查询到该属性值:{}",configParam);
             DefaultResponse response = new DefaultResponse();
@@ -483,6 +494,10 @@ public class AdminController extends Controller {
 
     private String getCallbackReturnStatus(JSONObject jsonObject){
         return jsonObject.getString("callbackReturnStatus");
+    }
+
+    private String getCallbackTemplate(JSONObject jsonObject){
+        return jsonObject.getString("callbackTemplate");
     }
 
 

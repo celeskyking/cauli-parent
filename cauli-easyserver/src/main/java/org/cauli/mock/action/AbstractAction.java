@@ -414,7 +414,8 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
         this.sourceEngine.updateTemplate(returnStatus,value);
     }
 
-
-
-
+    @Override
+    public void updateCallbackTemplateValue(String returnStatus, String value) {
+        this.sourceEngine.updateCallbackTemplate(returnStatus,value);
+    }
 }

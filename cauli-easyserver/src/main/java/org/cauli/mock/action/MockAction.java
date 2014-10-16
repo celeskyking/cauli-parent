@@ -52,6 +52,8 @@ public interface MockAction<T,V,K> {
 
     public void updateTemplateValue(String returnStatus,String value);
 
+    public void updateCallbackTemplateValue(String returnStatus,String value);
+
     public List<K> callback(String name) throws ActionExecuteException;
 
 

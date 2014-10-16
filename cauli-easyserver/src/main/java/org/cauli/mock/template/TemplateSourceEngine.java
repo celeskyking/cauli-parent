@@ -20,6 +20,8 @@ public interface TemplateSourceEngine {
 
     public void updateTemplate(String status,String templateValue);
 
+    public void updateCallbackTemplate(String status,String templateValue);
+
     public void deleteTemplate(String status);
 
     public Map<String,String> getActionTemplates();
