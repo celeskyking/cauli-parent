@@ -423,6 +423,26 @@ public class AdminController extends Controller {
         renderJson(service.doCallback(serverName,actionName,callbackName));
     }
 
+    @Path(value = "/action/callbacks",methods = HttpMethod.POST)
+    public void getCallbacks(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String actionName =getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.getCallbacksofAction(serverName,actionName));
+    }
+
     //--------------private methods---------------
 
     private String getServerName(JSONObject jsonObject){

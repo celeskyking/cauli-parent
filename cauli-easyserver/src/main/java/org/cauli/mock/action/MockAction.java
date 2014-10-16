@@ -8,6 +8,7 @@ import org.cauli.mock.server.MockServer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by tianqing.wang on 2014/7/4
@@ -55,6 +56,8 @@ public interface MockAction<T,V,K> {
     public void updateCallbackTemplateValue(String returnStatus,String value);
 
     public List<K> callback(String name) throws ActionExecuteException;
+
+    public Set<String> getAllCallbacks();
 
 
 

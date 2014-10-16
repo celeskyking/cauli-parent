@@ -400,6 +400,18 @@ public class AdminServiceImpl implements AdminService {
         return successMsg();
     }
 
+    @Override
+    public String getCallbacksofAction(String serverName, String actionName) {
+        logger.info("获取Action的Callbacks,serverName:{},actionName:{}",serverName,actionName);
+        MockAction action = getAction(serverName,actionName);
+        if(action==null){
+            return actionNotFountErrorMsg(serverName,actionName);
+        }
+        String content =JSON.toJSONString(action.getAllCallbacks());
+        logger.info("获取的callbacks:{}",content);
+        return content;
+    }
+
 
     private String errorMsg(){
         DefaultResponse response= new DefaultResponse();

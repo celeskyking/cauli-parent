@@ -313,16 +313,16 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     }
 
     public List<V> callback(String name) throws ActionExecuteException {
-        List<V> result = Lists.newArrayList();
-        Method method = callbacks.get(name);
-        if(method==null){
-            throw new RuntimeException("["+getServerName()+":"+getActionName()+"]"+"找不到该名字["+name+"]的Callback方法");
-        }
-        ActionExecuter executer = new ActionExecuter(callbacks.get(name),parametersModel,this);
-        List<V> callbackResult = (List<V>) executer.invoke();
-        logger.info("[{}:{}]得到的callback的内容:{}",getServerName(),getActionName(),callbackResult);
-        result.addAll(callbackResult);
-        return result;
+            List<V> result = Lists.newArrayList();
+            Method method = callbacks.get(name);
+            if(method==null){
+                throw new RuntimeException("["+getServerName()+":"+getActionName()+"]"+"找不到该名字["+name+"]的Callback方法");
+            }
+            ActionExecuter executer = new ActionExecuter(callbacks.get(name),parametersModel,this);
+            List<V> callbackResult = (List<V>) executer.invoke();
+            logger.info("[{}:{}]得到的callback的内容:{}",getServerName(),getActionName(),callbackResult);
+            result.addAll(callbackResult);
+            return result;
     }
 
 
@@ -354,8 +354,8 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
             logger.error("[{}:"+getActionName()+"]"+"获取callback的模板内容出错",getServerName(),e);
             return null;
         }
-
     }
+
     private TemplateSourceEngine checkTemplateSourceEngineClass(Class<? extends TemplateSourceEngine> clazz){
         try {
             Constructor constructor=clazz.getConstructor(MockAction.class);
@@ -407,6 +407,10 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     @Override
     public void addContext(KeyValueStore store) {
         this.parametersModel.getContext().addContext(store.getKey(),store.getValue());
+    }
+
+    public Set<String> getAllCallbacks(){
+        return callbacks.keySet();
     }
 
     @Override
