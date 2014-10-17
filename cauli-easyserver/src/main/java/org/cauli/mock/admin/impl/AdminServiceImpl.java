@@ -112,6 +112,22 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public String getCallbackTemplateValue(String serverName, String actionName, String returnStatus) {
+        logger.info("获取callback的模板信息:serverName:{},actionName:{],callbackReturnStatus:{}",serverName,actionName,returnStatus);
+        MockAction action = getAction(serverName,actionName);
+        if(action==null){
+            return actionNotFountErrorMsg(serverName,actionName);
+        }
+        String value =  action.getCallbackTemplateValue(returnStatus);
+        if(StringUtils.isEmpty(value)){
+            logger.warn("模板内容为空");
+        }else{
+            logger.info("模板内容为:{}",value);
+        }
+        return value;
+    }
+
+    @Override
     public String getActionRetureStatus(String serverName, String actionName) {
         logger.info("获取Action的模板Status:serverName:{},actionName:{}",serverName,actionName);
         MockAction action = getAction(serverName,actionName);
@@ -408,6 +424,18 @@ public class AdminServiceImpl implements AdminService {
             return actionNotFountErrorMsg(serverName,actionName);
         }
         String content =JSON.toJSONString(action.getAllCallbacks());
+        logger.info("获取的callbacks:{}",content);
+        return content;
+    }
+
+    @Override
+    public String getCallbackReturnStatuses(String serverName, String actionName) {
+        logger.info("获取Action的CallbackReturnStatus,serverName:{},actionName:{}",serverName,actionName);
+        MockAction action = getAction(serverName,actionName);
+        if(action==null){
+            return actionNotFountErrorMsg(serverName,actionName);
+        }
+        String content =JSON.toJSONString(action.getCallbackReturnStatuses());
         logger.info("获取的callbacks:{}",content);
         return content;
     }

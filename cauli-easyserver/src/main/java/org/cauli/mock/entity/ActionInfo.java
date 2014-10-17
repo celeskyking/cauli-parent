@@ -17,10 +17,10 @@ public class ActionInfo implements Serializable{
     private String actionName;
     private String returnStatus=Constant.DEFAULT_RETURN_STATUS;
     private long timeoutMS;
-    private boolean isUseTemplate=Constant.IS_USE_TEMPLATE;
-    private boolean isUseCallbackTemplate = Constant.IS_USE_CALLBACK_TEMPLATE;
+    private boolean useTemplate=Constant.IS_USE_TEMPLATE;
+    private boolean useCallbackTemplate = Constant.IS_USE_CALLBACK_TEMPLATE;
     private String requestUri;
-    private boolean isUseMessage=false;
+    private boolean useMessage=false;
 
     private CallbackInfo callbackInfo=new CallbackInfo();
 
@@ -60,11 +60,11 @@ public class ActionInfo implements Serializable{
 
 
     public boolean isUseTemplate() {
-        return isUseTemplate;
+        return useTemplate;
     }
 
     public void setUseTemplate(boolean isUseTemplate) {
-        this.isUseTemplate = isUseTemplate;
+        this.useTemplate = isUseTemplate;
     }
 
     public Class<? extends TemplateSourceEngine> getTemplateSourceLoaderClass() {
@@ -88,11 +88,11 @@ public class ActionInfo implements Serializable{
     }
 
     public boolean isUseMessage() {
-        return isUseMessage;
+        return useMessage;
     }
 
     public void setUseMessage(boolean isUseMessage) {
-        this.isUseMessage = isUseMessage;
+        this.useMessage = isUseMessage;
     }
 
     public void setCallbackInfo(CallbackInfo callbackInfo) {
@@ -100,10 +100,10 @@ public class ActionInfo implements Serializable{
     }
 
     public boolean isUseCallbackTemplate() {
-        return isUseCallbackTemplate;
+        return useCallbackTemplate;
     }
 
     public void setUseCallbackTemplate(boolean isUseCallbackTemplate) {
-        this.isUseCallbackTemplate = isUseCallbackTemplate;
+        this.useCallbackTemplate = isUseCallbackTemplate;
     }
 }

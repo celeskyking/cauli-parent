@@ -422,4 +422,9 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     public void updateCallbackTemplateValue(String returnStatus, String value) {
         this.sourceEngine.updateCallbackTemplate(returnStatus,value);
     }
+
+    @Override
+    public Set<String> getCallbackReturnStatuses() {
+        return this.sourceEngine.getCallbackTemplates().keySet();
+    }
 }

@@ -17,7 +17,7 @@ public class ServerInfo implements Serializable{
     private String keyStorePassword;
     private String keyPassword;
     private String ServerName;
-    private boolean isAsyn;
+    private boolean asyn;
     private int port=Constant.DEFAULT_PORT;
     private ServerStatus status;
     private ServerInitStatus initStatus=Constant.DEFAULT_INIT_STATUS;
@@ -28,11 +28,11 @@ public class ServerInfo implements Serializable{
     private String requestEncoding=Constant.DEFAULT_REQUEST_ENCODING;
 
     public boolean isAsyn() {
-        return isAsyn;
+        return asyn;
     }
 
     public void setAsyn(boolean isAsyn) {
-        this.isAsyn = isAsyn;
+        this.asyn = isAsyn;
     }
 
     public ServerStatus getStatus() {
@@ -121,7 +121,7 @@ public class ServerInfo implements Serializable{
             .append("],keyStorePassword=[").append(keyStorePassword)
             .append("],keyPassword=[").append(keyPassword)
             .append("],serverName=[").append(ServerName)
-            .append("],isAysn=[").append(isAsyn)
+            .append("],asyn=[").append(asyn)
             .append("],status=[").append(status)
             .append("],initStatus=[").append(initStatus)
             .append("],protocol=[").append(protocol)

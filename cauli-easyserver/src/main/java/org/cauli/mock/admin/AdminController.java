@@ -138,6 +138,29 @@ public class AdminController extends Controller {
         renderText(service.getTemplateValue(serverName, actionName, returnStatus));
     }
 
+
+    @Path(value = "/action/callback/template",methods = HttpMethod.POST)
+    public void getCallbackTemplateValue(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String serverName = getServerName(jsonObject);
+        String actionName = getActionName(jsonObject);
+        String returnStatus = getCallbackReturnStatus(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("serverName",serverName);
+        params.put("actionName",actionName);
+        params.put("callbackReturnStatus",returnStatus);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderText(service.getTemplateValue(serverName, actionName, returnStatus));
+    }
+
     @Path(value = "/action/statuses",methods = HttpMethod.POST)
     public void getActionRetureStatus(){
         String body = body();
@@ -353,6 +376,15 @@ public class AdminController extends Controller {
                 return;
             }
             renderJson(service.updateActionIsUseTemplate(serverName,actionName,isUseTemplate));
+        }else if("isUseCallbackTemplate".equalsIgnoreCase(configParam)){
+            boolean isUseTemplate = getIsUseTemplate(jsonObject);
+            logger.info("更新Server:{},action:{}的isUseTemplate为:{}",serverName,actionName,isUseTemplate);
+            params.put("isUseTemplate",isUseTemplate);
+            boolean check = checkJSONParams(params);
+            if(!check){
+                return;
+            }
+            renderJson(service.updateActionIsUseTemplate(serverName,actionName,isUseTemplate));
         }else if("isUseMessage".equalsIgnoreCase(configParam)){
             boolean isUseMessage = getIsUseMessage(jsonObject);
             logger.info("更新Server:{},action:{}的isUseMessage为:{}",serverName,actionName,isUseMessage);
@@ -381,7 +413,7 @@ public class AdminController extends Controller {
             }
             renderJson(service.updateActionCallBackReturnStatus(serverName,actionName,status));
         }else if("callbackTemplate".equalsIgnoreCase(configParam)){
-            String callbackTemplate = getCallbackReturnStatus(jsonObject);
+            String callbackTemplate = getCallbackTemplate(jsonObject);
             String callbackReturnStatus = getCallbackReturnStatus(jsonObject);
             logger.info("更新Server:{},action:{}的callbackTemplate为:{}",serverName,actionName,callbackTemplate);
             params.put("callbackTemplate",callbackTemplate);
@@ -423,6 +455,28 @@ public class AdminController extends Controller {
         renderJson(service.doCallback(serverName,actionName,callbackName));
     }
 
+    @Path(value = "/action/callback/template",methods = HttpMethod.POST)
+    public void callbackTemplate(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String actionName =getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        String callbackReturnStatus = getCallbackReturnStatus(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        params.put("callbackReturnStatus",callbackReturnStatus);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.getCallbackTemplateValue(serverName,actionName,callbackReturnStatus));
+    }
+
     @Path(value = "/action/callbacks",methods = HttpMethod.POST)
     public void getCallbacks(){
         String body = body();
@@ -441,6 +495,26 @@ public class AdminController extends Controller {
             return;
         }
         renderJson(service.getCallbacksofAction(serverName,actionName));
+    }
+
+    @Path(value = "/action/callback/statuses",methods = HttpMethod.POST)
+    public void getCallbackReturnStatuses(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String actionName =getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.getCallbackReturnStatuses(serverName,actionName));
     }
 
     //--------------private methods---------------
@@ -500,6 +574,10 @@ public class AdminController extends Controller {
         return jsonObject.getBoolean("isUseTemplate");
     }
 
+    private boolean getIsUseCallbackTemplate(JSONObject jsonObject){
+        return jsonObject.getBoolean("isUseCallbackTemplate");
+    }
+
     private boolean getIsUseMessage(JSONObject jsonObject){
         return jsonObject.getBoolean("isUseMessage");
     }
@@ -549,7 +627,5 @@ public class AdminController extends Controller {
         }
         return true;
     }
-
-
 
 }

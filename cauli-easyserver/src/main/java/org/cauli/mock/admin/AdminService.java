@@ -21,6 +21,8 @@ public interface AdminService {
 
     public String getTemplateValue(String serverName,String actionName,String returnStatus);
 
+    public String getCallbackTemplateValue(String serverName,String actionName,String returnStatus);
+
     public String getActionRetureStatus(String serverName,String actionName);
 
     public String createServer(ServerStyle serverStyle,String serverName,int port,ServerInitStatus initStatus);
@@ -58,4 +60,6 @@ public interface AdminService {
     public String updateActionCallBackTemplate(String serverName,String action,String returnStatus ,String callbackTemplate);
 
     public String getCallbacksofAction(String serverName,String actionName);
+
+    public String getCallbackReturnStatuses(String serverName,String actionName);
 }

@@ -59,6 +59,8 @@ public interface MockAction<T,V,K> {
 
     public Set<String> getAllCallbacks();
 
+    public Set<String> getCallbackReturnStatuses();
+
 
 
 
