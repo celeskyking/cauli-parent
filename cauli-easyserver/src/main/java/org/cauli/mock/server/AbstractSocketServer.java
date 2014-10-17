@@ -161,12 +161,15 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
                 if(!Modifier.isStatic(field.getModifiers())
                         && ClassUtils.isAssignableFromSubClass(AbstractSocketAction.class, field.getType())){
                     AbstractSocketAction action = (AbstractSocketAction) field.get(this);
-                    logger.info("Server:{} 添加:Action: {}", serverInfo.getServerName(), action.getActionName());
+                    logger.info("Server:[{}]扫描到Action: {}", serverInfo.getServerName(), action.getActionName());
                     if(StringUtil.isEmpty(action.getActionName())){
                         action.getActionInfo().setActionName(field.getName());
-                        action.load();
                     }
                     action.setServer(this);
+                    if(action.getActionInfo().isUseTemplate()||action.getActionInfo().isUseCallbackTemplate()){
+                        action.load();
+                    }
+
                     actionMap.put(action.getActionName(),action);
                 }
             }

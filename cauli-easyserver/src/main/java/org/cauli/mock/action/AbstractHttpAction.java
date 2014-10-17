@@ -8,6 +8,8 @@ import org.cauli.server.HttpMethod;
 import org.cauli.server.HttpRequest;
 import org.cauli.server.HttpResponse;
 import org.dom4j.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
@@ -17,6 +19,8 @@ import java.util.Map;
  * Created by tianqing.wang on 2014/8/14
  */
 public abstract class AbstractHttpAction extends AbstractAction<HttpRequest,String>{
+
+    private Logger logger = LoggerFactory.getLogger(AbstractHttpAction.class);
 
     private HttpResponse response;
 
@@ -85,7 +89,13 @@ public abstract class AbstractHttpAction extends AbstractAction<HttpRequest,Stri
     }
 
     public String xmlValue(String xpath){
-        return XMLUtil.getStringValue(requestToXml(),xpath);
+        try{
+            return XMLUtil.getStringValue(requestToXml(),xpath);
+        }catch (Exception e){
+            logger.error("未找到{}位置的xml元素",xpath);
+            return null;
+        }
+
     }
 
 

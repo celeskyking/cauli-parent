@@ -514,7 +514,7 @@ public class AdminServiceImpl implements AdminService {
         stores.add(new KeyValueStore("serverName",info.getServerName()));
         stores.add(new KeyValueStore("port",info.getPort()));
         if(info.getProtocol()==ServerProtocol.SOCKET){
-            stores.add(new KeyValueStore("isAync",info.isAsyn()));
+            stores.add(new KeyValueStore("aync",info.isAsyn()));
             stores.add(new KeyValueStore("requestEncoding",info.getRequestEncoding()));
             stores.add(new KeyValueStore("responseEncoding",info.getResponseEncoding()));
         }
@@ -538,9 +538,9 @@ public class AdminServiceImpl implements AdminService {
             stores.add(new KeyValueStore("callbackHost",action.getActionInfo().getCallbackInfo().socket.getHost()));
             stores.add(new KeyValueStore("callbackPort",action.getActionInfo().getCallbackInfo().socket.getPort()));
         }
-        stores.add(new KeyValueStore("isUseMessage",action.getActionInfo().isUseMessage()));
-        stores.add(new KeyValueStore("isUseTemplate",action.getActionInfo().isUseTemplate()));
-        stores.add(new KeyValueStore("isUseCallbackTemplate",action.getActionInfo().isUseCallbackTemplate()));
+        stores.add(new KeyValueStore("useMessage",action.getActionInfo().isUseMessage()));
+        stores.add(new KeyValueStore("useTemplate",action.getActionInfo().isUseTemplate()));
+        stores.add(new KeyValueStore("useCallbackTemplate",action.getActionInfo().isUseCallbackTemplate()));
         stores.add(new KeyValueStore("callbackReturnStatus",action.getActionInfo().getCallbackInfo().getReturnStatus()));
         return stores;
     }

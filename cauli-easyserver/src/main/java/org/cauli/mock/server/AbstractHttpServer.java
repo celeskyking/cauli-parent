@@ -276,6 +276,7 @@ public abstract class AbstractHttpServer implements MockServer<AbstractHttpActio
                         if(StringUtil.isEmpty(action.getActionName())){
                             action.getActionInfo().setActionName(field.getName());
                         }
+                        logger.info("Server:[{}]扫描到Action:{}",getServerName(),action.getActionName());
                         actionMap.put(action.getActionName(),action);
                         if(StringUtil.isNotEmpty(action.getRequestUri())){
                             this.mockActionUriMapping.put(action.getRequestUri(),action);

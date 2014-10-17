@@ -249,7 +249,11 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
 
     @Override
     public Map<String, String> getTemplateStatuses() {
-        return this.sourceEngine.getActionTemplates();
+        Map<String,String> map =  this.sourceEngine.getActionTemplates();
+        if(map==null||map.size()==0){
+            map.put("SUCCESS","");
+        }
+        return map;
     }
 
     @Override
