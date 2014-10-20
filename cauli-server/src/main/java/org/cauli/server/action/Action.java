@@ -19,6 +19,8 @@ public class Action {
 
     private ActionBuilder actionBuilder;
 
+    private String produce;
+
     private List<HttpMethod>  httpMethods;
 
 
@@ -28,6 +30,8 @@ public class Action {
         this.actionBuilder=new ActionBuilder(this);
         this.uriTemplate=this.actionBuilder.getUriTemplate();
         this.httpMethods=this.actionBuilder.getMethods();
+        this.produce=this.actionBuilder.getProduce();
+
     }
 
     public void setUriTemplate(String uriTemplate) {
@@ -48,6 +52,7 @@ public class Action {
     }
 
     public void invoke() throws Exception {
+        controller.produces(this.produce);
         method.invoke(controller);
     }
 

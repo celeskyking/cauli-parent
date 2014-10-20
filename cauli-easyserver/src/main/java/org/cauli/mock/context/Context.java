@@ -69,7 +69,11 @@ public class Context {
         Map<String,Object> values = Maps.newHashMap();
         Context context=this;
         while (context!=null){
-            values.putAll(context.getContextMap());
+            for(String key : context.getContextMap().keySet()){
+                if(!values.containsKey(key)){
+                    values.put(key,context.getContext(key));
+                }
+            }
             context=context.getParent();
         }
         return values;

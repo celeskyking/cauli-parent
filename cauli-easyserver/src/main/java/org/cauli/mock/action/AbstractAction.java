@@ -10,9 +10,7 @@ import org.cauli.common.instrument.ClassUtils;
 import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.common.keyvalue.KeyValueStores;
 import org.cauli.common.keyvalue.NormalSortComparator;
-import org.cauli.mock.CallbackMethod;
-import org.cauli.mock.CallbackPriorityComparator;
-import org.cauli.mock.ConfigType;
+import org.cauli.mock.*;
 import org.cauli.common.keyvalue.ValueHandler;
 import org.cauli.mock.annotation.Action;
 import org.cauli.mock.annotation.CallBack;
@@ -27,12 +25,14 @@ import org.cauli.mock.strategy.IStrategy;
 import org.cauli.mock.template.TemplateSourceEngine;
 import org.cauli.mock.util.CommonUtil;
 import org.cauli.mock.util.TemplateParseUtil;
+import org.cauli.server.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -41,6 +41,8 @@ import java.util.*;
 public abstract class AbstractAction<T,V> implements MockAction<String,ParametersModel,V>,IStrategy<T>{
 
     private TemplateSourceEngine sourceEngine;
+
+    private FixedSizeBox<ParametersModel> fixedSizeBox = new FixedSizeBox<ParametersModel>();
 
     private T request;
 
@@ -317,16 +319,16 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     }
 
     public List<V> callback(String name) throws ActionExecuteException {
-            List<V> result = Lists.newArrayList();
-            Method method = callbacks.get(name);
-            if(method==null){
-                throw new RuntimeException("["+getServerName()+":"+getActionName()+"]"+"找不到该名字["+name+"]的Callback方法");
-            }
-            ActionExecuter executer = new ActionExecuter(callbacks.get(name),parametersModel,this);
-            List<V> callbackResult = (List<V>) executer.invoke();
-            logger.info("[{}:{}]得到的callback的内容:{}",getServerName(),getActionName(),callbackResult);
-            result.addAll(callbackResult);
-            return result;
+        List<V> result = Lists.newArrayList();
+        Method method = callbacks.get(name);
+        if(method==null){
+            throw new RuntimeException("["+getServerName()+":"+getActionName()+"]"+"找不到该名字["+name+"]的Callback方法");
+        }
+        ActionExecuter executer = new ActionExecuter(callbacks.get(name),parametersModel,this);
+        List<V> callbackResult = (List<V>) executer.invoke();
+        logger.info("[{}:{}]得到的callback的内容:{}",getServerName(),getActionName(),callbackResult);
+        result.addAll(callbackResult);
+        return result;
     }
 
 
@@ -431,4 +433,32 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
     public Set<String> getCallbackReturnStatuses() {
         return this.sourceEngine.getCallbackTemplates().keySet();
     }
+
+    public synchronized void addRequestHistory(ParametersModel parametersModel){
+        String now =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        fixedSizeBox.add(new KeyValueStore(now,parametersModel));
+    }
+
+    public List<V> callback(String name,String date) throws ActionExecuteException {
+        ParametersModel model = fixedSizeBox.get(date);
+        List<V> result = Lists.newArrayList();
+        Method method = callbacks.get(name);
+        if(method==null){
+            throw new RuntimeException("["+getServerName()+":"+getActionName()+"]"+"找不到该名字["+name+"]的Callback方法");
+        }
+        ActionExecuter executer = new ActionExecuter(callbacks.get(name),model,this);
+        List<V> callbackResult = (List<V>) executer.invoke();
+        logger.info("[{}:{}]得到的callback的内容:{}",getServerName(),getActionName(),callbackResult);
+        result.addAll(callbackResult);
+        return result;
+    }
+
+
+    @Override
+    public List<String> getRequestHistoryDates() {
+        return this.fixedSizeBox.getKeys();
+    }
+
+
+
 }

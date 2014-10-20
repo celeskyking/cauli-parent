@@ -50,4 +50,13 @@ public class ActionBuilder {
         }
     }
 
+    public String getProduce(){
+        if(action.getMethod().isAnnotationPresent(Path.class)){
+            Path path = action.getMethod().getAnnotation(Path.class);
+            return path.produce();
+        }
+        return null;
+    }
+
+
 }

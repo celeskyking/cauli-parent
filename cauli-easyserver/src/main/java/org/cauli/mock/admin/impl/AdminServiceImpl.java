@@ -15,10 +15,7 @@ import org.cauli.mock.ServerProtocol;
 import org.cauli.mock.ServerStyle;
 import org.cauli.mock.action.MockAction;
 import org.cauli.mock.admin.AdminService;
-import org.cauli.mock.entity.ActionInfo;
-import org.cauli.mock.entity.CallbackResponse;
-import org.cauli.mock.entity.DefaultResponse;
-import org.cauli.mock.entity.ServerInfo;
+import org.cauli.mock.entity.*;
 import org.cauli.mock.exception.ActionExecuteException;
 import org.cauli.mock.server.MockServer;
 import org.cauli.mock.server.ServerFactory;
@@ -440,6 +437,28 @@ public class AdminServiceImpl implements AdminService {
         return content;
     }
 
+    @Override
+    public String getRequestHistoryKeys(String serverName, String actionName) {
+        logger.info("获取Action的Request历史记录的时间,serverName:{},actionName:{}",serverName,actionName);
+        MockAction action = getAction(serverName,actionName);
+        if(action==null){
+            return actionNotFountErrorMsg(serverName,actionName);
+        }
+        List<String> keys = action.getRequestHistoryDates();
+        return JSON.toJSONString(keys);
+    }
+
+    @Override
+    public String getRequestHistory(String serverName, String actionName,String date) {
+        logger.info("获取Action的Request的记录,serverName:{},actionName:{}",serverName,actionName);
+        MockAction action = getAction(serverName,actionName);
+        if(action==null){
+            return actionNotFountErrorMsg(serverName,actionName);
+        }
+        String history = action.getRequestHistory(date);
+        return history;
+    }
+
 
     private String errorMsg(){
         DefaultResponse response= new DefaultResponse();
@@ -531,6 +550,7 @@ public class AdminServiceImpl implements AdminService {
         stores.add(new KeyValueStore("actionName",action.getActionInfo().getActionName()));
         stores.add(new KeyValueStore("templateEncoding",action.getActionInfo().getTemplateEncoding()));
         stores.add(new KeyValueStore("returnStatus",action.getActionInfo().getReturnStatus()));
+        stores.add(new KeyValueStore("timeoutMS",action.getActionInfo().getTimeoutMS()));
         if(server.getProtocol()==ServerProtocol.HTTP){
             stores.add(new KeyValueStore("requestUri",action.getActionInfo().getRequestUri()));
             stores.add(new KeyValueStore("callbackURL",action.getActionInfo().getCallbackInfo().http.getUrl()));

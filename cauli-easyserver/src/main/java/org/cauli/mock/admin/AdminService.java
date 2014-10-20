@@ -62,4 +62,8 @@ public interface AdminService {
     public String getCallbacksofAction(String serverName,String actionName);
 
     public String getCallbackReturnStatuses(String serverName,String actionName);
+
+    public String getRequestHistoryKeys(String serverName,String actionName);
+
+    public String getRequestHistory(String serverName,String actionName,String date);
 }

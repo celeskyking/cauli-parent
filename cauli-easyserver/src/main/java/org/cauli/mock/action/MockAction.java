@@ -1,8 +1,8 @@
 package org.cauli.mock.action;
 
-import org.cauli.mock.entity.ActionInfo;
 import org.cauli.common.keyvalue.KeyValueStore;
-import org.cauli.mock.entity.ParametersModel;
+import org.cauli.mock.entity.ActionInfo;
+import org.cauli.mock.entity.RequestHistory;
 import org.cauli.mock.exception.ActionExecuteException;
 import org.cauli.mock.server.MockServer;
 
@@ -57,9 +57,15 @@ public interface MockAction<T,V,K> {
 
     public List<K> callback(String name) throws ActionExecuteException;
 
+    public List<K> callback(String name,String date) throws ActionExecuteException;
+
+    public String getRequestHistory(String date);
+
     public Set<String> getAllCallbacks();
 
     public Set<String> getCallbackReturnStatuses();
+
+    public List<String> getRequestHistoryDates();
 
 
 

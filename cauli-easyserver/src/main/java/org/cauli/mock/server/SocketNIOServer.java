@@ -149,6 +149,7 @@ public class SocketNIOServer implements ISocketServer{
                 convertMap.register(SocketRequest.class,new ConvertExecuter() {
                     @Override
                     public Object execute(Object clazz, ParametersModel parameterValuePairs) {
+                        parameterValuePairs.getContext().addContext("_request",msg);
                         return msg;
                     }
                 });
@@ -159,6 +160,7 @@ public class SocketNIOServer implements ISocketServer{
                 String response = action.build();
                 socketChannel.write(ByteBuffer.wrap(response.getBytes(Charset.forName(getResponseEncoding()))));
                 byteBuffer.clear();
+                action.addRequestHistory(parametersModel);
                 if(action.getActionInfo().isUseMessage()){
                     new Thread(new Runnable() {
                         @Override

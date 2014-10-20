@@ -1,5 +1,6 @@
 package org.cauli.mock.action;
 
+import org.cauli.mock.entity.RequestHistory;
 import org.cauli.mock.sender.SocketSender;
 
 import java.nio.charset.Charset;
@@ -19,5 +20,13 @@ public abstract class AbstractSocketAction extends AbstractAction<String,String>
         Charset charset =getActionInfo().getCallbackInfo().socket.getCharset();
         boolean isAync = getActionInfo().getCallbackInfo().socket.isAync();
         return new SocketSender().aync(isAync).host(host).port(port).encoding(charset);
+    }
+
+    @Override
+    public String getRequestHistory(String date) {
+        RequestHistory.Socket socket = new RequestHistory.Socket();
+        String request = (String) getParametersModel().getContext().getContext("_request");
+        socket.setContent(request);
+        return socket.toString();
     }
 }

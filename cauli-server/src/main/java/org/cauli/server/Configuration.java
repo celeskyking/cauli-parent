@@ -68,4 +68,5 @@ public class Configuration {
     public void setViewPath(String viewPath) {
         this.viewPath = viewPath;
     }
+
 }

@@ -55,6 +55,7 @@ public class SocketIOHandler implements Runnable{
             convertMap.register(SocketRequest.class,new ConvertExecuter() {
                 @Override
                 public Object execute(Object clazz, ParametersModel parameterValuePairs) {
+                    parameterValuePairs.getContext().addContext("_request",request);
                     return request;
                 }
             });
@@ -64,6 +65,7 @@ public class SocketIOHandler implements Runnable{
             action.setParametersModel(parametersModel);
             IOUtils.write(action.build(), socket.getOutputStream());
             socket.close();
+            action.addRequestHistory(parametersModel);
             if(action.getActionInfo().isUseMessage()){
                 new Thread(new Runnable() {
                     @Override

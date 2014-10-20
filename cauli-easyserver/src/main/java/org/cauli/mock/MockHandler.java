@@ -47,14 +47,14 @@ public class MockHandler implements HttpHandler {
             convertMap.register(HttpRequest.class,new ConvertExecuter() {
                 @Override
                 public Object execute(Object clazz, ParametersModel parameterValuePairs) {
-                    parametersModel.getContext().addObject("request",request);
+                    parametersModel.getContext().addObject("_request",request);
                     return request;
                 }
             });
             convertMap.register(HttpResponse.class,new ConvertExecuter() {
                 @Override
                 public Object execute(Object clazz, ParametersModel parameterValuePairs) {
-                    parametersModel.getContext().addObject("response",httpResponse);
+                    parametersModel.getContext().addObject("_response",httpResponse);
                     return httpResponse;
                 }
             });
@@ -98,6 +98,7 @@ public class MockHandler implements HttpHandler {
         String responseContent =  action.build();
         logger.info("[{}:{}]响应内容为:{}",action.getServerName(),action.getActionName(),responseContent);
         httpResponse.content(responseContent).end();
+        action.addRequestHistory(parametersModel);
         if(action.getActionInfo().isUseMessage()){
             new Runnable() {
                 @Override
@@ -106,7 +107,6 @@ public class MockHandler implements HttpHandler {
                 }
             }.run();
         }
-
         return;
     }
 

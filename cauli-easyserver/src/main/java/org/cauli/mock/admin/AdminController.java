@@ -42,7 +42,6 @@ public class AdminController extends Controller {
         }catch (Exception e){
             return null;
         }
-
     }
 
     private void sendResponse(int errorCode,String content){
@@ -52,7 +51,7 @@ public class AdminController extends Controller {
         renderText(JSON.toJSONString(response));
     }
 
-    @Path(value = "/server/info",methods = HttpMethod.POST)
+    @Path(value = "/server/info",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void getServerInfo(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -71,7 +70,7 @@ public class AdminController extends Controller {
     }
 
 
-    @Path(value = "/action/info",methods = HttpMethod.POST)
+    @Path(value = "/action/info",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void getActionInfo(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -92,13 +91,13 @@ public class AdminController extends Controller {
 
     }
 
-    @Path(value = "/servers",methods = HttpMethod.POST)
+    @Path(value = "/servers",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void getServers(){
         renderJson(service.getServers());
 
     }
 
-    @Path(value = "/server/actions",methods = HttpMethod.POST)
+    @Path(value = "/server/actions",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void getActionsOfServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -116,7 +115,7 @@ public class AdminController extends Controller {
         renderJson(service.getActionsOfServer(serverName));
     }
 
-    @Path(value = "/action/template",methods = HttpMethod.POST)
+    @Path(value = "/action/template",methods = HttpMethod.POST,produce = "text/plain; charset=UTF-8")
     public void getTemplateValue(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -139,7 +138,7 @@ public class AdminController extends Controller {
     }
 
 
-    @Path(value = "/action/callback/template",methods = HttpMethod.POST)
+    @Path(value = "/action/callback/template",methods = HttpMethod.POST,produce = "text/plain; charset=UTF-8")
     public void getCallbackTemplateValue(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -161,7 +160,7 @@ public class AdminController extends Controller {
         renderText(service.getTemplateValue(serverName, actionName, returnStatus));
     }
 
-    @Path(value = "/action/statuses",methods = HttpMethod.POST)
+    @Path(value = "/action/statuses",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void getActionRetureStatus(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -181,7 +180,7 @@ public class AdminController extends Controller {
         renderJson(service.getActionRetureStatus(serverName,actionName));
     }
 
-    @Path(value = "/server/create",methods = HttpMethod.POST)
+    @Path(value = "/server/create",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void createServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -205,7 +204,7 @@ public class AdminController extends Controller {
         renderJson(service.createServer(style,serverName,port,initStatus));
     }
 
-    @Path(value = "/action/create",methods = HttpMethod.POST)
+    @Path(value = "/action/create",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void createActionOfServer() throws Exception {
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -236,7 +235,7 @@ public class AdminController extends Controller {
 
     }
 
-    @Path(value = "/action/template/create",methods = HttpMethod.POST)
+    @Path(value = "/action/template/create",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void createTemplate(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -261,7 +260,7 @@ public class AdminController extends Controller {
     }
 
 
-    @Path(value = "/start/server",methods = HttpMethod.POST)
+    @Path(value = "/start/server",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void startServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -279,7 +278,7 @@ public class AdminController extends Controller {
         renderJson(service.startServer(serverName));
     }
 
-    @Path(value = "/stop/server",methods = HttpMethod.POST)
+    @Path(value = "/stop/server",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void stopServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -297,7 +296,7 @@ public class AdminController extends Controller {
         renderJson(service.stopServer(serverName));
     }
 
-    @Path(value = "/restart/server",methods = HttpMethod.POST)
+    @Path(value = "/restart/server",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void restartServer(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -315,7 +314,7 @@ public class AdminController extends Controller {
         renderJson(service.restartServer(serverName));
     }
 
-    @Path(value = "/action/update/{param}",methods = HttpMethod.POST)
+    @Path(value = "/action/update/{param}",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void updateAction(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -433,7 +432,7 @@ public class AdminController extends Controller {
 
     }
 
-    @Path(value = "/action/callback",methods = HttpMethod.POST)
+    @Path(value = "/action/callback",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void docallback(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -455,7 +454,7 @@ public class AdminController extends Controller {
         renderJson(service.doCallback(serverName,actionName,callbackName));
     }
 
-    @Path(value = "/action/callback/template",methods = HttpMethod.POST)
+    @Path(value = "/action/callback/template",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void callbackTemplate(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -477,7 +476,7 @@ public class AdminController extends Controller {
         renderJson(service.getCallbackTemplateValue(serverName,actionName,callbackReturnStatus));
     }
 
-    @Path(value = "/action/callbacks",methods = HttpMethod.POST)
+    @Path(value = "/action/callbacks",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void getCallbacks(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -497,7 +496,7 @@ public class AdminController extends Controller {
         renderJson(service.getCallbacksofAction(serverName,actionName));
     }
 
-    @Path(value = "/action/callback/statuses",methods = HttpMethod.POST)
+    @Path(value = "/action/callback/statuses",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
     public void getCallbackReturnStatuses(){
         String body = body();
         JSONObject jsonObject = saveJSONObject(body);
@@ -517,10 +516,56 @@ public class AdminController extends Controller {
         renderJson(service.getCallbackReturnStatuses(serverName,actionName));
     }
 
+    @Path(value = "/action/request",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
+    public void getRequestsOfAction(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String actionName =getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        String date = getDate(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        params.put("date",date);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.getRequestHistory(serverName,actionName,date));
+    }
+
+    @Path(value = "/action/requestKeys",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")
+    public void getRequestKeysOfAction(){
+        String body = body();
+        JSONObject jsonObject = saveJSONObject(body);
+        boolean bool = checkJSON(jsonObject);
+        if(!bool){
+            return;
+        }
+        String actionName =getActionName(jsonObject);
+        String serverName = getServerName(jsonObject);
+        Map<String,Object> params = Maps.newHashMap();
+        params.put("actionName",actionName);
+        params.put("serverName",serverName);
+        boolean check = checkJSONParams(params);
+        if(!check){
+            return;
+        }
+        renderJson(service.getRequestHistoryKeys(serverName,actionName));
+    }
+
     //--------------private methods---------------
 
     private String getServerName(JSONObject jsonObject){
         return jsonObject.getString("serverName");
+    }
+
+    private String getDate(JSONObject jsonObject){
+        return jsonObject.getString("date");
     }
 
     private String getActionName(JSONObject jsonObject){

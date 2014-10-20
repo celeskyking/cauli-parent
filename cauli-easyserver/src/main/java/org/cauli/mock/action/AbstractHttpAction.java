@@ -2,6 +2,7 @@ package org.cauli.mock.action;
 
 import com.google.common.collect.Maps;
 import org.cauli.mock.entity.ActionInfo;
+import org.cauli.mock.entity.RequestHistory;
 import org.cauli.mock.sender.HttpSender;
 import org.cauli.mock.util.XMLUtil;
 import org.cauli.server.HttpMethod;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -106,5 +108,47 @@ public abstract class AbstractHttpAction extends AbstractAction<HttpRequest,Stri
     public void setResponse(HttpResponse response) {
         this.response = response;
     }
+
+
+    @Override
+    public String getRequestHistory(String date) {
+        HttpRequest request = (HttpRequest) getParametersModel().getContext().getContext("_request");
+        RequestHistory.Http http = new RequestHistory.Http();
+        http.setBody(request.body());
+        http.setHeaders(parseHeader(request.allHeaders()));
+        http.setPostParameters(parseRequestPost(request));
+        http.setQueryParameters(parseRequestQuery(request));
+        return http.toString();
+    }
+
+    private Map<String,String> parseHeader(List<Map.Entry<String,String>> headers){
+        Map<String,String> headerMap = Maps.newHashMap();
+        for(Map.Entry<String,String> entry:headers){
+            headerMap.put(entry.getKey(),entry.getValue());
+        }
+        return headerMap;
+    }
+
+    private Map<String,String> parseRequestQuery(HttpRequest request){
+        Map<String,String> requestMap = Maps.newHashMap();
+        if(request.method().equalsIgnoreCase("GET")){
+            for(String key:request().queryParamKeys()){
+                requestMap.put(key,request().queryParam(key));
+            }
+        }
+        return requestMap;
+    }
+
+    private Map<String,String> parseRequestPost(HttpRequest request){
+        Map<String,String> requestMap = Maps.newHashMap();
+        if(request.method().equalsIgnoreCase("POST")){
+            for(String key:request().postParamKeys()){
+                requestMap.put(key,request().postParam(key));
+            }
+        }
+        return requestMap;
+    }
+
+
 
 }
