@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import jodd.util.Base64;
+import jodd.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.cauli.common.keyvalue.KeyValueStore;
 import org.cauli.mock.ServerBuilder;
@@ -339,10 +340,22 @@ public class AdminController extends Controller {
             renderJson(service.updateActionRetureStatus(serverName,actionName,returnStatus));
         }else if("templateValue".equalsIgnoreCase(configParam)){
             String returnStatus = getReturnStatus(jsonObject);
-            String templateValue = Base64.decodeToString(getTemplateValue(jsonObject));
-            logger.info("更新Server:{},action:{}的templateValue为:{}",serverName,actionName,templateValue);
-            params.put("returnStatus",returnStatus);
-            params.put("templateValue",templateValue);
+            String value = getTemplateValue(jsonObject);
+            String templateValue = null;
+            if(StringUtil.isNotEmpty(value)){
+                templateValue = Base64.decodeToString(getTemplateValue(jsonObject));
+                logger.info("更新Server:{},action:{}的templateValue为:{}",serverName,actionName,templateValue);
+                params.put("returnStatus",returnStatus);
+                params.put("templateValue",templateValue);
+                boolean check = checkJSONParams(params);
+                if(!check){
+                    return;
+                }
+            }else{
+                logger.info("更新Server:{},action:{}的templateValue为:{}",serverName,actionName,"空");
+                params.put("returnStatus",returnStatus);
+                params.put("templateValue","");
+            }
             boolean check = checkJSONParams(params);
             if(!check){
                 return;
@@ -376,14 +389,14 @@ public class AdminController extends Controller {
             }
             renderJson(service.updateActionIsUseTemplate(serverName,actionName,isUseTemplate));
         }else if("isUseCallbackTemplate".equalsIgnoreCase(configParam)){
-            boolean isUseTemplate = getIsUseTemplate(jsonObject);
-            logger.info("更新Server:{},action:{}的isUseTemplate为:{}",serverName,actionName,isUseTemplate);
-            params.put("isUseTemplate",isUseTemplate);
+            boolean isUseCallbackTemplate = getIsUseCallbackTemplate(jsonObject);
+            logger.info("更新Server:{},action:{}的isUseCallbackTemplate为:{}",serverName,actionName,isUseCallbackTemplate);
+            params.put("isCallbackUseTemplate",isUseCallbackTemplate);
             boolean check = checkJSONParams(params);
             if(!check){
                 return;
             }
-            renderJson(service.updateActionIsUseTemplate(serverName,actionName,isUseTemplate));
+            renderJson(service.updateActionIsUseCallbackTemplate(serverName, actionName, isUseCallbackTemplate));
         }else if("isUseMessage".equalsIgnoreCase(configParam)){
             boolean isUseMessage = getIsUseMessage(jsonObject);
             logger.info("更新Server:{},action:{}的isUseMessage为:{}",serverName,actionName,isUseMessage);
@@ -413,6 +426,9 @@ public class AdminController extends Controller {
             renderJson(service.updateActionCallBackReturnStatus(serverName,actionName,status));
         }else if("callbackTemplate".equalsIgnoreCase(configParam)){
             String callbackTemplate = getCallbackTemplate(jsonObject);
+            if(StringUtil.isNotEmpty(callbackTemplate)){
+                callbackTemplate=Base64.decodeToString(callbackTemplate);
+            }
             String callbackReturnStatus = getCallbackReturnStatus(jsonObject);
             logger.info("更新Server:{},action:{}的callbackTemplate为:{}",serverName,actionName,callbackTemplate);
             params.put("callbackTemplate",callbackTemplate);
@@ -423,7 +439,7 @@ public class AdminController extends Controller {
             }
             renderJson(service.updateActionCallBackTemplate(serverName,actionName,callbackReturnStatus,callbackTemplate));
         }else{
-            logger.error("未查询到该属性值:{}",configParam);
+            logger.error("未查询到该属性值:{},更新失败",configParam);
             DefaultResponse response = new DefaultResponse();
             response.setErrorInfo("不能够查找到该属性"+configParam);
             response.setErrorCode(9);
@@ -473,7 +489,7 @@ public class AdminController extends Controller {
         if(!check){
             return;
         }
-        renderJson(service.getCallbackTemplateValue(serverName,actionName,callbackReturnStatus));
+        renderText(service.getCallbackTemplateValue(serverName,actionName,callbackReturnStatus));
     }
 
     @Path(value = "/action/callbacks",methods = HttpMethod.POST,produce = "text/json; charset=UTF-8")

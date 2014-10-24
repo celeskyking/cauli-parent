@@ -56,13 +56,8 @@ public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
                             }catch (Exception e){
                                 throw new RuntimeException("读取"+ff.getName()+"的流失败",e);
                             }
-                            if(!fff.getName().contains("_callback")){
-                                String returnStatus = StringUtils.substringBefore(fff.getName(),".");
-                                templateCache.put(returnStatus,content);
-                            }else{
-                                String returnStatus = StringUtils.substringBefore(fff.getName(), ".");
-                                templateCache.put(returnStatus,content);
-                            }
+                            String returnStatus = StringUtils.substringBefore(fff.getName(),".");
+                            templateCache.put(returnStatus,content);
                         }
                     }
                 }

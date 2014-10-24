@@ -3,6 +3,7 @@ package org.cauli.server.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+import jodd.util.StringUtil;
 import org.cauli.server.HttpRequest;
 import org.cauli.server.HttpResponse;
 import org.cauli.server.action.Action;
@@ -131,12 +132,22 @@ public  class Controller {
     }
 
     public void renderText(String content){
-        response.content(content).end();
+        if(StringUtil.isNotEmpty(content)){
+            response.content(content).end();
+        }else{
+            throw new RuntimeException("renderText()响应内容为空");
+
+        }
+
     }
 
     public void renderHtml(String html){
-        produces("text/html");
-        response.content(html).end();
+        if(StringUtil.isNotEmpty(html)){
+            response.content(html).end();
+        }else{
+            throw new RuntimeException("renderHtml()响应内容为空");
+        }
+
     }
 
 
@@ -151,12 +162,14 @@ public  class Controller {
     }
 
     public void renderJson(Object model){
-        produces("application/json");
+        if(model==null){
+            throw new RuntimeException("renderJson()响应内容为空");
+        }
         if(model instanceof String){
             try{
                 Object jsonObject=JSON.parse((String) model);
                 if(jsonObject==null){
-                    response.status(406).end();
+                    response.status(500).end();
                     return;
                 }else{
                     response.content((String) model).end();

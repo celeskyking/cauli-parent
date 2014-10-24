@@ -47,6 +47,8 @@ public interface AdminService {
 
     public String updateActionIsUseTemplate(String serverName,String actionName,boolean isUseTemplate);
 
+    public String updateActionIsUseCallbackTemplate(String serverName,String actionName,boolean isUseCallbackTemplate);
+
     public String updateActionIsUseMessage(String serverName,String actionName,boolean isUseMessage);
 
     public String updateActionTemplateEncoding(String serverName,String actionName,String templateEncoding);

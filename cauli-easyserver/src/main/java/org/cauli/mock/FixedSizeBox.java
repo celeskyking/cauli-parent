@@ -17,9 +17,9 @@ public class FixedSizeBox<T>{
 
     public void add(KeyValueStore keyValueStore){
         if(this.linkedList.size()>=DEFAULT_SIZE){
+            this.linkedList.removeFirst();
             this.linkedList.add(keyValueStore);
         }else{
-            this.linkedList.removeFirst();
             this.linkedList.add(keyValueStore);
         }
     }

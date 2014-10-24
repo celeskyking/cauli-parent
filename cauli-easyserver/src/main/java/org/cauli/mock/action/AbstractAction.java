@@ -431,7 +431,12 @@ public abstract class AbstractAction<T,V> implements MockAction<String,Parameter
 
     @Override
     public Set<String> getCallbackReturnStatuses() {
-        return this.sourceEngine.getCallbackTemplates().keySet();
+        Set<String> callbackReturnStatuses = this.sourceEngine.getCallbackTemplates().keySet();
+        if(callbackReturnStatuses==null||callbackReturnStatuses.size()==0){
+            return Sets.newHashSet("SUCCESS");
+        }else{
+            return callbackReturnStatuses;
+        }
     }
 
     public synchronized void addRequestHistory(ParametersModel parametersModel){

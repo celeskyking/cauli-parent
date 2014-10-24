@@ -94,7 +94,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String getTemplateValue(String serverName, String actionName, String returnStatus) {
-        logger.info("获取模板信息:serverName:{},actionName:{],returnStatus:{}",serverName,actionName,returnStatus);
+        logger.info("获取模板信息:serverName:{},actionName:{},returnStatus:{}",serverName,actionName,returnStatus);
         MockAction action = getAction(serverName,actionName);
         if(action==null){
             return actionNotFountErrorMsg(serverName,actionName);
@@ -110,7 +110,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String getCallbackTemplateValue(String serverName, String actionName, String returnStatus) {
-        logger.info("获取callback的模板信息:serverName:{},actionName:{],callbackReturnStatus:{}",serverName,actionName,returnStatus);
+        logger.info("获取callback的模板信息:serverName:{},actionName:{},callbackReturnStatus:{}",serverName,actionName,returnStatus);
         MockAction action = getAction(serverName,actionName);
         if(action==null){
             return actionNotFountErrorMsg(serverName,actionName);
@@ -290,6 +290,24 @@ public class AdminServiceImpl implements AdminService {
         }
         action.getActionInfo().setUseTemplate(isUseTemplate);
         logger.info("更新isUseTemplate成功,server:{},action:{}",serverName,actionName);
+        return successMsg();
+    }
+
+    @Override
+    public String updateActionIsUseCallbackTemplate(String serverName, String actionName, boolean isUseCallbackTemplate) {
+        logger.info("更新isUseCallbackTemplate,server:{},action:{},isUseTemplate:{}",serverName,actionName,isUseCallbackTemplate);
+        MockServer server = ServerBuilder.getInstance().getServer(serverName);
+        if(server==null){
+            logger.error("更新isCallbackUseTemplate失败,server:{}不存在",serverName);
+            return serverNotFountErrorMsg(serverName);
+        }
+        MockAction action = server.getAction(actionName);
+        if(action==null){
+            logger.error("更新isCallbackUseTemplate失败,action:{}不存在",actionName);
+            return actionNotFountErrorMsg(serverName,actionName);
+        }
+        action.getActionInfo().setUseCallbackTemplate(isUseCallbackTemplate);
+        logger.info("更新isUseCallbackTemplate成功,server:{},action:{}",serverName,actionName);
         return successMsg();
     }
 

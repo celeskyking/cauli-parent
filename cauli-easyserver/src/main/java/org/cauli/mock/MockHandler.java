@@ -97,8 +97,8 @@ public class MockHandler implements HttpHandler {
         action.setResponse(httpResponse);
         String responseContent =  action.build();
         logger.info("[{}:{}]响应内容为:{}",action.getServerName(),action.getActionName(),responseContent);
-        httpResponse.content(responseContent).end();
         action.addRequestHistory(parametersModel);
+        httpResponse.content(responseContent).end();
         if(action.getActionInfo().isUseMessage()){
             new Runnable() {
                 @Override
