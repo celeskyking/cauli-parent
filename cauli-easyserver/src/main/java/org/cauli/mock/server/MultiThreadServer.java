@@ -35,8 +35,8 @@ public class MultiThreadServer implements ISocketServer{
             try{
                 socket=serverSocket.accept();
                 SocketIOHandler socketIOHandler = new SocketIOHandler(socket,server);
-                socketIOHandler.setRequestEncoding(getRequestEncoding());
-                socketIOHandler.setResponseEncoding(getResponseEncoding());
+                socketIOHandler.setRequestEncoding(server.getServerInfo().getRequestEncoding());
+                socketIOHandler.setResponseEncoding(server.getServerInfo().getResponseEncoding());
                 executorService.execute(socketIOHandler);
             }catch (Exception e){
                 logger.error("发生了SOCKET异常",e);

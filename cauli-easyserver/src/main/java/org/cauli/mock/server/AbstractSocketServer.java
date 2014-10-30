@@ -93,8 +93,6 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
 
     @Override
     public void start() throws Exception {
-        this.socketServer.setRequestEncoding(serverInfo.getRequestEncoding());
-        this.socketServer.setResponseEncoding(serverInfo.getResponseEncoding());
         if(serverInfo.isAsyn()){
             this.socketServer=new SocketNIOServer(this);
             this.socketServer.start();

@@ -17,7 +17,7 @@ public class ServerInfo implements Serializable{
     private String keyStorePassword;
     private String keyPassword;
     private String ServerName;
-    private boolean asyn;
+    private boolean asyn=false;
     private int port=Constant.DEFAULT_PORT;
     private ServerStatus status;
     private ServerInitStatus initStatus=Constant.DEFAULT_INIT_STATUS;

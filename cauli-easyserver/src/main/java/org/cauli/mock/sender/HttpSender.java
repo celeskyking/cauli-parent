@@ -105,7 +105,7 @@ public class HttpSender{
                 request.header(entry.getKey(),entry.getValue());
             }
         }
-        if(form!=null&&headers.size()>1){
+        if(form!=null&&form.size()>1){
             request.form(form);
         }
         if(StringUtils.isNotEmpty(queryString)){

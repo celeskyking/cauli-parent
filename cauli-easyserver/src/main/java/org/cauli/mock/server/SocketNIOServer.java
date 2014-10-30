@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -33,6 +34,8 @@ public class SocketNIOServer implements ISocketServer{
 
     public SocketNIOServer(AbstractSocketServer server){
         this.server=server;
+        this.requestEncoding=server.getServerInfo().getRequestEncoding();
+        this.responseEncoding=server.getServerInfo().getResponseEncoding();
     }
 
     public void setServer(AbstractSocketServer server) {
@@ -51,9 +54,9 @@ public class SocketNIOServer implements ISocketServer{
             socket.bind(new InetSocketAddress("localhost",server.getPort()));
             channel.register(connectionBell.getSelector(), SelectionKey.OP_ACCEPT);
             new Thread(connectionBell).start();
-            logger.info("启动Server：{}",server.getServerName());
+            logger.info("启动异步Socket Server：{},port :{}",server.getServerName(),server.getPort());
         }catch (Exception e){
-            logger.error("启动Server失败:{}",server.getServerName(),e);
+            logger.error("启动异步Socket Server失败:{}",server.getServerName(),e);
             e.printStackTrace();
         }
 
@@ -135,6 +138,7 @@ public class SocketNIOServer implements ISocketServer{
                     }
                 }
             }else if(selectionKey.isReadable()){
+                logger.info("异步Socket Server:{}接收到请求",server.getServerName());
                 SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
                 int count = socketChannel.read(byteBuffer);
                 if(count<0){
@@ -143,7 +147,8 @@ public class SocketNIOServer implements ISocketServer{
                     return;
                 }
                 byteBuffer.flip();
-                final String msg = Charset.forName(getRequestEncoding()).decode(byteBuffer).toString();
+                CharBuffer charBuffer = Charset.forName(getRequestEncoding()).decode(byteBuffer);
+                final String msg = charBuffer.toString()==null?"":charBuffer.toString();
                 logger.info("Server received [{}] from client address:"+ socketChannel.getRemoteAddress() ,msg);
                 ConvertManager.ConvertMap convertMap = new ConvertManager.ConvertMap();
                 convertMap.register(SocketRequest.class,new ConvertExecuter() {
@@ -169,7 +174,7 @@ public class SocketNIOServer implements ISocketServer{
                         }
                     }).start();
                 }
-
+                socketChannel.close();;
             }
         }
     }
