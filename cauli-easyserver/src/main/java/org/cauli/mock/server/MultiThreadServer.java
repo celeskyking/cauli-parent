@@ -26,7 +26,7 @@ public class MultiThreadServer implements ISocketServer{
         this.server=server;
         serverSocket = new ServerSocket(server.getPort());
         executorService= Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * POOL_SIZE);
-        logger.info("服务器启动,端口号为:{}",server.getPort());
+        logger.info("服务器:{}启动,端口号为:{}",server.getServerName(),server.getPort());
     }
 
     public void service(){
@@ -35,8 +35,6 @@ public class MultiThreadServer implements ISocketServer{
             try{
                 socket=serverSocket.accept();
                 SocketIOHandler socketIOHandler = new SocketIOHandler(socket,server);
-                socketIOHandler.setRequestEncoding(server.getServerInfo().getRequestEncoding());
-                socketIOHandler.setResponseEncoding(server.getServerInfo().getResponseEncoding());
                 executorService.execute(socketIOHandler);
             }catch (Exception e){
                 logger.error("发生了SOCKET异常",e);

@@ -87,7 +87,6 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
     public abstract void config(ServerInfo serverInfo);
 
     public void loadActions() {
-
         parseActions();
     }
 

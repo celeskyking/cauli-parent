@@ -23,8 +23,6 @@ public class SocketIOHandler implements Runnable{
     private Socket socket;
 
     private AbstractSocketServer server;
-    private String responseEncoding;
-    private String requestEncoding;
 
     public SocketIOHandler(Socket socket,AbstractSocketServer server){
         this.socket=socket;
@@ -49,7 +47,7 @@ public class SocketIOHandler implements Runnable{
             inputStream.read(buffer);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             outputStream.write(buffer);
-            final String request = new String(outputStream.toByteArray(),getRequestEncoding());
+            final String request = new String(outputStream.toByteArray(),server.getServerInfo().getRequestEncoding());
             logger.info("接收到的内容为:{}",request);
             ConvertManager.ConvertMap convertMap = new ConvertManager.ConvertMap();
             convertMap.register(SocketRequest.class,new ConvertExecuter() {
@@ -82,19 +80,4 @@ public class SocketIOHandler implements Runnable{
         }
     }
 
-    public String getRequestEncoding() {
-        return requestEncoding;
-    }
-
-    public void setRequestEncoding(String requestEncoding) {
-        this.requestEncoding = requestEncoding;
-    }
-
-    public String getResponseEncoding() {
-        return responseEncoding;
-    }
-
-    public void setResponseEncoding(String responseEncoding) {
-        this.responseEncoding = responseEncoding;
-    }
 }

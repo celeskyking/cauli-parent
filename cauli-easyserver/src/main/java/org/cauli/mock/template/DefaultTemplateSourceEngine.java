@@ -44,6 +44,10 @@ public class DefaultTemplateSourceEngine implements TemplateSourceEngine{
     @Override
     public void init(){
         File file = ResourceUtil.getFileFromClassPath("template");
+        if(file==null){
+            logger.error("扫描模板文件失败,请检查是否配置了模板文件,action:{}",action.getActionName());
+            return;
+        }
         for(File f:file.listFiles()){
             if(f.isDirectory()&&f.getName().equals(action.getServer().getServerName())){
                 for(File ff:f.listFiles()){

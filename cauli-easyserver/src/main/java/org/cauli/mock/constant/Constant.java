@@ -22,7 +22,7 @@ public class Constant {
 
     public final static boolean IS_USE_TEMPLATE = true;
 
-    public final static boolean IS_USE_CALLBACK_TEMPLATE = true;
+    public final static boolean IS_USE_CALLBACK_TEMPLATE = false;
 
     public final static String DEFAULT_ACTION_NAME ="default";
 

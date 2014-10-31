@@ -1,181 +1,70 @@
 package org.cauli.mock.server;
 
-import org.cauli.mock.action.AbstractSocketAction;
-import org.cauli.mock.annotation.SocketRequest;
-import org.cauli.mock.core.convert.ConvertExecuter;
-import org.cauli.mock.core.convert.ConvertManager;
-import org.cauli.mock.entity.ParametersModel;
+import org.jboss.netty.bootstrap.ServerBootstrap;
+import org.jboss.netty.channel.ChannelFactory;
+import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.channel.Channels;
+import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.jboss.netty.handler.codec.string.StringDecoder;
+import org.jboss.netty.handler.codec.string.StringEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.concurrent.Executors;
 
 public class SocketNIOServer implements ISocketServer{
 
     private Logger logger = LoggerFactory.getLogger(SocketNIOServer.class);
+
+
     private AbstractSocketServer server;
-    private SelectorLoop connectionBell;
-    private SelectorLoop readBell;
-    private boolean isReadBellRunning=false;
-    private ServerSocketChannel channel;
-    private String requestEncoding;
-    private String responseEncoding;
+
+    private ChannelFactory factory ;
+    private ServerBootstrap serverBootstrap;
 
     public SocketNIOServer(AbstractSocketServer server){
         this.server=server;
-        this.requestEncoding=server.getServerInfo().getRequestEncoding();
-        this.responseEncoding=server.getServerInfo().getResponseEncoding();
+        init(server);
     }
 
-    public void setServer(AbstractSocketServer server) {
+    public void init(final AbstractSocketServer server) {
         this.server = server;
+        this.factory= new NioServerSocketChannelFactory(
+                Executors.newCachedThreadPool(),
+                Executors.newCachedThreadPool());
+        this.serverBootstrap=new ServerBootstrap(factory);
+        this.serverBootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+            @Override
+            public ChannelPipeline getPipeline() throws Exception {
+                ChannelPipeline pipeline = Channels.pipeline();
+                pipeline.addLast("encode",new StringEncoder());
+                pipeline.addLast("decode",new StringDecoder());
+                pipeline.addLast("handler",new NettyServerHandler(server));
+                return pipeline;
+            }
+        });
+        serverBootstrap.setOption("child.tcpNoDelay", true);
+        serverBootstrap.setOption("child.keepAlive", true);
     }
 
-    private ServerSocket socket;
 
     public void start(){
-        try{
-            connectionBell = new SelectorLoop();
-            readBell = new SelectorLoop();
-            channel = ServerSocketChannel.open();
-            channel.configureBlocking(false);
-            socket = channel.socket();
-            socket.bind(new InetSocketAddress("localhost",server.getPort()));
-            channel.register(connectionBell.getSelector(), SelectionKey.OP_ACCEPT);
-            new Thread(connectionBell).start();
-            logger.info("启动异步Socket Server：{},port :{}",server.getServerName(),server.getPort());
-        }catch (Exception e){
-            logger.error("启动异步Socket Server失败:{}",server.getServerName(),e);
-            e.printStackTrace();
-        }
-
+        serverBootstrap.bind(new InetSocketAddress(server.getPort()));
+        logger.info("NIO SOCKET SERVER:{} 启动成功,port:{}",server.getServerName(),server.getPort());
     }
 
     @Override
     public void stop(){
         try {
-            this.socket.close();
-            this.channel.close();
-        } catch (IOException e) {
+            this.serverBootstrap.shutdown();
+        } catch (Exception e) {
             logger.error("关闭SocketServer失败：{}",server.getServerName(),e);
             e.printStackTrace();
         }
 
     }
 
-    @Override
-    public void setRequestEncoding(String encoding) {
-        this.requestEncoding=encoding;
-    }
 
-    @Override
-    public void setResponseEncoding(String encoding) {
-        this.responseEncoding=encoding;
-    }
-
-    public String getRequestEncoding() {
-        return requestEncoding;
-    }
-
-    public String getResponseEncoding() {
-        return responseEncoding;
-    }
-
-    public class SelectorLoop implements Runnable {
-
-        private Selector selector;
-        private ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-
-        public SelectorLoop()throws IOException {
-            this.selector = Selector.open();
-        }
-
-        public Selector getSelector() {
-            return selector;
-        }
-
-
-        @Override
-        public void run() {
-            while(true){
-                try{
-                    this.selector.select();
-                    Set<SelectionKey> selectionKeys = this.selector.selectedKeys();
-                    Iterator<SelectionKey> iterator= selectionKeys.iterator();
-                    while(iterator.hasNext()){
-                        SelectionKey key= iterator.next();
-                        iterator.remove();
-                        this.dispatch(key);
-                    }
-                }catch (Exception e){
-                    logger.error("Socket 接收出现异常",e);
-                }
-            }
-        }
-
-
-        public void dispatch(SelectionKey selectionKey) throws Exception {
-            if(selectionKey.isAcceptable()){
-                ServerSocketChannel serverSocketChannel = (ServerSocketChannel) selectionKey.channel();
-                SocketChannel socketChannel = serverSocketChannel.accept();
-                socketChannel.configureBlocking(false);
-                socketChannel.register(readBell.getSelector(),SelectionKey.OP_READ);
-                synchronized (SocketNIOServer.this){
-                    if(!SocketNIOServer.this.isReadBellRunning){
-                        SocketNIOServer.this.isReadBellRunning=true;
-                        new Thread(readBell).start();
-                    }
-                }
-            }else if(selectionKey.isReadable()){
-                logger.info("异步Socket Server:{}接收到请求",server.getServerName());
-                SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-                int count = socketChannel.read(byteBuffer);
-                if(count<0){
-                    selectionKey.cancel();
-                    socketChannel.close();
-                    return;
-                }
-                byteBuffer.flip();
-                CharBuffer charBuffer = Charset.forName(getRequestEncoding()).decode(byteBuffer);
-                final String msg = charBuffer.toString()==null?"":charBuffer.toString();
-                logger.info("Server received [{}] from client address:"+ socketChannel.getRemoteAddress() ,msg);
-                ConvertManager.ConvertMap convertMap = new ConvertManager.ConvertMap();
-                convertMap.register(SocketRequest.class,new ConvertExecuter() {
-                    @Override
-                    public Object execute(Object clazz, ParametersModel parameterValuePairs) {
-                        parameterValuePairs.getContext().addContext("_request",msg);
-                        return msg;
-                    }
-                });
-                final ParametersModel parametersModel = new ParametersModel(convertMap);
-                final AbstractSocketAction action = server.route(msg);
-                action.setParametersModel(parametersModel);
-                action.setRequest(msg);
-                String response = action.build();
-                socketChannel.write(ByteBuffer.wrap(response.getBytes(Charset.forName(getResponseEncoding()))));
-                byteBuffer.clear();
-                action.addRequestHistory(parametersModel);
-                if(action.getActionInfo().isUseMessage()){
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            action.onMessage(parametersModel);
-                        }
-                    }).start();
-                }
-                socketChannel.close();;
-            }
-        }
-    }
 }

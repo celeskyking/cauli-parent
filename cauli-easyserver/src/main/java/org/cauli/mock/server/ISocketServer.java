@@ -10,8 +10,4 @@ public interface ISocketServer {
 
     public void stop();
 
-    public void setRequestEncoding(String encoding);
-
-    public void setResponseEncoding(String encoding);
-
 }
