@@ -551,7 +551,6 @@ public class AdminServiceImpl implements AdminService {
         stores.add(new KeyValueStore("serverName",info.getServerName()));
         stores.add(new KeyValueStore("port",info.getPort()));
         if(info.getProtocol()==ServerProtocol.SOCKET){
-            stores.add(new KeyValueStore("aync",info.isAsyn()));
             stores.add(new KeyValueStore("requestEncoding",info.getRequestEncoding()));
             stores.add(new KeyValueStore("responseEncoding",info.getResponseEncoding()));
         }

@@ -100,14 +100,15 @@ public interface ActionListener {
 
     public void aftersubmit();
 
-	public void onRetryError();
-
     public void beforekeyPress();
 
     public void afterkeyPress();
 
     public void beforeContextClick();
+
     public void afterContextClick();
+
     public void beforeRelease();
+
     public void afterRelease();
 }

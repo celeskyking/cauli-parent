@@ -56,6 +56,7 @@ public class NettyServerHandler extends SimpleChannelUpstreamHandler{
                 }
             }).start();
         }
+        e.getChannel().close();
     }
 
 

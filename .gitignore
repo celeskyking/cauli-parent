@@ -9,3 +9,4 @@
 .project
 .classpath
 .setting
+log4j.properties

@@ -12,6 +12,7 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,32 +70,20 @@ public class InterceptorStatement extends Statement {
     }
 
     protected void runRetry(){
-        for(Interceptor interceptor:interceptors){
-            interceptor.interceptorBeforeRetryTimeConfig(this);
-        }
+        runBeforeRetryConfig();
         for(int i=0;i<=retryTimes;i++){
             try{
-                for(Interceptor interceptor:interceptors){
-                    interceptor.interceptorBefore(this);
-                }
+                runBefore();
                 if(this.dependencyStatement==null){
-                    testMethod.invokeExplosively(target);
+                        runTestMethod();
                 }else{
-                    for(final InterceptorStatement statement:this.dependencyStatement){
-                        statement.evaluate();
-                    }
-                        testMethod.invokeExplosively(target);
+                        runTestMethod();
                 }
-
-                for(Interceptor interceptor:interceptors){
-                    interceptor.interceptorAfter(this);
-                }
+                runAfter();
                 break;
             }catch(Throwable e){
-                e.printStackTrace();
-                for(Interceptor interceptor:interceptors){
-                    interceptor.interceptorAfterForce(this);
-                }
+                logger.error(e.getMessage(),e);
+                runAfterForce();
                 logger.error("用例执行失败了,异常信息->" + e.getMessage());
                 if(i==retryTimes){
                     throw new TestFailedError("["+this.testMethod.getName()+"]用例执行失败了！",e);
@@ -123,6 +112,44 @@ public class InterceptorStatement extends Statement {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    protected void runTestMethod() throws Throwable {
+        try{
+            testMethod.invokeExplosively(target);
+        }catch (Throwable e){
+            throw new Throwable(e);
+        }
+    }
+
+    protected void runBeforeRetryConfig(){
+        for(Interceptor interceptor:interceptors){
+            interceptor.interceptorBeforeRetryTimeConfig(this);
+        }
+    }
+
+    protected void runBefore(){
+        for(Interceptor interceptor:interceptors){
+            interceptor.interceptorBefore(this);
+        }
+    }
+
+    protected void runAfter(){
+        for(Interceptor interceptor:interceptors){
+            interceptor.interceptorAfter(this);
+        }
+    }
+
+    protected void runAfterForce(){
+        for(Interceptor interceptor:interceptors){
+            interceptor.interceptorAfterForce(this);
+        }
+    }
+
+    protected void runDependency() throws Throwable {
+        for(final InterceptorStatement statement:this.dependencyStatement){
+            statement.evaluate();
+        }
     }
 
 

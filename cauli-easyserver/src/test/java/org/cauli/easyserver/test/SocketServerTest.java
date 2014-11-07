@@ -1,8 +1,11 @@
 package org.cauli.easyserver.test;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -52,5 +55,9 @@ public class SocketServerTest {
         }
         System.out.println(new String(response));
         client.close();
+//        Socket socket = new Socket("localhost",7777);
+//        IOUtils.write("hello,world",socket.getOutputStream(),"UTF-8");
+//        System.out.println(IOUtils.toString(socket.getInputStream()));
+//        socket.close();
     }
 }

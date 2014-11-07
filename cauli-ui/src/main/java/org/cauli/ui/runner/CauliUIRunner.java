@@ -54,7 +54,7 @@ public class CauliUIRunner extends CauliRunner{
 
     @Override
     protected Statement methodInvoker(FrameworkMethodWithParameters method, Object test) {
-        CauliUIStatment statment = new CauliUIStatment((UIFrameworkMethod) method,test);
+        CauliUIStatment statment = new CauliUIStatment(method,test);
         statment.setRetryTimes(getTestPlan().getRetryTimes());
         return statment;
     }

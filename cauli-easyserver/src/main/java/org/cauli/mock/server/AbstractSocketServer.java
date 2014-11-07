@@ -62,7 +62,6 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
 
     public AbstractSocketServer(){
         serverInfo.setStatus(ServerStatus.STOP);
-        serverInfo.setAsyn(Constant.DEFAULT_SOCKET_AYNC);
         serverInfo.setProtocol(ServerProtocol.SOCKET);
         if(getClass().isAnnotationPresent(ServerConfig.class)){
             ServerConfig serverConfig=getClass().getAnnotation(ServerConfig.class);
@@ -92,13 +91,8 @@ public abstract class AbstractSocketServer implements MockServer<AbstractSocketA
 
     @Override
     public void start() throws Exception {
-        if(serverInfo.isAsyn()){
-            this.socketServer=new SocketNIOServer(this);
-            this.socketServer.start();
-        }else{
-            this.socketServer=new MultiThreadServer(this);
-            this.socketServer.start();
-        }
+        this.socketServer=new SocketNIOServer(this);
+        this.socketServer.start();
         serverInfo.setStatus(ServerStatus.START);
     }
 
