@@ -1,5 +1,7 @@
 package org.cauli.common.instrument;
 
+import jodd.util.StringUtil;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -163,7 +165,11 @@ public class ClassFinder {
                 if(file.getName().endsWith("class")){
                     String className = file.getName().substring(0, file.getName().length()-6);
                     try{
-                        classes.add(Thread.currentThread().getContextClassLoader().loadClass(baseName+"."+className));
+                        if(StringUtil.isBlank(baseName)){
+                            classes.add(Thread.currentThread().getContextClassLoader().loadClass(className));
+                        }else{
+                            classes.add(Thread.currentThread().getContextClassLoader().loadClass(baseName+"."+className));
+                        }
                     }catch(ClassNotFoundException e){
                         throw new RuntimeException("扫描File的时候出现了异常，加载类文件的时候出现了异常",e);
                     }
