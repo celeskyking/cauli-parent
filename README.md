@@ -11,7 +11,7 @@ Maven下载
                 <dependency>
                     <groupId>com.github.celeskyking.ui</groupId>
                     <artifactId>cauli-ui</artifactId>
-                    <version>1.1-SNAPSHOT</version>
+                    <version>1.2.5-SNAPSHOT</version>
                 </dependency>
             </dependencies>
 
@@ -42,7 +42,7 @@ Maven下载
                 </repository>
             </repositories>
 
-项目目前只上传到了Maven中央仓库的SNAPSHOT仓库中，未正式提交release版本，目前版本随时都有更新..
+目前Maven上的正式版本为1.2.4
 
 
 cauli-test
@@ -57,7 +57,12 @@ cauli-ui
 
 cauli-server
 ------------
-一个copy于webbit的项目，本身想基于此netty框架扩展一个基于堆栈的微型 Java 框架。提供REST入口，目前处于开发阶段...
+一个copy于webbit的项目，本身想基于此netty框架扩展一个基于堆栈的微型 Java 框架。提供了一套简单的WEB微型框架。
+
+cauli-easyserver
+--------------
+开发的一套基于Http和Server的mock框架,和常用的mock框架风格不一样,支持到业务层次。基于模板的mock框架,开发基于cauli-server。
+
 
 ###cauli-ui使用说明
 ######一个hello，world程序
