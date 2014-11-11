@@ -24,7 +24,6 @@ public class MySocketServer extends AbstractSocketServer{
     public void config(ServerInfo serverInfo) {
         serverInfo.setPort(7777);
         serverInfo.setInitStatus(ServerInitStatus.START);
-        serverInfo.setAsyn(true);
     }
 
 

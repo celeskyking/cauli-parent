@@ -26,6 +26,8 @@ public abstract class AbstractHttpAction extends AbstractAction<HttpRequest,Stri
 
     private HttpResponse response;
 
+    private String body;
+
     public AbstractHttpAction(String name) {
         super(name);
     }
@@ -148,7 +150,5 @@ public abstract class AbstractHttpAction extends AbstractAction<HttpRequest,Stri
         }
         return requestMap;
     }
-
-
 
 }
