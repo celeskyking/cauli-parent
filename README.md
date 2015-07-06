@@ -1,3 +1,6 @@
+该项目暂停继续更新，所有的新实现通过cauli-toolkit来提供。
+
+
 cauli-parent
 ============
 
